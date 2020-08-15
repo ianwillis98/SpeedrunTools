@@ -62,13 +62,13 @@ void GameToolkit::setGameSpeed(float speed)
 void GameToolkit::renderGameGravityView()
 {
     ImGui::Text("Customize Game Gravity");
-    ImGui::SameLine();
-    ImGui::Text("(Current Game Gravity: %.3f)", *this->svSoccarGameGravity);
 
     bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
 
     ImVec4 color = isInFreeplay ? ImGui::GetStyle().Colors[ImGuiCol_TextDisabled] : ImGui::GetStyle().Colors[ImGuiCol_Text];
     ImGui::TextColored(color, "(only works in freeplay and workshop maps)");
+
+    ImGui::Spacing();
 
     if (!isInFreeplay)
     {
@@ -81,17 +81,17 @@ void GameToolkit::renderGameGravityView()
         this->setGameGravity(*this->svSoccarGameGravity);
     }
 
-    if (ImGui::Button("Default Game Gravity (-650.0)"))
+    if (ImGui::Button("Default (-650.0)"))
     {
         this->setGameGravity(-650.0f);
     }
     ImGui::SameLine();
-    if (ImGui::Button("Zero Game Gravity (0.0)"))
+    if (ImGui::Button("Zero Gravity (0.0)"))
     {
         this->setGameGravity(0.0f);
     }
     ImGui::SameLine();
-    if (ImGui::Button("Invert Game Gravity (650.0)"))
+    if (ImGui::Button("Inverted (650.0)"))
     {
         this->setGameGravity(650.0f);
     }
@@ -106,8 +106,6 @@ void GameToolkit::renderGameGravityView()
 void GameToolkit::renderGameSpeedView()
 {
     ImGui::Text("Customize Game Speed");
-    ImGui::SameLine();
-    ImGui::Text("(Current Game Speed: %.3f)", *this->svSoccarGameSpeed);
 
     bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
 
@@ -125,17 +123,17 @@ void GameToolkit::renderGameSpeedView()
         this->setGameSpeed(*this->svSoccarGameSpeed);
     }
 
-    if (ImGui::Button("Default Game Speed (1.0)"))
+    if (ImGui::Button("Default (1.0)"))
     {
         this->setGameSpeed(1.0f);
     }
     ImGui::SameLine();
-    if (ImGui::Button("Half Game Speed (0.5)"))
+    if (ImGui::Button("Half (0.5)"))
     {
         this->setGameSpeed(0.5f);
     }
     ImGui::SameLine();
-    if (ImGui::Button("Double Game Speed (2.0)"))
+    if (ImGui::Button("Double (2.0)"))
     {
         this->setGameSpeed(2.0f);
     }
