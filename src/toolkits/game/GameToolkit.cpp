@@ -1,8 +1,10 @@
+#include <cmath>
 #include "GameToolkit.h"
 
 GameToolkit::GameToolkit(BakkesMod::Plugin::BakkesModPlugin *plugin) : PluginToolkit(plugin)
 {
-
+    this->gameGravity = -650.0f;
+    this->gameSpeed = std::make_shared<float>(1.0f);
 }
 
 std::string GameToolkit::title()
@@ -12,7 +14,19 @@ std::string GameToolkit::title()
 
 void GameToolkit::onLoad()
 {
+    CVarWrapper gravityCVar = this->plugin->cvarManager->registerCvar("fpt_g_gravity", "-650.0", "Current gravity of the game", true);
+    gravityCVar.addOnValueChanged([this](const std::string &oldValue, CVarWrapper cvar) {
+        if (cvar.IsNull()) return;
 
+        this->setGameGravity(cvar.getFloatValue());
+    });
+
+    this->plugin->cvarManager->registerCvar("fpt_g_speed", "1.0", "Current speed of the game", true, true, 0.05f, true, 5.0f, false)
+            .addOnValueChanged([this](const std::string &oldValue, CVarWrapper cvar) {
+                if (cvar.IsNull()) return;
+
+                this->setGameSpeed(cvar.getFloatValue());
+            });
 }
 
 void GameToolkit::onUnload()
@@ -35,21 +49,26 @@ void GameToolkit::render()
     ImGui::Spacing();
 }
 
-void GameToolkit::setGameGravity(float gameGravity)
+void GameToolkit::setGameGravity(float gravity)
 {
-    if (gameGravity == 0) gameGravity = -0.00001f; // setting it directly to 0.0f has no effect
-    if (gameGravity < -5000) gameGravity = -5000.0f;
-    if (gameGravity > 5000) gameGravity = 5000.0f;
+    CVarWrapper svSoccarGravityCVar = this->plugin->cvarManager->getCvar("sv_soccar_gravity");
+    CVarWrapper gravityCVar = this->plugin->cvarManager->getCvar("fpt_g_gravity");
+    if (svSoccarGravityCVar.IsNull() || gravityCVar.IsNull()) return;
 
-    this->plugin->cvarManager->getCvar("sv_soccar_gravity").setValue(gameGravity);
+    gravity = std::fmax(-5000.0f, std::fmin(5000.0f, gravity));
+    gravity = gravity == 0 ? -0.00001f : gravity;
+    this->gameGravity = gravity;
+
+    //svSoccarGravityCVar.setValue(this->gameGravity);
+    gravityCVar.setValue(this->gameGravity);
 }
 
-void GameToolkit::setGameSpeed(float gameSpeed)
+void GameToolkit::setGameSpeed(float speed)
 {
-    if (gameSpeed < 0.05) gameSpeed = 0.05f;
-    if (gameSpeed > 5) gameSpeed = 5.0f;
+    speed = std::fmax(0.05f, std::fmin(5.0f, speed));
+    //this->gameSpeed = speed;
 
-    this->plugin->cvarManager->getCvar("sv_soccar_gamespeed").setValue(gameSpeed);
+    // this->plugin->cvarManager->getCvar("sv_soccar_gamespeed").setValue(gameSpeed);
 }
 
 void GameToolkit::renderGameGravityView()

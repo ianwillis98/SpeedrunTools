@@ -1,3 +1,4 @@
+#include <cmath>
 #include "SaveStateToolkit.h"
 #include "../../services/MultiEventHooker.h"
 
@@ -132,6 +133,8 @@ void SaveStateToolkit::setRewindLength(float length)
 {
     float clamped = std::fmax(1.0, std::fmin(15.0f, length));
     this->rewindLength = clamped;
+    this->rewindCarStates.clear();
+    this->rewindBallStates.clear();
 }
 
 void SaveStateToolkit::rewindCarState()
