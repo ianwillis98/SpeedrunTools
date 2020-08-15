@@ -1,6 +1,7 @@
 #include "FreePlayToolsPlugin.h"
 #include "toolkits/game/GameToolkit.h"
 #include "toolkits/savestate/SaveStateToolkit.h"
+#include "toolkits/test/TestToolkit.h"
 
 BAKKESMOD_PLUGIN(FreePlayToolsPlugin, FreePlayToolsPlugin::PLUGIN_TITLE,
                  FreePlayToolsPlugin::PLUGIN_VERSION, PLUGINTYPE_CUSTOM_TRAINING)
@@ -14,6 +15,7 @@ FreePlayToolsPlugin::FreePlayToolsPlugin() : BaseBakkesModPlugin(FreePlayToolsPl
 {
     this->toolkits.push_back(std::make_unique<GameToolkit>(this));
     this->toolkits.push_back(std::make_unique<SaveStateToolkit>(this));
+    this->toolkits.push_back(std::make_unique<TestToolkit>(this));
 }
 
 void FreePlayToolsPlugin::onLoad()
@@ -34,7 +36,7 @@ void FreePlayToolsPlugin::onUnload()
 
 void FreePlayToolsPlugin::RenderBody()
 {
-    //ImGui::ShowDemoWindow();
+    ImGui::ShowDemoWindow();
 
     ImGui::Text("%s (version %s)", PLUGIN_TITLE, PLUGIN_VERSION);
 

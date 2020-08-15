@@ -3,8 +3,8 @@
 
 GameToolkit::GameToolkit(BakkesMod::Plugin::BakkesModPlugin *plugin) : PluginToolkit(plugin)
 {
-    this->gameGravity = -650.0f;
-    this->gameSpeed = std::make_shared<float>(1.0f);
+    this->svSoccarGameGravity = std::make_shared<float>();
+    this->svSoccarGameSpeed = std::make_shared<float>();
 }
 
 std::string GameToolkit::title()
@@ -14,19 +14,8 @@ std::string GameToolkit::title()
 
 void GameToolkit::onLoad()
 {
-    CVarWrapper gravityCVar = this->plugin->cvarManager->registerCvar("fpt_g_gravity", "-650.0", "Current gravity of the game", true);
-    gravityCVar.addOnValueChanged([this](const std::string &oldValue, CVarWrapper cvar) {
-        if (cvar.IsNull()) return;
-
-        this->setGameGravity(cvar.getFloatValue());
-    });
-
-    this->plugin->cvarManager->registerCvar("fpt_g_speed", "1.0", "Current speed of the game", true, true, 0.05f, true, 5.0f, false)
-            .addOnValueChanged([this](const std::string &oldValue, CVarWrapper cvar) {
-                if (cvar.IsNull()) return;
-
-                this->setGameSpeed(cvar.getFloatValue());
-            });
+    this->plugin->cvarManager->getCvar("sv_soccar_gravity").bindTo(this->svSoccarGameGravity);
+    this->plugin->cvarManager->getCvar("sv_soccar_gamespeed").bindTo(this->svSoccarGameSpeed);
 }
 
 void GameToolkit::onUnload()
@@ -51,34 +40,34 @@ void GameToolkit::render()
 
 void GameToolkit::setGameGravity(float gravity)
 {
-    CVarWrapper svSoccarGravityCVar = this->plugin->cvarManager->getCvar("sv_soccar_gravity");
-    CVarWrapper gravityCVar = this->plugin->cvarManager->getCvar("fpt_g_gravity");
-    if (svSoccarGravityCVar.IsNull() || gravityCVar.IsNull()) return;
+    CVarWrapper svSoccarGameGravityCVar = this->plugin->cvarManager->getCvar("sv_soccar_gravity");
+    if (svSoccarGameGravityCVar.IsNull()) return;
 
     gravity = std::fmax(-5000.0f, std::fmin(5000.0f, gravity));
-    gravity = gravity == 0 ? -0.00001f : gravity;
-    this->gameGravity = gravity;
+    gravity = gravity == 0 ? -0.00001f : gravity; // setting it directly to zero does nothing
 
-    //svSoccarGravityCVar.setValue(this->gameGravity);
-    gravityCVar.setValue(this->gameGravity);
+    svSoccarGameGravityCVar.setValue(gravity);
 }
 
 void GameToolkit::setGameSpeed(float speed)
 {
-    speed = std::fmax(0.05f, std::fmin(5.0f, speed));
-    //this->gameSpeed = speed;
+    CVarWrapper svSoccarGameSpeedCVar = this->plugin->cvarManager->getCvar("sv_soccar_gamespeed");
+    if (svSoccarGameSpeedCVar.IsNull()) return;
 
-    // this->plugin->cvarManager->getCvar("sv_soccar_gamespeed").setValue(gameSpeed);
+    speed = std::fmax(0.05f, std::fmin(5.0f, speed));
+
+    svSoccarGameSpeedCVar.setValue(speed);
 }
 
 void GameToolkit::renderGameGravityView()
 {
     ImGui::Text("Customize Game Gravity");
+    ImGui::SameLine();
+    ImGui::Text("(Current Game Gravity: %.3f)", *this->svSoccarGameGravity);
 
     bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
 
-    ImVec4 color = isInFreeplay ? ImGui::GetStyle().Colors[ImGuiCol_TextDisabled]
-                                : ImGui::GetStyle().Colors[ImGuiCol_Text];
+    ImVec4 color = isInFreeplay ? ImGui::GetStyle().Colors[ImGuiCol_TextDisabled] : ImGui::GetStyle().Colors[ImGuiCol_Text];
     ImGui::TextColored(color, "(only works in freeplay and workshop maps)");
 
     if (!isInFreeplay)
@@ -87,15 +76,11 @@ void GameToolkit::renderGameGravityView()
         ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
     }
 
-    static float gravitySlider = -650.0f;
-    ImGui::SliderFloat("Game Gravity", &gravitySlider, -5000.0f, 5000.0f, "%.3f");
-    if (ImGui::Button(("Apply Game Gravity (" + std::to_string(gravitySlider) + ")").c_str()))
+    if (ImGui::SliderFloat("Game Gravity", this->svSoccarGameGravity.get(), -5000.0f, 5000.0f, "%.3f"))
     {
-        this->setGameGravity(gravitySlider);
+        this->setGameGravity(*this->svSoccarGameGravity);
     }
-    ImGui::SameLine();
-    float currentGravity = this->plugin->cvarManager->getCvar("sv_soccar_gravity").getFloatValue();
-    ImGui::Text("(Current Game Gravity: %.3f)", currentGravity);
+
     if (ImGui::Button("Default Game Gravity (-650.0)"))
     {
         this->setGameGravity(-650.0f);
@@ -121,11 +106,12 @@ void GameToolkit::renderGameGravityView()
 void GameToolkit::renderGameSpeedView()
 {
     ImGui::Text("Customize Game Speed");
+    ImGui::SameLine();
+    ImGui::Text("(Current Game Speed: %.3f)", *this->svSoccarGameSpeed);
 
     bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
 
-    ImVec4 color = isInFreeplay ? ImGui::GetStyle().Colors[ImGuiCol_TextDisabled]
-                                : ImGui::GetStyle().Colors[ImGuiCol_Text];
+    ImVec4 color = isInFreeplay ? ImGui::GetStyle().Colors[ImGuiCol_TextDisabled] : ImGui::GetStyle().Colors[ImGuiCol_Text];
     ImGui::TextColored(color, "(only works in freeplay and workshop maps)");
 
     if (!isInFreeplay)
@@ -134,15 +120,11 @@ void GameToolkit::renderGameSpeedView()
         ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
     }
 
-    static float speedSlider = 1.0f;
-    ImGui::SliderFloat("Game Speed", &speedSlider, 0.05f, 5.0f, "%.3f");
-    if (ImGui::Button(("Apply Game Speed (" + std::to_string(speedSlider) + ")").c_str()))
+    if (ImGui::SliderFloat("Game Speed", this->svSoccarGameSpeed.get(), 0.05f, 5.0f, "%.3f"))
     {
-        this->setGameSpeed(speedSlider);
+        this->setGameSpeed(*this->svSoccarGameSpeed);
     }
-    ImGui::SameLine();
-    float currentSpeed = this->plugin->cvarManager->getCvar("sv_soccar_gamespeed").getFloatValue();
-    ImGui::Text("(Current Game Speed: %.3f)", currentSpeed);
+
     if (ImGui::Button("Default Game Speed (1.0)"))
     {
         this->setGameSpeed(1.0f);

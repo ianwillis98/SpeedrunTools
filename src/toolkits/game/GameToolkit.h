@@ -11,8 +11,8 @@ public:
     void render() override;
 
 private:
-    float gameGravity;
-    std::shared_ptr<float> gameSpeed;
+    std::shared_ptr<float> svSoccarGameGravity;
+    std::shared_ptr<float> svSoccarGameSpeed;
 
     void setGameGravity(float gravity);
     void setGameSpeed(float speed);

@@ -19,7 +19,7 @@ add_library(
         src/models/CarState.cpp src/models/CarState.h
         src/models/BallState.cpp src/models/BallState.h
         src/services/MultiEventHooker.cpp src/services/MultiEventHooker.h
-)
+        src/toolkits/test/TestToolkit.cpp src/toolkits/test/TestToolkit.h)
 
 target_include_directories(
         FreePlayTools PRIVATE
