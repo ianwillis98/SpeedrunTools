@@ -11,9 +11,4 @@ public:
     void onLoad() override;
     void onUnload() override;
     void render() override;
-
-private:
-    std::shared_ptr<float> gravity;
-
-    void setGameGravity(float g);
 };

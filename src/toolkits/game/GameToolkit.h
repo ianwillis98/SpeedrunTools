@@ -12,9 +12,15 @@ public:
 
 private:
     std::shared_ptr<float> svSoccarGameGravity;
-    std::shared_ptr<float> svSoccarGameSpeed;
+    std::shared_ptr<float> gameGravity;
 
+    std::shared_ptr<float> svSoccarGameSpeed;
+    std::shared_ptr<float> gameSpeed;
+
+    void setSvSoccarGameGravity(float gravity);
     void setGameGravity(float gravity);
+
+    void setSvSoccarGameSpeed(float speed);
     void setGameSpeed(float speed);
 
     void renderGameGravityView();

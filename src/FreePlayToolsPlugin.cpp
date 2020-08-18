@@ -7,7 +7,7 @@ BAKKESMOD_PLUGIN(FreePlayToolsPlugin, FreePlayToolsPlugin::PLUGIN_TITLE,
                  FreePlayToolsPlugin::PLUGIN_VERSION, PLUGINTYPE_CUSTOM_TRAINING)
 
 const char *FreePlayToolsPlugin::PLUGIN_VERSION = "1.0";
-const char *FreePlayToolsPlugin::PLUGIN_TITLE = "Freeplay Tools";
+const char *FreePlayToolsPlugin::PLUGIN_TITLE = "Free Play Tools";
 const char *FreePlayToolsPlugin::PLUGIN_MENU_NAME = "freeplaytools";
 
 FreePlayToolsPlugin::FreePlayToolsPlugin() : BaseBakkesModPlugin(FreePlayToolsPlugin::PLUGIN_TITLE,
@@ -36,7 +36,12 @@ void FreePlayToolsPlugin::onUnload()
 
 void FreePlayToolsPlugin::RenderBody()
 {
-    ImGui::ShowDemoWindow();
+    static bool showDemoWindow = false;
+    ImGui::Checkbox("Show Demo Window", &showDemoWindow);
+    if (showDemoWindow)
+    {
+        ImGui::ShowDemoWindow();
+    }
 
     ImGui::Text("%s (version %s)", PLUGIN_TITLE, PLUGIN_VERSION);
 
