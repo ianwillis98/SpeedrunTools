@@ -97,7 +97,6 @@ void SaveStateToolkit::rewindState()
     ServerWrapper server = this->plugin->gameWrapper->GetGameEventAsServer();
     if (server.IsNull()) return;
 
-    this->plugin->cvarManager->log("a " + std::to_string(this->rewindBuffer.buffer.size()));
     SaveState ss = this->rewindBuffer.getFrontAndRemoveOthers();
 
     ss.applyTo(server);
