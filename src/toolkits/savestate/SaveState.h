@@ -8,9 +8,9 @@
 class SaveState
 {
 public:
+    SaveState();
     explicit SaveState(ServerWrapper &serverWrapper);
     SaveState(CarState carState, BallState ballState);
-    SaveState();
 
     void applyTo(ServerWrapper &serverWrapper);
 

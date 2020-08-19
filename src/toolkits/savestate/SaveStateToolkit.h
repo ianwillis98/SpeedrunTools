@@ -3,6 +3,8 @@
 #include "../PluginToolkit.h"
 #include "../../models/CarState.h"
 #include "../../models/BallState.h"
+#include "SaveState.h"
+#include "SaveStateBuffer.h"
 
 // save car state
 // save ball state
@@ -20,23 +22,13 @@ public:
     void render() override;
 
 private:
-    CarState carSaveState;
-    bool isCarStateSaved;
+    SaveState saveState;
+    bool isStateSaved;
+    void saveCurrentState();
+    void loadSaveState();
 
-    BallState ballSaveState;
-    bool isBallStateSaved;
-
-    float rewindLength;
-    std::vector<CarState> rewindCarStates;
-    std::vector<BallState> rewindBallStates;
-
-    void saveCarState();
-    void loadCarState();
-
-    void saveBallState();
-    void loadBallState();
-
+    SaveStateBuffer rewindBuffer;
+    std::shared_ptr<float> rewindLength;
     void setRewindLength(float length);
-    void rewindCarState();
-    void rewindBallState();
+    void rewindState();
 };

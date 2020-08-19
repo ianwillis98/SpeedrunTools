@@ -4,11 +4,7 @@
 
 #include "SaveState.h"
 
-SaveState::SaveState(CarState carState, BallState ballState)
-{
-    this->carState = carState;
-    this->ballState = ballState;
-}
+SaveState::SaveState() = default;
 
 SaveState::SaveState(ServerWrapper &serverWrapper)
 {
@@ -27,7 +23,11 @@ SaveState::SaveState(ServerWrapper &serverWrapper)
     }
 }
 
-SaveState::SaveState() = default;
+SaveState::SaveState(CarState carState, BallState ballState)
+{
+    this->carState = carState;
+    this->ballState = ballState;
+}
 
 void SaveState::applyTo(ServerWrapper &serverWrapper)
 {
