@@ -17,7 +17,7 @@ public:
     int size() const;
     bool empty() const;
 
-public:
+private:
     std::deque<SaveState> buffer;
     int capacity;
 };
