@@ -45,3 +45,8 @@ bool SaveStateBuffer::empty() const
 {
     return this->buffer.empty();
 }
+
+void SaveStateBuffer::clear()
+{
+    this->buffer.clear();
+}

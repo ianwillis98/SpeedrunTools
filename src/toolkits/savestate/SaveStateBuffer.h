@@ -16,6 +16,7 @@ public:
 
     int size() const;
     bool empty() const;
+    void clear();
 
 private:
     std::deque<SaveState> buffer;

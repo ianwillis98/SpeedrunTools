@@ -29,6 +29,7 @@ private:
 
     SaveStateBuffer rewindBuffer;
     std::shared_ptr<float> rewindLength;
+    std::shared_ptr<float> rewindSaveInterval;
     void setRewindLength(float length);
     void rewindState();
 };

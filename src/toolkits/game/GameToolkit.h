@@ -13,13 +13,22 @@ public:
 private:
     std::shared_ptr<float> svSoccarGameGravity;
     std::shared_ptr<float> gameGravity;
-    void setSvSoccarGameGravity(float gravity);
-    void setGameGravity(float gravity);
-    void renderGameGravityView();
 
     std::shared_ptr<float> svSoccarGameSpeed;
     std::shared_ptr<float> gameSpeed;
-    void setSvSoccarGameSpeed(float speed);
-    void setGameSpeed(float speed);
+
+    void setSvSoccarGameGravityCVar(float gravity);
+    void onSvSoccarGameGravityCVarChanged(const std::string &oldValue, const CVarWrapper &cvar);
+
+    void setGameGravityCVar(float gravity);
+    void onGameGravityCVarChanged(const std::string &oldValue, const CVarWrapper &cvar);
+
+    void setSvSoccarGameSpeedCVar(float speed);
+    void onSvSoccarGameSpeedCVarChanged(const std::string &oldValue, const CVarWrapper &cvar);
+
+    void setGameSpeedCVar(float speed);
+    void onGameSpeedCVarChanged(const std::string &oldValue, const CVarWrapper &cvar);
+
+    void renderGameGravityView();
     void renderGameSpeedView();
 };
