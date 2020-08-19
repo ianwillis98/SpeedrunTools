@@ -1,28 +1,23 @@
 #pragma once
 
-#include <vector>
+#include <deque>
 #include "SaveState.h"
-
 
 class SaveStateBuffer
 {
 public:
     explicit SaveStateBuffer(int capacity);
 
-    void add(SaveState saveState);
+    void push(SaveState saveState);
     SaveState getFrontAndRemoveOthers();
-    bool isEmpty() const;
 
-private:
-    std::vector<SaveState> buffer;
+    int getCapacity() const;
+    void setCapacity(int c);
+
+    int size() const;
+    bool empty() const;
+
+public:
+    std::deque<SaveState> buffer;
     int capacity;
-    int head;
-
-private:
-    class Node
-    {
-    public:
-        SaveState ss;
-        Node *next;
-    };
 };

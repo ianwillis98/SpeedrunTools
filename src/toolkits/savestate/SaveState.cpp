@@ -1,7 +1,3 @@
-//
-// Created by Ian on 8/15/2020.
-//
-
 #include "SaveState.h"
 
 SaveState::SaveState() = default;
@@ -21,12 +17,6 @@ SaveState::SaveState(ServerWrapper &serverWrapper)
     {
         ballState = BallState(ballWrapper);
     }
-}
-
-SaveState::SaveState(CarState carState, BallState ballState)
-{
-    this->carState = carState;
-    this->ballState = ballState;
 }
 
 void SaveState::applyTo(ServerWrapper &serverWrapper)

@@ -2,50 +2,46 @@
 
 SaveStateBuffer::SaveStateBuffer(int capacity)
 {
-    this->buffer = std::vector<SaveState>();
-    this->capacity = capacity;
-    this->head = -1;
+    this->buffer = std::deque<SaveState>();
+    this->capacity = (std::max)(capacity, 1);
 }
 
-void SaveStateBuffer::add(SaveState saveState)
+void SaveStateBuffer::push(SaveState saveState)
 {
-    this->head++;
-    if (this->head == this->capacity)
-        this->head = 0;
-
     if (this->buffer.size() == this->capacity)
-    {
-        this->buffer.at(this->head) = saveState;
-    }
-    else
-    {
-        this->buffer.push_back(saveState);
-    }
+        this->buffer.pop_front();
+
+    this->buffer.push_back(saveState);
 }
 
 SaveState SaveStateBuffer::getFrontAndRemoveOthers()
 {
-    if (this->head == -1) return {};
+    if (this->buffer.empty()) return {};
 
-    SaveState front = this->buffer.at(0);
-    if (this->buffer.size() == this->capacity)
-    {
-        int frontIndex = head + 1;
-        if (frontIndex == this->capacity)
-        {
-            frontIndex = 0;
-        }
-        front = this->buffer.at(frontIndex);
-    }
+    while (this->buffer.size() != 1)
+        this->buffer.pop_back();
 
-    this->buffer.clear();
-    this->buffer.push_back(front);
-    this->head = 0;
-
-    return front;
+    return this->buffer.front();
 }
 
-bool SaveStateBuffer::isEmpty() const
+int SaveStateBuffer::getCapacity() const
 {
-    return head == -1;
+    return this->capacity;
+}
+
+void SaveStateBuffer::setCapacity(int c)
+{
+    this->capacity = (std::max)(capacity, 1);
+    while (this->buffer.size() > this->capacity)
+        this->buffer.pop_front();
+}
+
+int SaveStateBuffer::size() const
+{
+    return this->buffer.size();
+}
+
+bool SaveStateBuffer::empty() const
+{
+    return this->buffer.empty();
 }

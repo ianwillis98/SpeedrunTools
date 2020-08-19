@@ -1,8 +1,8 @@
 #pragma once
 
+#include <bakkesmod/wrappers/GameEvent/ServerWrapper.h>
 #include "../../models/CarState.h"
 #include "../../models/BallState.h"
-#include <bakkesmod/wrappers/GameEvent/ServerWrapper.h>
 
 
 class SaveState
@@ -10,7 +10,6 @@ class SaveState
 public:
     SaveState();
     explicit SaveState(ServerWrapper &serverWrapper);
-    SaveState(CarState carState, BallState ballState);
 
     void applyTo(ServerWrapper &serverWrapper);
 

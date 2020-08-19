@@ -22,7 +22,7 @@ void SaveStateToolkit::onLoad()
             this->plugin->cvarManager->registerCvar("fpt_ss_rewindlength", "6.0", "Save state rewind length", true, true, 1.0f, true, 15.0f, true);
     rewindLengthCVar.bindTo(this->rewindLength);
     rewindLengthCVar.addOnValueChanged([this](const std::string &oldValue, CVarWrapper cvar) {
-        this->rewindBuffer = SaveStateBuffer(cvar.getIntValue());
+        this->rewindBuffer = SaveStateBuffer(cvar.getIntValue() * 120);
     });
 
     MultiEventHooker::getInstance().hookEvent(plugin, "Function TAGame.Car_TA.SetVehicleInput", [this](const std::string &evenName) {
@@ -33,7 +33,7 @@ void SaveStateToolkit::onLoad()
 
         SaveState ss(server);
 
-        this->rewindBuffer.add(ss);
+        this->rewindBuffer.push(ss);
     });
 
     this->plugin->cvarManager->registerNotifier("fpt_ss_save", [this](const std::vector<std::string> &commands) {
@@ -92,12 +92,13 @@ void SaveStateToolkit::setRewindLength(float length)
 void SaveStateToolkit::rewindState()
 {
     if (!this->plugin->gameWrapper->IsInFreeplay()) return;
-    if (this->rewindBuffer.isEmpty()) return;
+    if (this->rewindBuffer.empty()) return;
 
     ServerWrapper server = this->plugin->gameWrapper->GetGameEventAsServer();
     if (server.IsNull()) return;
 
+    this->plugin->cvarManager->log("a " + std::to_string(this->rewindBuffer.buffer.size()));
     SaveState ss = this->rewindBuffer.getFrontAndRemoveOthers();
-    this->plugin->cvarManager->log("its here " + std::to_string(server.GetGameCar().IsNull()));
+
     ss.applyTo(server);
 }
