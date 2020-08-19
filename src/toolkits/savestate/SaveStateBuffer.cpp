@@ -31,7 +31,7 @@ int SaveStateBuffer::getCapacity() const
 
 void SaveStateBuffer::setCapacity(int c)
 {
-    this->capacity = (std::max)(capacity, 1);
+    this->capacity = (std::max)(c, 1);
     while (this->buffer.size() > this->capacity)
         this->buffer.pop_front();
 }
