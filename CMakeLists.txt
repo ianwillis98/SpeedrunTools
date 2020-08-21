@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(FreePlayTools)
+project(SpeedrunTools)
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -10,8 +10,8 @@ add_subdirectory(external/ocornut/imgui)
 add_subdirectory(external/asio)
 
 add_library(
-        FreePlayTools SHARED
-        src/FreePlayToolsPlugin.cpp src/FreePlayToolsPlugin.h
+        SpeedrunTools SHARED
+        src/SpeedrunTools.cpp src/SpeedrunTools.h
         src/plugin/BaseBakkesModPlugin.cpp src/plugin/BaseBakkesModPlugin.h
         src/toolkits/PluginToolkit.cpp src/toolkits/PluginToolkit.h
         src/toolkits/game/GameToolkit.cpp src/toolkits/game/GameToolkit.h
@@ -19,25 +19,28 @@ add_library(
         src/models/CarState.cpp src/models/CarState.h
         src/models/BallState.cpp src/models/BallState.h
         src/services/MultiEventHooker.cpp src/services/MultiEventHooker.h
-        src/toolkits/test/TestToolkit.cpp src/toolkits/test/TestToolkit.h src/toolkits/savestate/SaveState.cpp src/toolkits/savestate/SaveState.h src/toolkits/savestate/SaveStateBuffer.cpp src/toolkits/savestate/SaveStateBuffer.h)
+        src/toolkits/test/TestToolkit.cpp src/toolkits/test/TestToolkit.h
+        src/toolkits/savestate/SaveState.cpp src/toolkits/savestate/SaveState.h
+        src/toolkits/savestate/SaveStateBuffer.cpp src/toolkits/savestate/SaveStateBuffer.h
+)
 
 target_include_directories(
-        FreePlayTools PRIVATE
+        SpeedrunTools PRIVATE
         "${BAKKESMOD_PATH}/bakkesmodsdk/include"
         "external/ocornut/imgui"
         "external/asio"
 )
 
 target_link_libraries(
-        FreePlayTools PRIVATE
+        SpeedrunTools PRIVATE
         "${BAKKESMOD_PATH}/bakkesmodsdk/lib/pluginsdk.lib"
         ImGui
         asio
 )
 
 add_custom_command(
-        TARGET FreePlayTools POST_BUILD
-        COMMAND python tools/bakkes_patchplugin.py ${CMAKE_CURRENT_SOURCE_DIR}/cmake-build-release/FreePlayTools.dll
+        TARGET SpeedrunTools POST_BUILD
+        COMMAND python tools/bakkes_patchplugin.py $<TARGET_FILE:SpeedrunTools>
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         COMMENT "Running bakkes patch plugin..."
 )

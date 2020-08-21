@@ -4,14 +4,14 @@
 #include "plugin/BaseBakkesModPlugin.h"
 #include "toolkits/PluginToolkit.h"
 
-class FreePlayToolsPlugin : public BaseBakkesModPlugin
+class SpeedrunTools : public BaseBakkesModPlugin
 {
 public:
     static const char *PLUGIN_VERSION;
     static const char *PLUGIN_TITLE;
     static const char *PLUGIN_MENU_NAME;
 
-    FreePlayToolsPlugin();
+    SpeedrunTools();
 
     void onLoad() override;
     void onUnload() override;

@@ -26,7 +26,7 @@ void GameToolkit::onLoad()
         });
     }
 
-    CVarWrapper gameGravityCVar = this->plugin->cvarManager->registerCvar("fpt_g_gravity", "-650.0", "Current game gravity.");
+    CVarWrapper gameGravityCVar = this->plugin->cvarManager->registerCvar("st_g_gravity", "-650.0", "Current game gravity.");
     gameGravityCVar.bindTo(this->gameGravity);
     gameGravityCVar.addOnValueChanged([this](const std::string &oldValue, const CVarWrapper &cvar) {
         this->onGameGravityCVarChanged(oldValue, cvar);
@@ -41,7 +41,7 @@ void GameToolkit::onLoad()
         });
     }
 
-    CVarWrapper gameSpeedCVar = this->plugin->cvarManager->registerCvar("fpt_g_speed", "1.0", "Current game speed.");
+    CVarWrapper gameSpeedCVar = this->plugin->cvarManager->registerCvar("st_g_speed", "1.0", "Current game speed.");
     gameSpeedCVar.bindTo(this->gameSpeed);
     gameSpeedCVar.addOnValueChanged([this](const std::string &oldValue, const CVarWrapper &cvar) {
         this->onGameSpeedCVarChanged(oldValue, cvar);
@@ -86,7 +86,7 @@ void GameToolkit::onSvSoccarGameGravityCVarChanged(const std::string &oldValue, 
 
 void GameToolkit::setGameGravityCVar(float gravity)
 {
-    CVarWrapper gameGravityCVar = this->plugin->cvarManager->getCvar("fpt_g_gravity");
+    CVarWrapper gameGravityCVar = this->plugin->cvarManager->getCvar("st_g_gravity");
     if (gameGravityCVar.IsNull()) return;
 
     gameGravityCVar.setValue(gravity);
@@ -118,7 +118,7 @@ void GameToolkit::onSvSoccarGameSpeedCVarChanged(const std::string &oldValue, co
 
 void GameToolkit::setGameSpeedCVar(float speed)
 {
-    CVarWrapper gameSpeedCVar = this->plugin->cvarManager->getCvar("fpt_g_speed");
+    CVarWrapper gameSpeedCVar = this->plugin->cvarManager->getCvar("st_g_speed");
     if (gameSpeedCVar.IsNull()) return;
 
     gameSpeedCVar.setValue(speed);

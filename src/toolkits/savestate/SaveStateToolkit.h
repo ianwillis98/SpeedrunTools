@@ -24,12 +24,24 @@ public:
 private:
     SaveState saveState;
     bool isStateSaved;
-    void saveCurrentState();
-    void loadSaveState();
 
     SaveStateBuffer rewindBuffer;
     std::shared_ptr<float> rewindLength;
     std::shared_ptr<float> rewindSaveInterval;
-    void setRewindLength(float length);
+
+    void onPhysicsTick();
+
+    void saveCurrentState();
+    void loadSaveState();
+
     void rewindState();
+
+    void setRewindLengthCVar(float length);
+    void onRewindLengthCvarChanged(const std::string &oldValue, CVarWrapper cvar);
+
+    void setRewindSaveIntervalCVar(float interval);
+    void onRewindSaveIntervalChanged(const std::string &oldValue, const CVarWrapper &cvar);
+
+    void renderSaveStateView();
+    void renderRewindView();
 };

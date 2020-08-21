@@ -1,9 +1,6 @@
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-
 #include "SaveStateToolkit.h"
 #include "../../services/MultiEventHooker.h"
+#include <utils/customrotator.h>
 
 SaveStateToolkit::SaveStateToolkit(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : PluginToolkit(plugin), isStateSaved(false), rewindBuffer(6 * 120)
@@ -19,36 +16,29 @@ std::string SaveStateToolkit::title()
 
 void SaveStateToolkit::onLoad()
 {
-    CVarWrapper rewindLengthCVar = this->plugin->cvarManager->registerCvar("fpt_ss_rewindlength", "6.0", "Rewind length");
+    CVarWrapper rewindLengthCVar = this->plugin->cvarManager->registerCvar("st_ss_rewindlength", "6.0", "Rewind length");
     rewindLengthCVar.bindTo(this->rewindLength);
     rewindLengthCVar.addOnValueChanged([this](const std::string &oldValue, CVarWrapper cvar) {
-        this->rewindBuffer = SaveStateBuffer(cvar.getIntValue() * 120);
+        this->onRewindLengthCvarChanged(oldValue, cvar);
     });
 
-    CVarWrapper rewindSaveIntervalCVar = this->plugin->cvarManager->registerCvar("fpt_ss_rewindsaveinterval", "0.1", "Rewind save interval");
+    CVarWrapper rewindSaveIntervalCVar = this->plugin->cvarManager->registerCvar("st_ss_rewindsaveinterval", "0.1", "Rewind save interval");
     rewindSaveIntervalCVar.bindTo(this->rewindSaveInterval);
     rewindSaveIntervalCVar.addOnValueChanged([this](const std::string &oldValue, CVarWrapper cvar) {
-        this->rewindBuffer.clear();
+        this->onRewindSaveIntervalChanged(oldValue, cvar);
     });
 
     MultiEventHooker::getInstance().hookEvent(plugin, "Function TAGame.Car_TA.SetVehicleInput", [this](const std::string &evenName) {
-        if (!this->plugin->gameWrapper->IsInFreeplay()) return;
-
-        ServerWrapper server = this->plugin->gameWrapper->GetGameEventAsServer();
-        if (server.IsNull()) return;
-
-        SaveState ss(server);
-
-        this->rewindBuffer.push(ss);
+        this->onPhysicsTick();
     });
 
-    this->plugin->cvarManager->registerNotifier("fpt_ss_save", [this](const std::vector<std::string> &commands) {
+    this->plugin->cvarManager->registerNotifier("st_ss_save", [this](const std::vector<std::string> &commands) {
         this->saveCurrentState();
     }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
-    this->plugin->cvarManager->registerNotifier("fpt_ss_load", [this](const std::vector<std::string> &commands) {
+    this->plugin->cvarManager->registerNotifier("st_ss_load", [this](const std::vector<std::string> &commands) {
         this->loadSaveState();
     }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
-    this->plugin->cvarManager->registerNotifier("fpt_ss_rewind", [this](const std::vector<std::string> &commands) {
+    this->plugin->cvarManager->registerNotifier("st_ss_rewind", [this](const std::vector<std::string> &commands) {
         this->rewindState();
     }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
 }
@@ -60,7 +50,29 @@ void SaveStateToolkit::onUnload()
 
 void SaveStateToolkit::render()
 {
-    ImGui::Text("hello");
+    ImGui::Spacing();
+
+    this->renderSaveStateView();
+
+    ImGui::Spacing();
+    ImGui::Separator();
+    ImGui::Spacing();
+
+    this->renderRewindView();
+
+    ImGui::Spacing();
+}
+
+void SaveStateToolkit::onPhysicsTick()
+{
+    CustomRotator r;
+    if (!this->plugin->gameWrapper->IsInFreeplay()) return;
+
+    ServerWrapper server = this->plugin->gameWrapper->GetGameEventAsServer();
+    if (server.IsNull()) return;
+
+    SaveState ss(server);
+    this->rewindBuffer.push(ss);
 }
 
 void SaveStateToolkit::saveCurrentState()
@@ -85,16 +97,6 @@ void SaveStateToolkit::loadSaveState()
     this->saveState.applyTo(server);
 }
 
-void SaveStateToolkit::setRewindLength(float length)
-{
-    CVarWrapper rewindLengthCVar = this->plugin->cvarManager->getCvar("fpt_ss_rewindlength");
-    if (rewindLengthCVar.IsNull()) return;
-
-    length = (std::max)(length, 0.0f);
-
-    rewindLengthCVar.setValue(length);
-}
-
 void SaveStateToolkit::rewindState()
 {
     if (!this->plugin->gameWrapper->IsInFreeplay()) return;
@@ -106,4 +108,40 @@ void SaveStateToolkit::rewindState()
     SaveState ss = this->rewindBuffer.getFrontAndRemoveOthers();
 
     ss.applyTo(server);
+}
+
+void SaveStateToolkit::setRewindLengthCVar(float length)
+{
+    CVarWrapper rewindLengthCVar = this->plugin->cvarManager->getCvar("st_ss_rewindlength");
+    if (rewindLengthCVar.IsNull()) return;
+
+    rewindLengthCVar.setValue(length);
+}
+
+void SaveStateToolkit::onRewindLengthCvarChanged(const std::string &oldValue, CVarWrapper cvar)
+{
+    this->rewindBuffer = SaveStateBuffer(cvar.getIntValue() * 120);
+}
+
+void SaveStateToolkit::setRewindSaveIntervalCVar(float interval)
+{
+    CVarWrapper rewindSaveIntervalCVar = this->plugin->cvarManager->getCvar("st_ss_rewindsaveinterval");
+    if (rewindSaveIntervalCVar.IsNull()) return;
+
+    rewindSaveIntervalCVar.setValue(interval);
+}
+
+void SaveStateToolkit::onRewindSaveIntervalChanged(const std::string &oldValue, const CVarWrapper &cvar)
+{
+    this->rewindBuffer.clear();
+}
+
+void SaveStateToolkit::renderSaveStateView()
+{
+    ImGui::Text("save state");
+}
+
+void SaveStateToolkit::renderRewindView()
+{
+    ImGui::Text("rewind");
 }

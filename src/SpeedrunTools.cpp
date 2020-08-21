@@ -1,24 +1,24 @@
-#include "FreePlayToolsPlugin.h"
+#include "SpeedrunTools.h"
 #include "toolkits/game/GameToolkit.h"
 #include "toolkits/savestate/SaveStateToolkit.h"
 #include "toolkits/test/TestToolkit.h"
 
-BAKKESMOD_PLUGIN(FreePlayToolsPlugin, FreePlayToolsPlugin::PLUGIN_TITLE,
-                 FreePlayToolsPlugin::PLUGIN_VERSION, PLUGINTYPE_CUSTOM_TRAINING)
+BAKKESMOD_PLUGIN(SpeedrunTools, SpeedrunTools::PLUGIN_TITLE,
+                 SpeedrunTools::PLUGIN_VERSION, PLUGINTYPE_CUSTOM_TRAINING)
 
-const char *FreePlayToolsPlugin::PLUGIN_VERSION = "1.0";
-const char *FreePlayToolsPlugin::PLUGIN_TITLE = "Free Play Tools";
-const char *FreePlayToolsPlugin::PLUGIN_MENU_NAME = "freeplaytools";
+const char *SpeedrunTools::PLUGIN_VERSION = "1.0";
+const char *SpeedrunTools::PLUGIN_TITLE = "Speedrun Tools";
+const char *SpeedrunTools::PLUGIN_MENU_NAME = "speedruntools";
 
-FreePlayToolsPlugin::FreePlayToolsPlugin() : BaseBakkesModPlugin(FreePlayToolsPlugin::PLUGIN_TITLE,
-                                                                 FreePlayToolsPlugin::PLUGIN_MENU_NAME)
+SpeedrunTools::SpeedrunTools() : BaseBakkesModPlugin(SpeedrunTools::PLUGIN_TITLE,
+                                                     SpeedrunTools::PLUGIN_MENU_NAME)
 {
     this->toolkits.push_back(std::make_unique<GameToolkit>(this));
     this->toolkits.push_back(std::make_unique<SaveStateToolkit>(this));
     this->toolkits.push_back(std::make_unique<TestToolkit>(this));
 }
 
-void FreePlayToolsPlugin::onLoad()
+void SpeedrunTools::onLoad()
 {
     for (auto &toolkit : this->toolkits)
     {
@@ -26,7 +26,7 @@ void FreePlayToolsPlugin::onLoad()
     }
 }
 
-void FreePlayToolsPlugin::onUnload()
+void SpeedrunTools::onUnload()
 {
     for (auto &toolkit : this->toolkits)
     {
@@ -34,7 +34,7 @@ void FreePlayToolsPlugin::onUnload()
     }
 }
 
-void FreePlayToolsPlugin::RenderBody()
+void SpeedrunTools::RenderBody()
 {
     static bool showDemoWindow = false;
     ImGui::Checkbox("Show Demo Window", &showDemoWindow);
