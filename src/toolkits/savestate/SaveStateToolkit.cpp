@@ -2,11 +2,15 @@
 #include "../../services/MultiEventHooker.h"
 #include <utils/customrotator.h>
 
+const bool SaveStateToolkit::DEFAULT_IS_REWIND_ACTIVE = true;
+const float SaveStateToolkit::DEFAULT_REWIND_LENGTH = 6.0f;
+const float SaveStateToolkit::DEFAULT_REWIND_SAVE_INTERVAL = 1.0f;
+
 SaveStateToolkit::SaveStateToolkit(BakkesMod::Plugin::BakkesModPlugin *plugin)
-        : PluginToolkit(plugin), isStateSaved(false), rewindBuffer(6 * 120)
+        : PluginToolkit(plugin), isRewindActive(std::make_shared<bool>()), rewindLength(std::make_shared<float>()),
+          rewindSaveInterval(std::make_shared<float>()), isStateSaved(false), rewindBuffer(rewindLength)
 {
-    this->rewindLength = std::make_shared<float>();
-    this->rewindSaveInterval = std::make_shared<float>();
+
 }
 
 std::string SaveStateToolkit::title()
@@ -16,15 +20,25 @@ std::string SaveStateToolkit::title()
 
 void SaveStateToolkit::onLoad()
 {
-    CVarWrapper rewindLengthCVar = this->plugin->cvarManager->registerCvar("st_ss_rewindlength", "6.0", "Rewind length");
+    CVarWrapper isRewindActiveCVar = this->plugin->cvarManager->registerCvar("st_ss_rewindactive", std::to_string(DEFAULT_IS_REWIND_ACTIVE),
+                                                                             "Is rewind active");
+    isRewindActiveCVar.bindTo(this->isRewindActive);
+    isRewindActiveCVar.addOnValueChanged([this](const std::string &oldValue, const CVarWrapper &cvar) {
+        this->onIsRewindActiveCVarChanged(oldValue, cvar);
+    });
+
+    CVarWrapper rewindLengthCVar = this->plugin->cvarManager->registerCvar("st_ss_rewindlength", std::to_string(DEFAULT_REWIND_LENGTH),
+                                                                           "Rewind length");
     rewindLengthCVar.bindTo(this->rewindLength);
-    rewindLengthCVar.addOnValueChanged([this](const std::string &oldValue, CVarWrapper cvar) {
+    rewindLengthCVar.addOnValueChanged([this](const std::string &oldValue, const CVarWrapper &cvar) {
         this->onRewindLengthCvarChanged(oldValue, cvar);
     });
 
-    CVarWrapper rewindSaveIntervalCVar = this->plugin->cvarManager->registerCvar("st_ss_rewindsaveinterval", "0.1", "Rewind save interval");
+    CVarWrapper rewindSaveIntervalCVar = this->plugin->cvarManager->registerCvar("st_ss_rewindsaveinterval",
+                                                                                 std::to_string(DEFAULT_REWIND_SAVE_INTERVAL),
+                                                                                 "Rewind save interval");
     rewindSaveIntervalCVar.bindTo(this->rewindSaveInterval);
-    rewindSaveIntervalCVar.addOnValueChanged([this](const std::string &oldValue, CVarWrapper cvar) {
+    rewindSaveIntervalCVar.addOnValueChanged([this](const std::string &oldValue, const CVarWrapper &cvar) {
         this->onRewindSaveIntervalChanged(oldValue, cvar);
     });
 
@@ -33,13 +47,13 @@ void SaveStateToolkit::onLoad()
     });
 
     this->plugin->cvarManager->registerNotifier("st_ss_save", [this](const std::vector<std::string> &commands) {
-        this->saveCurrentState();
+        this->onSaveState();
     }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
     this->plugin->cvarManager->registerNotifier("st_ss_load", [this](const std::vector<std::string> &commands) {
-        this->loadSaveState();
+        this->onLoadState();
     }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
     this->plugin->cvarManager->registerNotifier("st_ss_rewind", [this](const std::vector<std::string> &commands) {
-        this->rewindState();
+        this->onRewindState();
     }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
 }
 
@@ -65,17 +79,27 @@ void SaveStateToolkit::render()
 
 void SaveStateToolkit::onPhysicsTick()
 {
-    CustomRotator r;
     if (!this->plugin->gameWrapper->IsInFreeplay()) return;
 
-    ServerWrapper server = this->plugin->gameWrapper->GetGameEventAsServer();
-    if (server.IsNull()) return;
+    if (*this->isRewindActive)
+    {
+        ServerWrapper server = this->plugin->gameWrapper->GetGameEventAsServer();
+        if (server.IsNull()) return;
 
-    SaveState ss(server);
-    this->rewindBuffer.push(ss);
+        float currentTime = server.GetSecondsElapsed();
+
+        this->rewindBuffer.empty();
+        if (this->rewindBuffer.empty() || currentTime > previousSaveTime + *this->rewindSaveInterval)
+        {
+            SaveState ss(server);
+            this->rewindBuffer.push(ss);
+            this->previousSaveTime = currentTime;
+            this->plugin->cvarManager->log("saving state");
+        }
+    }
 }
 
-void SaveStateToolkit::saveCurrentState()
+void SaveStateToolkit::onSaveState()
 {
     if (!this->plugin->gameWrapper->IsInFreeplay()) return;
 
@@ -86,7 +110,7 @@ void SaveStateToolkit::saveCurrentState()
     this->isStateSaved = true;
 }
 
-void SaveStateToolkit::loadSaveState()
+void SaveStateToolkit::onLoadState()
 {
     if (!this->plugin->gameWrapper->IsInFreeplay()) return;
     if (!this->isStateSaved) return;
@@ -97,7 +121,7 @@ void SaveStateToolkit::loadSaveState()
     this->saveState.applyTo(server);
 }
 
-void SaveStateToolkit::rewindState()
+void SaveStateToolkit::onRewindState()
 {
     if (!this->plugin->gameWrapper->IsInFreeplay()) return;
     if (this->rewindBuffer.empty()) return;
@@ -105,9 +129,25 @@ void SaveStateToolkit::rewindState()
     ServerWrapper server = this->plugin->gameWrapper->GetGameEventAsServer();
     if (server.IsNull()) return;
 
-    SaveState ss = this->rewindBuffer.getFrontAndRemoveOthers();
-
+    this->rewindBuffer.removeAllButFront();
+    SaveState ss = this->rewindBuffer.front();
     ss.applyTo(server);
+}
+
+void SaveStateToolkit::setIsRewindActiveCVar(bool active)
+{
+    CVarWrapper isRewindActiveCVar = this->plugin->cvarManager->getCvar("st_ss_rewindactive");
+    if (isRewindActiveCVar.IsNull()) return;
+
+    isRewindActiveCVar.setValue(active);
+}
+
+void SaveStateToolkit::onIsRewindActiveCVarChanged(const std::string &oldValue, const CVarWrapper &cvar)
+{
+    if (!*this->isRewindActive)
+    {
+        this->rewindBuffer.clear();
+    }
 }
 
 void SaveStateToolkit::setRewindLengthCVar(float length)
@@ -118,9 +158,9 @@ void SaveStateToolkit::setRewindLengthCVar(float length)
     rewindLengthCVar.setValue(length);
 }
 
-void SaveStateToolkit::onRewindLengthCvarChanged(const std::string &oldValue, CVarWrapper cvar)
+void SaveStateToolkit::onRewindLengthCvarChanged(const std::string &oldValue, const CVarWrapper &cvar)
 {
-    this->rewindBuffer = SaveStateBuffer(cvar.getIntValue() * 120);
+    //this->rewindBuffer = SaveStateBuffer((int) (*this->rewindLength * (1.0f / *this->rewindSaveInterval)));
 }
 
 void SaveStateToolkit::setRewindSaveIntervalCVar(float interval)

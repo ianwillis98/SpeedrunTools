@@ -14,6 +14,11 @@
 class SaveStateToolkit : public PluginToolkit
 {
 public:
+    static const bool DEFAULT_IS_REWIND_ACTIVE;
+    static const float DEFAULT_REWIND_LENGTH;
+    static const float DEFAULT_REWIND_SAVE_INTERVAL;
+
+public:
     explicit SaveStateToolkit(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
     std::string title() override;
@@ -25,19 +30,24 @@ private:
     SaveState saveState;
     bool isStateSaved;
 
-    SaveStateBuffer rewindBuffer;
+    std::shared_ptr<bool> isRewindActive;
     std::shared_ptr<float> rewindLength;
     std::shared_ptr<float> rewindSaveInterval;
+    float previousSaveTime;
+    SaveStateBuffer rewindBuffer;
 
     void onPhysicsTick();
 
-    void saveCurrentState();
-    void loadSaveState();
+    void onSaveState();
+    void onLoadState();
 
-    void rewindState();
+    void onRewindState();
+
+    void setIsRewindActiveCVar(bool active);
+    void onIsRewindActiveCVarChanged(const std::string &oldValue, const CVarWrapper& cvar);
 
     void setRewindLengthCVar(float length);
-    void onRewindLengthCvarChanged(const std::string &oldValue, CVarWrapper cvar);
+    void onRewindLengthCvarChanged(const std::string &oldValue, const CVarWrapper& cvar);
 
     void setRewindSaveIntervalCVar(float interval);
     void onRewindSaveIntervalChanged(const std::string &oldValue, const CVarWrapper &cvar);

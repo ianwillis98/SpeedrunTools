@@ -13,7 +13,7 @@ public:
 
     void applyTo(ServerWrapper &serverWrapper);
 
-private:
+public:
     CarState carState;
     BallState ballState;
 };

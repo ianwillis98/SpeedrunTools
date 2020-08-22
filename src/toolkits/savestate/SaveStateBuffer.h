@@ -1,24 +1,30 @@
 #pragma once
 
+#include <bakkesmod/plugin/bakkesmodplugin.h>
 #include <deque>
+#include <chrono>
 #include "SaveState.h"
+
+using time_point = std::chrono::time_point<std::chrono::system_clock>;
+using duration = std::chrono::duration<float>;
 
 class SaveStateBuffer
 {
 public:
-    explicit SaveStateBuffer(int capacity);
+    explicit SaveStateBuffer(std::shared_ptr<float> rewindLength);
 
     void push(SaveState saveState);
-    SaveState getFrontAndRemoveOthers();
 
-    int getCapacity() const;
-    void setCapacity(int c);
+    SaveState front();
+    void removeAllButFront();
 
-    int size() const;
-    bool empty() const;
+    int size();
+    bool empty();
     void clear();
 
+    void expire();
+
 private:
-    std::deque<SaveState> buffer;
-    int capacity;
+    std::shared_ptr<float> rewindLength;
+    std::deque<std::pair<time_point, SaveState>> buffer;
 };
