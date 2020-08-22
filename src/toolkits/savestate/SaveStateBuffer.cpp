@@ -23,10 +23,14 @@ SaveState SaveStateBuffer::front()
 
 void SaveStateBuffer::removeAllButFront()
 {
+    if (this->empty()) return;
+
     this->expire();
 
     while (this->buffer.size() != 1)
         this->buffer.pop_back();
+
+    this->buffer.front().first = std::chrono::system_clock::now();
 }
 
 int SaveStateBuffer::size()
@@ -55,4 +59,24 @@ void SaveStateBuffer::expire()
 
     while (!this->buffer.empty() && (now - this->buffer.front().first) > rewindLengthDuration)
         this->buffer.pop_front();
+}
+
+float SaveStateBuffer::progress()
+{
+    if (this->buffer.empty()) return 0.0f;
+
+    time_point now = std::chrono::system_clock::now();
+    duration rewindLengthDuration = duration(*this->rewindLength);
+
+    return (now - this->buffer.front().first) / rewindLengthDuration;
+}
+
+float SaveStateBuffer::frontOffset()
+{
+    if (this->buffer.empty()) return 0.0f;
+
+    time_point now = std::chrono::system_clock::now();
+    duration diff = now - this->buffer.front().first;
+
+    return diff.count();
 }

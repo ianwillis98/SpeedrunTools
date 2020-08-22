@@ -24,6 +24,9 @@ public:
 
     void expire();
 
+    float progress();
+    float frontOffset();
+
 private:
     std::shared_ptr<float> rewindLength;
     std::deque<std::pair<time_point, SaveState>> buffer;

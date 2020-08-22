@@ -4,11 +4,11 @@
 
 const bool SaveStateToolkit::DEFAULT_IS_REWIND_ACTIVE = true;
 const float SaveStateToolkit::DEFAULT_REWIND_LENGTH = 6.0f;
-const float SaveStateToolkit::DEFAULT_REWIND_SAVE_INTERVAL = 1.0f;
+const float SaveStateToolkit::DEFAULT_REWIND_SAVE_INTERVAL = 0.1f;
 
 SaveStateToolkit::SaveStateToolkit(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : PluginToolkit(plugin), isRewindActive(std::make_shared<bool>()), rewindLength(std::make_shared<float>()),
-          rewindSaveInterval(std::make_shared<float>()), isStateSaved(false), rewindBuffer(rewindLength)
+          rewindSaveInterval(std::make_shared<float>()), isStateSaved(false), rewindBuffer(rewindLength), previousSaveTime()
 {
 
 }
@@ -160,7 +160,7 @@ void SaveStateToolkit::setRewindLengthCVar(float length)
 
 void SaveStateToolkit::onRewindLengthCvarChanged(const std::string &oldValue, const CVarWrapper &cvar)
 {
-    //this->rewindBuffer = SaveStateBuffer((int) (*this->rewindLength * (1.0f / *this->rewindSaveInterval)));
+
 }
 
 void SaveStateToolkit::setRewindSaveIntervalCVar(float interval)
@@ -173,7 +173,7 @@ void SaveStateToolkit::setRewindSaveIntervalCVar(float interval)
 
 void SaveStateToolkit::onRewindSaveIntervalChanged(const std::string &oldValue, const CVarWrapper &cvar)
 {
-    this->rewindBuffer.clear();
+
 }
 
 void SaveStateToolkit::renderSaveStateView()
@@ -183,5 +183,77 @@ void SaveStateToolkit::renderSaveStateView()
 
 void SaveStateToolkit::renderRewindView()
 {
-    ImGui::Text("rewind");
+    if (ImGui::Checkbox("Rewind the game back in time", this->isRewindActive.get()))
+    {
+        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
+            this->setIsRewindActiveCVar(*this->isRewindActive);
+        });
+    }
+
+    bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
+
+    ImVec4 color = ImGui::GetStyle().Colors[isInFreeplay ? ImGuiCol_TextDisabled : ImGuiCol_Text];
+    ImGui::TextColored(color, "(only works in freeplay and workshop maps)");
+
+    ImGui::Spacing();
+
+    if (!isInFreeplay || !*this->isRewindActive)
+    {
+        ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
+        ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
+    }
+
+    if (ImGui::Button("Rewind game state"))
+    {
+        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
+            this->onRewindState();
+        });
+    }
+
+    float progress = this->rewindBuffer.progress();
+    float frontOffset = this->rewindBuffer.frontOffset();
+    ImGui::ProgressBar(progress, ImVec2(0.f, 0.f), std::to_string(frontOffset).c_str());
+    ImGui::SameLine(0.0f, ImGui::GetStyle().ItemInnerSpacing.x);
+    ImGui::Text("Rewind buffer (in seconds)");
+
+    if (ImGui::SliderFloat("Rewind length (in seconds)", this->rewindLength.get(), 1.0f, 30.0f, "%.3f"))
+    {
+        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
+            this->setRewindLengthCVar(*this->rewindLength);
+        });
+    }
+
+//    if (ImGui::SliderFloat("Rewind save interval (in seconds)", this->rewindSaveInterval.get(), 0.001, 0.25, "%.3f"))
+//    {
+//        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
+//            this->setRewindSaveIntervalCVar(*this->rewindSaveInterval);
+//        });
+//    }
+
+    if (ImGui::Button("Default (6.0)"))
+    {
+        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
+            this->setRewindLengthCVar(6.0f);
+        });
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Short (2.0)"))
+    {
+        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
+            this->setRewindLengthCVar(2.0f);
+        });
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Long (12.0)"))
+    {
+        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
+            this->setRewindLengthCVar(12.0f);
+        });
+    }
+
+    if (!isInFreeplay || !*this->isRewindActive)
+    {
+        ImGui::PopItemFlag();
+        ImGui::PopStyleVar();
+    }
 }

@@ -193,6 +193,8 @@ void GameToolkit::renderGameSpeedView()
     ImVec4 color = ImGui::GetStyle().Colors[isInFreeplay ? ImGuiCol_TextDisabled : ImGuiCol_Text];
     ImGui::TextColored(color, "(only works in freeplay and workshop maps)");
 
+    ImGui::Spacing();
+
     if (!isInFreeplay)
     {
         ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
