@@ -23,4 +23,6 @@ public:
     );
 
     void applyTo(CarWrapper &car) const;
+
+    void render(const std::string &tag);
 };

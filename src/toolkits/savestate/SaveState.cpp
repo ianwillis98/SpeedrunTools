@@ -1,3 +1,4 @@
+#include <imgui.h>
 #include "SaveState.h"
 
 SaveState::SaveState() = default;
@@ -34,4 +35,11 @@ void SaveState::applyTo(ServerWrapper &serverWrapper)
     {
         ballState.applyTo(ballWrapper);
     }
+}
+
+void SaveState::render(const std::string &tag)
+{
+    this->carState.render(tag + " car");
+    ImGui::Spacing();
+    this->ballState.render(tag + " ball");
 }

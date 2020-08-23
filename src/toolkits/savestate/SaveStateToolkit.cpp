@@ -68,13 +68,13 @@ void SaveStateToolkit::render()
 {
     ImGui::Spacing();
 
-    this->renderSaveStateView();
+    this->renderRewindView();
 
     ImGui::Spacing();
     ImGui::Separator();
     ImGui::Spacing();
 
-    this->renderRewindView();
+    this->renderSaveStateView();
 
     ImGui::Spacing();
 }
@@ -177,14 +177,9 @@ void SaveStateToolkit::onRewindSaveIntervalChanged(const std::string &oldValue, 
 
 }
 
-void SaveStateToolkit::renderSaveStateView()
-{
-    ImGui::Text("save state");
-}
-
 void SaveStateToolkit::renderRewindView()
 {
-    if (ImGui::Checkbox("Rewind the game back in time", this->isRewindActive.get()))
+    if (ImGui::Checkbox("Rewind the game state back a short amount of time", this->isRewindActive.get()))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
             this->setIsRewindActiveCVar(*this->isRewindActive);
@@ -245,14 +240,64 @@ void SaveStateToolkit::renderRewindView()
         });
     }
 
-    if (ImGui::SliderFloat("Rewind save interval (in seconds)", this->rewindSaveInterval.get(), 0.001, 0.25, "%.3f"))
-    {
-        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->setRewindSaveIntervalCVar(*this->rewindSaveInterval);
-        });
-    }
+//    if (ImGui::SliderFloat("Rewind save interval (in seconds)", this->rewindSaveInterval.get(), 0.001, 0.25, "%.3f"))
+//    {
+//        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
+//            this->setRewindSaveIntervalCVar(*this->rewindSaveInterval);
+//        });
+//    }
 
     if (!isInFreeplay || !*this->isRewindActive)
+    {
+        ImGui::PopItemFlag();
+        ImGui::PopStyleVar();
+    }
+}
+
+void SaveStateToolkit::renderSaveStateView()
+{
+    ImGui::Text("Save the current game state to be loaded whenever");
+
+    bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
+    ImVec4 color = isInFreeplay ? ImGui::GetStyle().Colors[ImGuiCol_TextDisabled] : ImGui::GetStyle().Colors[ImGuiCol_Text];
+    ImGui::TextColored(color, "(only works in freeplay and workshop maps)");
+
+    if (!isInFreeplay)
+    {
+        ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
+        ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
+    }
+
+    if (ImGui::Button("Save state"))
+    {
+        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
+            this->onSaveState();
+        });
+    }
+    ImGui::SameLine();
+    if (isInFreeplay && !this->isStateSaved)
+    {
+        ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
+        ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
+    }
+    if (ImGui::Button("Load state"))
+    {
+        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
+            this->onLoadState();
+        });
+    }
+    if (isInFreeplay && !this->isStateSaved)
+    {
+        ImGui::PopItemFlag();
+        ImGui::PopStyleVar();
+    }
+
+    if (this->isStateSaved)
+    {
+        this->saveState.render("save state");
+    }
+
+    if (!isInFreeplay)
     {
         ImGui::PopItemFlag();
         ImGui::PopStyleVar();

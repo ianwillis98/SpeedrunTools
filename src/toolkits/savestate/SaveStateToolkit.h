@@ -52,6 +52,6 @@ private:
     void setRewindSaveIntervalCVar(float interval);
     void onRewindSaveIntervalChanged(const std::string &oldValue, const CVarWrapper &cvar);
 
-    void renderSaveStateView();
     void renderRewindView();
+    void renderSaveStateView();
 };

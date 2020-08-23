@@ -20,4 +20,6 @@ public:
     );
 
     void applyTo(BallWrapper &ball) const;
+
+    void render(const std::string &tag);
 };

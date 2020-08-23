@@ -13,6 +13,8 @@ public:
 
     void applyTo(ServerWrapper &serverWrapper);
 
+    void render(const std::string &tag);
+
 public:
     CarState carState;
     BallState ballState;
