@@ -57,5 +57,3 @@ void MultiEventHooker::handleEventPostCallback(const std::string &eventName) {
         callback(eventName);
     }
 }
-
-

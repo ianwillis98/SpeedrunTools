@@ -27,6 +27,8 @@ void SaveStateToolkit::onLoad()
         this->onIsRewindActiveCVarChanged(oldValue, cvar);
     });
 
+    this->plugin->cvarManager->log("asdfasfdasdf its loading!");
+
     CVarWrapper rewindLengthCVar = this->plugin->cvarManager->registerCvar("st_ss_rewindlength", std::to_string(DEFAULT_REWIND_LENGTH),
                                                                            "Rewind length");
     rewindLengthCVar.bindTo(this->rewindLength);
@@ -94,7 +96,6 @@ void SaveStateToolkit::onPhysicsTick()
             SaveState ss(server);
             this->rewindBuffer.push(ss);
             this->previousSaveTime = currentTime;
-            this->plugin->cvarManager->log("saving state");
         }
     }
 }
@@ -223,13 +224,6 @@ void SaveStateToolkit::renderRewindView()
         });
     }
 
-//    if (ImGui::SliderFloat("Rewind save interval (in seconds)", this->rewindSaveInterval.get(), 0.001, 0.25, "%.3f"))
-//    {
-//        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-//            this->setRewindSaveIntervalCVar(*this->rewindSaveInterval);
-//        });
-//    }
-
     if (ImGui::Button("Default (6.0)"))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
@@ -248,6 +242,13 @@ void SaveStateToolkit::renderRewindView()
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
             this->setRewindLengthCVar(12.0f);
+        });
+    }
+
+    if (ImGui::SliderFloat("Rewind save interval (in seconds)", this->rewindSaveInterval.get(), 0.001, 0.25, "%.3f"))
+    {
+        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
+            this->setRewindSaveIntervalCVar(*this->rewindSaveInterval);
         });
     }
 

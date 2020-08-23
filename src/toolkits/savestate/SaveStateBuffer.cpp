@@ -23,9 +23,9 @@ SaveState SaveStateBuffer::front()
 
 void SaveStateBuffer::removeAllButFront()
 {
-    if (this->empty()) return;
-
     this->expire();
+
+    if (this->empty()) return;
 
     while (this->buffer.size() != 1)
         this->buffer.pop_back();
@@ -63,6 +63,8 @@ void SaveStateBuffer::expire()
 
 float SaveStateBuffer::progress()
 {
+    this->expire();
+
     if (this->buffer.empty()) return 0.0f;
 
     time_point now = std::chrono::system_clock::now();
@@ -73,6 +75,8 @@ float SaveStateBuffer::progress()
 
 float SaveStateBuffer::frontOffset()
 {
+    this->expire();
+
     if (this->buffer.empty()) return 0.0f;
 
     time_point now = std::chrono::system_clock::now();
