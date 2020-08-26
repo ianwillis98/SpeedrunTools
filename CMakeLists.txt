@@ -22,7 +22,8 @@ add_library(
         src/toolkits/test/TestToolkit.cpp src/toolkits/test/TestToolkit.h
         src/toolkits/savestate/SaveState.cpp src/toolkits/savestate/SaveState.h
         src/toolkits/savestate/SaveStateBuffer.cpp src/toolkits/savestate/SaveStateBuffer.h
-)
+        src/services/LiveSplitClient.cpp src/services/LiveSplitClient.h
+        src/toolkits/livesplit/LiveSplitToolkit.cpp src/toolkits/livesplit/LiveSplitToolkit.h)
 
 target_include_directories(
         SpeedrunTools PRIVATE

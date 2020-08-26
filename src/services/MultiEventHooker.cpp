@@ -1,16 +1,22 @@
 #include "MultiEventHooker.h"
 
-MultiEventHooker &MultiEventHooker::getInstance() {
-    static MultiEventHooker instance;
+MultiEventHooker &MultiEventHooker::getInstance(BakkesMod::Plugin::BakkesModPlugin *plugin)
+{
+    // assume there will only ever be one plugin instance
+    static MultiEventHooker instance(plugin);
     return instance;
 }
 
-MultiEventHooker::MultiEventHooker() : eventCallbacks() {
+MultiEventHooker::MultiEventHooker(BakkesMod::Plugin::BakkesModPlugin *plugin)
+        : plugin(plugin), eventCallbacks()
+{
+
 }
 
-void MultiEventHooker::hookEvent(BakkesMod::Plugin::BakkesModPlugin *plugin, const std::string &eventName,
-                                 const std::function<void(std::string)> &callback) {
-    if (eventCallbacks.find(eventName) == eventCallbacks.end()) {
+void MultiEventHooker::hookEvent(const std::string &eventName, const std::function<void(std::string)> &callback)
+{
+    if (eventCallbacks.find(eventName) == eventCallbacks.end())
+    {
         std::vector<std::function<void(std::string)>> emptyVector;
         eventCallbacks[eventName] = emptyVector;
         plugin->gameWrapper->UnhookEvent(eventName);
@@ -21,21 +27,26 @@ void MultiEventHooker::hookEvent(BakkesMod::Plugin::BakkesModPlugin *plugin, con
     eventCallbacks[eventName].push_back(callback);
 }
 
-void MultiEventHooker::unhookEvent(BakkesMod::Plugin::BakkesModPlugin *plugin, const std::string &eventName) {
+void MultiEventHooker::unhookEvent(const std::string &eventName)
+{
     plugin->gameWrapper->UnhookEvent(eventName);
     eventCallbacks.erase(eventName);
 }
 
-void MultiEventHooker::handleEventCallback(const std::string &eventName) {
+void MultiEventHooker::handleEventCallback(const std::string &eventName)
+{
     std::vector<std::function<void(std::string)>> callbacks = eventCallbacks[eventName];
-    for (auto &callback : callbacks) {
+    for (auto &callback : callbacks)
+    {
         callback(eventName);
     }
 }
 
-void MultiEventHooker::hookEventPost(BakkesMod::Plugin::BakkesModPlugin *plugin, const std::string &eventName,
-                                 const std::function<void(std::string)> &callback) {
-    if (eventPostCallbacks.find(eventName) == eventPostCallbacks.end()) {
+void MultiEventHooker::hookEventPost(const std::string &eventName,
+                                     const std::function<void(std::string)> &callback)
+{
+    if (eventPostCallbacks.find(eventName) == eventPostCallbacks.end())
+    {
         std::vector<std::function<void(std::string)>> emptyVector;
         eventPostCallbacks[eventName] = emptyVector;
         plugin->gameWrapper->UnhookEventPost(eventName);
@@ -46,14 +57,17 @@ void MultiEventHooker::hookEventPost(BakkesMod::Plugin::BakkesModPlugin *plugin,
     eventPostCallbacks[eventName].push_back(callback);
 }
 
-void MultiEventHooker::unhookEventPost(BakkesMod::Plugin::BakkesModPlugin *plugin, const std::string &eventName) {
+void MultiEventHooker::unhookEventPost(const std::string &eventName)
+{
     plugin->gameWrapper->UnhookEventPost(eventName);
     eventPostCallbacks.erase(eventName);
 }
 
-void MultiEventHooker::handleEventPostCallback(const std::string &eventName) {
+void MultiEventHooker::handleEventPostCallback(const std::string &eventName)
+{
     std::vector<std::function<void(std::string)>> callbacks = eventPostCallbacks[eventName];
-    for (auto &callback : callbacks) {
+    for (auto &callback : callbacks)
+    {
         callback(eventName);
     }
 }

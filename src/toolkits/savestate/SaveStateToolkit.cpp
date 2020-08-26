@@ -7,8 +7,9 @@ const float SaveStateToolkit::DEFAULT_REWIND_LENGTH = 6.0f;
 const float SaveStateToolkit::DEFAULT_REWIND_SAVE_INTERVAL = 0.1f;
 
 SaveStateToolkit::SaveStateToolkit(BakkesMod::Plugin::BakkesModPlugin *plugin)
-        : PluginToolkit(plugin), isRewindActive(std::make_shared<bool>()), rewindLength(std::make_shared<float>()),
-          rewindSaveInterval(std::make_shared<float>()), isStateSaved(false), rewindBuffer(rewindLength), previousSaveTime()
+        : PluginToolkit(plugin), multiEventHooker(MultiEventHooker::getInstance(plugin)), isRewindActive(std::make_shared<bool>()),
+          rewindLength(std::make_shared<float>()), rewindSaveInterval(std::make_shared<float>()), isStateSaved(false), rewindBuffer(rewindLength),
+          previousSaveTime()
 {
 
 }
@@ -27,8 +28,6 @@ void SaveStateToolkit::onLoad()
         this->onIsRewindActiveCVarChanged(oldValue, cvar);
     });
 
-    this->plugin->cvarManager->log("asdfasfdasdf its loading!");
-
     CVarWrapper rewindLengthCVar = this->plugin->cvarManager->registerCvar("st_ss_rewindlength", std::to_string(DEFAULT_REWIND_LENGTH),
                                                                            "Rewind length");
     rewindLengthCVar.bindTo(this->rewindLength);
@@ -44,7 +43,7 @@ void SaveStateToolkit::onLoad()
         this->onRewindSaveIntervalChanged(oldValue, cvar);
     });
 
-    MultiEventHooker::getInstance().hookEvent(plugin, "Function TAGame.Car_TA.SetVehicleInput", [this](const std::string &evenName) {
+    multiEventHooker.hookEvent("Function TAGame.Car_TA.SetVehicleInput", [this](const std::string &evenName) {
         this->onPhysicsTick();
     });
 

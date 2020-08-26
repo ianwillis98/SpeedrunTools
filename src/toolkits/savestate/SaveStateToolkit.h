@@ -5,6 +5,7 @@
 #include "../../models/BallState.h"
 #include "SaveState.h"
 #include "SaveStateBuffer.h"
+#include "../../services/MultiEventHooker.h"
 
 // save car state
 // save ball state
@@ -27,6 +28,8 @@ public:
     void render() override;
 
 private:
+    MultiEventHooker multiEventHooker;
+
     SaveState saveState;
     bool isStateSaved;
 
