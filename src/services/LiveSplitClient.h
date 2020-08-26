@@ -14,6 +14,11 @@ enum ConnectionState
     Connected
 };
 
+class ConnectCallback
+{
+
+};
+
 class LiveSplitClient
 {
 private:
@@ -30,7 +35,7 @@ private:
 public:
     static LiveSplitClient &getInstance(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
-    void connect(const std::string &host, const std::string &port, const std::function<void(int, std::string)> &);
+    void connectAsync(const std::string &host, const std::string &port, const std::function<void(int errorCode, std::string message)> &callback);
     ConnectionState getConnectionState();
 
     void startOrSplit();
@@ -45,5 +50,5 @@ public:
     void undoSplit();
 
 private:
-    void send(const std::string &message);
+    void sendAsync(const std::string &message);
 };

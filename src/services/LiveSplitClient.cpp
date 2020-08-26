@@ -13,7 +13,9 @@ LiveSplitClient::LiveSplitClient(BakkesMod::Plugin::BakkesModPlugin *plugin)
 
 }
 
-void LiveSplitClient::connect(const std::string &host, const std::string &port, const std::function<void(int, std::string)> &callback)
+void
+LiveSplitClient::connectAsync(const std::string &host, const std::string &port,
+                              const std::function<void(int errorCode, std::string message)> &callback)
 {
     if (this->connectionState == ConnectionState::Connecting) return;
 
@@ -25,14 +27,12 @@ void LiveSplitClient::connect(const std::string &host, const std::string &port, 
         asio::ip::tcp::resolver::iterator endpoint = resolver.resolve(query);
         asio::async_connect(this->socket, endpoint, [this, callback](const asio::error_code &ec, const asio::ip::tcp::resolver::iterator &iterator) {
             this->connectionState = (ec.value() == 0) ? ConnectionState::Connected : ConnectionState::NotConnected;
-
             callback(ec.value(), ec.message());
         });
 
         std::thread th([this] {
             if (this->io_context.stopped())
                 this->io_context.restart();
-
             this->io_context.run();
         });
         th.detach();
@@ -40,7 +40,6 @@ void LiveSplitClient::connect(const std::string &host, const std::string &port, 
     catch (const std::exception &e)
     {
         this->connectionState = ConnectionState::NotConnected;
-
         throw;
     }
 }
@@ -52,46 +51,45 @@ ConnectionState LiveSplitClient::getConnectionState()
 
 void LiveSplitClient::startOrSplit()
 {
-    this->send("startorsplit");
+    this->sendAsync("startorsplit");
 }
 
 void LiveSplitClient::start()
 {
-    this->send("starttimer");
+    this->sendAsync("starttimer");
 }
 
 void LiveSplitClient::pause()
 {
-    this->send("pause");
+    this->sendAsync("pause");
 }
 
 void LiveSplitClient::resume()
 {
-    this->send("resume");
+    this->sendAsync("resume");
 }
 
 void LiveSplitClient::reset()
 {
-    this->send("reset");
+    this->sendAsync("reset");
 }
 
 void LiveSplitClient::split()
 {
-    this->send("split");
+    this->sendAsync("split");
 }
 
 void LiveSplitClient::skipSplit()
 {
-    this->send("skipsplit");
+    this->sendAsync("skipsplit");
 }
 
 void LiveSplitClient::undoSplit()
 {
-    this->send("unsplit");
+    this->sendAsync("unsplit");
 }
 
-// TODO: get async_send working
-void LiveSplitClient::send(const std::string &message)
+void LiveSplitClient::sendAsync(const std::string &message)
 {
     if (this->connectionState != ConnectionState::Connected)
     {
@@ -100,12 +98,15 @@ void LiveSplitClient::send(const std::string &message)
 
     try
     {
-        this->socket.send(asio::buffer(message + "\r\n"));
+        auto buffer = asio::buffer(message + "\r\n");
+        this->socket.async_send(buffer, [this](const asio::error_code &ec, std::size_t bytes_transferred) {
+            bool success = ec.value() == 0;
+            this->connectionState = success ? ConnectionState::Connected : ConnectionState::NotConnected;
+        });
     }
     catch (const std::exception &e)
     {
         this->connectionState = ConnectionState::NotConnected;
-
         throw;
     }
 }

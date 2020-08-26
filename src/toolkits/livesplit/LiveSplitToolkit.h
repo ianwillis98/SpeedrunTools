@@ -24,13 +24,13 @@ private:
     void connect();
 
     void startOrSplit();
-//
-//    void start();
-//    void pause();
-//    void resume();
-//    void reset();
-//
-//    void split();
-//    void skipSplit();
-//    void undoSplit();
+
+    void start();
+    void pause();
+    void resume();
+    void reset();
+
+    void split();
+    void skipSplit();
+    void undoSplit();
 };
