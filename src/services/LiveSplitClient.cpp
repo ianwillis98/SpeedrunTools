@@ -24,13 +24,15 @@ void LiveSplitClient::connect(const std::string &host, const std::string &port, 
         asio::ip::tcp::resolver::query query = asio::ip::tcp::resolver::query(host, port);
         asio::ip::tcp::resolver::iterator endpoint = resolver.resolve(query);
         asio::async_connect(this->socket, endpoint, [this, callback](const asio::error_code &ec, const asio::ip::tcp::resolver::iterator &iterator) {
+            this->connectionState = (ec.value() == 0) ? ConnectionState::Connected : ConnectionState::NotConnected;
+
             callback(ec.value(), ec.message());
-            if (ec.value() == 0)
-                this->connectionState = ConnectionState::Connected;
         });
 
         std::thread th([this] {
-            if (this->io_context.stopped()) io_context.restart();
+            if (this->io_context.stopped())
+                this->io_context.restart();
+
             this->io_context.run();
         });
         th.detach();
@@ -91,22 +93,18 @@ void LiveSplitClient::undoSplit()
 // TODO: get async_send working
 void LiveSplitClient::send(const std::string &message)
 {
-    if (this->connectionState != ConnectionState::Connected) return;
+    if (this->connectionState != ConnectionState::Connected)
+    {
+        throw std::exception("A connection must be established before a message can be send to the LiveSplit Server.");
+    }
 
     try
     {
         this->socket.send(asio::buffer(message + "\r\n"));
-
-//        this->plugin->cvarManager->log("LiveSplitClient: Message sent (" + message + ").");
-//        this->plugin->gameWrapper->LogToChatbox("LiveSplitClient: Message sent (" + message + ").", "SPEEDRUNTOOLS");
     }
     catch (const std::exception &e)
     {
         this->connectionState = ConnectionState::NotConnected;
-
-//        this->plugin->cvarManager->log("LiveSplitClient: Error sending message (" + message + "). " + std::string(e.what()));
-//        this->plugin->gameWrapper->LogToChatbox("LiveSplitClient: Error sending message (" + message + "). " + std::string(e.what()),
-//                                                "SPEEDRUNTOOLS");
 
         throw;
     }

@@ -38,28 +38,33 @@ void LiveSplitToolkit::render()
 void LiveSplitToolkit::connect()
 {
     this->plugin->cvarManager->log("LiveSplitToolkit: Attempting to establish a connection with the LiveSplit Server...");
-    this->plugin->gameWrapper->LogToChatbox("LiveSplitToolkit: Attempting to establish a connection with the LiveSplit Server...", "SPEEDRUNTOOLS");
 
     try
     {
-        this->liveSplitClient.connect("localhost", "16834", [this](int errorCode, const std::string &errorMessage) {
-            this->plugin->cvarManager->log("ec: " + std::to_string(errorCode) + ", em: " + errorMessage);
+        this->liveSplitClient.connect("localhost", "16834", [this](const int &errorCode, const std::string &errorMessage) {
+            this->plugin->gameWrapper->Execute([this, errorCode, errorMessage](GameWrapper *gw) {
+                if (errorCode == 0)
+                {
+                    this->plugin->cvarManager->log("LiveSplitToolkit: Connection established with the LiveSplit Server.");
+                }
+                else
+                {
+                    this->plugin->cvarManager->log(
+                            "LiveSplitToolkit: Error while connecting to the LiveSplit Server (" + std::to_string(errorCode) + ") \"" + errorMessage +
+                            "\".");
+                    this->plugin->cvarManager->log("LiveSplitToolkit: Make sure the LiveSplit Server is running and open on port 16834.");
+                }
+            });
         });
     }
     catch (const std::exception &e)
     {
-        this->plugin->cvarManager->log("LiveSplitToolkit: Failed to connect. " + std::string(e.what()));
-        this->plugin->gameWrapper->LogToChatbox("LiveSplitToolkit: Failed to connect. " + std::string(e.what()), "SPEEDRUNTOOLS");
-
-        this->plugin->cvarManager->log("LiveSplitToolkit: Make sure the LiveSplit Server is running and open on port 16834 " + std::string(e.what()));
-        this->plugin->gameWrapper->LogToChatbox(
-                "LiveSplitToolkit: Make sure the LiveSplit Server is running on localhost port 16834 " + std::string(e.what()), "SPEEDRUNTOOLS");
+        this->plugin->cvarManager->log("LiveSplitToolkit: There was an issue setting up the connection \"" + std::string(e.what()) + "\".");
     }
 }
 
 void LiveSplitToolkit::startOrSplit()
 {
-    this->plugin->cvarManager->log("giving it a go");
     try
     {
         this->liveSplitClient.startOrSplit();
