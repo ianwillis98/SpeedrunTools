@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.17)
 project(SpeedrunTools)
 
 set(CMAKE_CXX_STANDARD 14)
@@ -11,19 +11,10 @@ add_subdirectory(external/asio)
 
 add_library(
         SpeedrunTools SHARED
-        src/SpeedrunTools.cpp src/SpeedrunTools.h
         src/plugin/BaseBakkesModPlugin.cpp src/plugin/BaseBakkesModPlugin.h
-        src/toolkits/PluginToolkit.cpp src/toolkits/PluginToolkit.h
-        src/toolkits/game/GameToolkit.cpp src/toolkits/game/GameToolkit.h
-        src/toolkits/savestate/SaveStateToolkit.cpp src/toolkits/savestate/SaveStateToolkit.h
-        src/models/CarState.cpp src/models/CarState.h
-        src/models/BallState.cpp src/models/BallState.h
-        src/services/MultiEventHooker.cpp src/services/MultiEventHooker.h
-        src/toolkits/test/TestToolkit.cpp src/toolkits/test/TestToolkit.h
-        src/toolkits/savestate/SaveState.cpp src/toolkits/savestate/SaveState.h
-        src/toolkits/savestate/SaveStateBuffer.cpp src/toolkits/savestate/SaveStateBuffer.h
-        src/services/LiveSplitClient.cpp src/services/LiveSplitClient.h
-        src/toolkits/livesplit/LiveSplitToolkit.cpp src/toolkits/livesplit/LiveSplitToolkit.h)
+        src/SpeedrunToolsPlugin.cpp src/SpeedrunToolsPlugin.h
+        src/toolkit/game/GameToolkit.cpp src/toolkit/game/GameToolkit.h
+        src/components/game/GameGravityComponent.cpp src/components/game/GameGravityComponent.h src/plugin/PluginComponent.cpp src/plugin/PluginComponent.h src/components/game/GameSpeedComponent.cpp src/components/game/GameSpeedComponent.h src/toolkit/PluginToolkit.cpp src/toolkit/PluginToolkit.h)
 
 target_include_directories(
         SpeedrunTools PRIVATE

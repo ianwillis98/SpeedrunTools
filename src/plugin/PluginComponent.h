@@ -4,12 +4,11 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 
-class PluginToolkit
+class PluginComponent
 {
 public:
-    explicit PluginToolkit(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit PluginComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
-    virtual std::string title() = 0;
     virtual void onLoad() = 0;
     virtual void onUnload() = 0;
     virtual void render() = 0;
