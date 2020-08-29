@@ -27,6 +27,9 @@ add_library(
         src/utils/ImGuiExtensions.cpp src/utils/ImGuiExtensions.h
         src/toolkit/savestate/SaveStateToolkit.cpp src/toolkit/savestate/SaveStateToolkit.h
         src/components/savestate/RewindBuffer.h src/components/savestate/RewindBuffer.cpp
+        src/components/livesplit/LiveSplitComponent.cpp src/components/livesplit/LiveSplitComponent.h
+        src/toolkit/livesplit/LiveSplitToolkit.cpp src/toolkit/livesplit/LiveSplitToolkit.h
+        src/services/LiveSplitClient.h src/services/LiveSplitClient.cpp
 )
 
 target_include_directories(

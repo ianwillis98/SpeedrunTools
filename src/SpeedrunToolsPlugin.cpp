@@ -1,6 +1,7 @@
 #include "SpeedrunToolsPlugin.h"
 #include "toolkit/game/GameToolkit.h"
 #include "toolkit/savestate/SaveStateToolkit.h"
+#include "toolkit/livesplit/LiveSplitToolkit.h"
 
 BAKKESMOD_PLUGIN(SpeedrunToolsPlugin, SpeedrunToolsPlugin::PLUGIN_TITLE, SpeedrunToolsPlugin::PLUGIN_VERSION, PLUGINTYPE_CUSTOM_TRAINING)
 
@@ -13,6 +14,7 @@ SpeedrunToolsPlugin::SpeedrunToolsPlugin()
 {
     this->toolkits.push_back(std::make_unique<GameToolkit>(this));
     this->toolkits.push_back(std::make_unique<SaveStateToolkit>(this));
+    this->toolkits.push_back(std::make_unique<LiveSplitToolkit>(this));
 }
 
 void SpeedrunToolsPlugin::onLoad()

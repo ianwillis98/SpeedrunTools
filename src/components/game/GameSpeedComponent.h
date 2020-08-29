@@ -14,9 +14,10 @@ public:
     float getGameSpeed();
     void setGameSpeed(float gameSpeed);
 
-private:
     bool isComponentEnabled();
     void setComponentEnabled(bool enabled);
+
+private:
     void onComponentEnabledChanged();
 
     float getSvSoccarGameSpeed();

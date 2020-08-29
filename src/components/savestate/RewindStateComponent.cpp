@@ -10,7 +10,14 @@ RewindStateComponent::RewindStateComponent(BakkesMod::Plugin::BakkesModPlugin *p
 
 void RewindStateComponent::onLoad()
 {
-    CVarWrapper componentEnabled = this->plugin->cvarManager->registerCvar("st_savestate_rewind_enabled", "1", "Is custom gravity enabled");
+    // Function TAGame.Mutator_Freeplay_TA.Init
+    // Function TAGame.GameEvent_TA.Init
+    // Function TAGame.GameEvent_TA.Destroyed
+    // Function TAGame.GameEvent_TA.EventDestroyed
+    // Function TAGame.GameEvent_TA.IsFinished
+    // Function GameEvent_Soccar_TA.Active.EndRound
+    // Function TAGame.GameEvent_Soccar_TA.EventMatchEnded
+    CVarWrapper componentEnabled = this->plugin->cvarManager->registerCvar("st_savestate_rewind_enabled", "1", "Is rewind state enabled");
     componentEnabled.addOnValueChanged([this](const std::string &oldValue, const CVarWrapper &cvar) {
         this->onComponentEnabledChanged();
     });
@@ -54,7 +61,7 @@ void RewindStateComponent::render()
 
     ImGui::Spacing();
 
-    ImGuiExtensions::PushDisabledStyleIf(!isInFreeplay || !isComponentEnabled);
+    ImGuiExtensions::PushDisabledStyleIf(!isComponentEnabled || !isInFreeplay);
 
     if (ImGui::Button("Rewind game state"))
     {
@@ -105,7 +112,7 @@ void RewindStateComponent::render()
 //        });
 //    }
 
-    ImGuiExtensions::PopDisabledStyleIf(!isInFreeplay || !isComponentEnabled);
+    ImGuiExtensions::PopDisabledStyleIf(!isComponentEnabled || !isInFreeplay);
 }
 
 void RewindStateComponent::rewind()

@@ -5,6 +5,10 @@
 
 class RewindStateComponent : public PluginComponent
 {
+private:
+    float previousSaveTime;
+    RewindBuffer rewindBuffer;
+
 public:
     explicit RewindStateComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
@@ -14,20 +18,19 @@ public:
 
     void rewind();
 
-private:
-    void onPhysicsTick();
-
-    bool isComponentEnabled();
-    void setComponentEnabled(bool enabled);
-    void onComponentEnabledChanged();
-
     float getRewindLength();
     void setRewindLength(float length);
-    void onRewindLengthChanged();
 
     float getRewindSaveInterval();
     void setRewindSaveInterval(float interval);
 
-    float previousSaveTime;
-    RewindBuffer rewindBuffer;
+    bool isComponentEnabled();
+    void setComponentEnabled(bool enabled);
+
+private:
+    void onPhysicsTick();
+
+    void onComponentEnabledChanged();
+
+    void onRewindLengthChanged();
 };

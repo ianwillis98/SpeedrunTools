@@ -10,6 +10,10 @@ using duration = std::chrono::duration<float>;
 
 class RewindBuffer
 {
+private:
+    float rewindLength;
+    std::deque<std::pair<time_point, GameState>> buffer;
+
 public:
     explicit RewindBuffer(float rewindLength);
 
@@ -30,7 +34,4 @@ public:
 
 private:
     void expire();
-
-    float rewindLength;
-    std::deque<std::pair<time_point, GameState>> buffer;
 };

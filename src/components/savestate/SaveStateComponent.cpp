@@ -9,10 +9,15 @@ SaveStateComponent::SaveStateComponent(BakkesMod::Plugin::BakkesModPlugin *plugi
 
 void SaveStateComponent::onLoad()
 {
-    this->plugin->cvarManager->registerNotifier("st_ss_save", [this](const std::vector<std::string> &commands) {
+    CVarWrapper componentEnabled = this->plugin->cvarManager->registerCvar("st_savestate_save_enabled", "1", "Are save states enabled");
+    componentEnabled.addOnValueChanged([this](const std::string &oldValue, const CVarWrapper &cvar) {
+        this->onComponentEnabledChanged();
+    });
+
+    this->plugin->cvarManager->registerNotifier("st_savestate_save", [this](const std::vector<std::string> &commands) {
         this->save();
     }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
-    this->plugin->cvarManager->registerNotifier("st_ss_load", [this](const std::vector<std::string> &commands) {
+    this->plugin->cvarManager->registerNotifier("st_savestate_load", [this](const std::vector<std::string> &commands) {
         this->load();
     }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
 }
@@ -24,14 +29,20 @@ void SaveStateComponent::onUnload()
 
 void SaveStateComponent::render()
 {
-    ImGui::Text("Save the current game state to be loaded whenever");
+    bool isComponentEnabled = this->isComponentEnabled();
+    if (ImGui::Checkbox("Save the current game state to be loaded whenever", &isComponentEnabled))
+    {
+        this->plugin->gameWrapper->Execute([this, isComponentEnabled](GameWrapper *gw) {
+            this->setComponentEnabled(isComponentEnabled);
+        });
+    }
 
     bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
 
     ImVec4 color = ImGui::GetStyle().Colors[isInFreeplay ? ImGuiCol_TextDisabled : ImGuiCol_Text];
     ImGui::TextColored(color, "(only works in freeplay and workshop maps)");
 
-    ImGuiExtensions::PushDisabledStyleIf(!isInFreeplay);
+    ImGuiExtensions::PushDisabledStyleIf(!isComponentEnabled || !isInFreeplay);
 
     if (ImGui::Button("Save state"))
     {
@@ -40,25 +51,24 @@ void SaveStateComponent::render()
         });
     }
     ImGui::SameLine();
-    ImGuiExtensions::PushDisabledStyleIf(isInFreeplay && !this->isSaved);
+    ImGuiExtensions::PushDisabledStyleIf(isComponentEnabled && isInFreeplay && !this->isSaved);
     if (ImGui::Button("Load state"))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
             this->load();
         });
     }
-    ImGuiExtensions::PopDisabledStyleIf(isInFreeplay && !this->isSaved);
 
-    if (this->isSaved)
-    {
-        this->saveState.render("save state");
-    }
+    this->saveState.render("save state");
 
-    ImGuiExtensions::PopDisabledStyleIf(!isInFreeplay);
+    ImGuiExtensions::PopDisabledStyleIf(isComponentEnabled && isInFreeplay && !this->isSaved);
+
+    ImGuiExtensions::PopDisabledStyleIf(!isComponentEnabled || !isInFreeplay);
 }
 
 void SaveStateComponent::save()
 {
+    if (!this->isComponentEnabled()) return;
     if (!this->plugin->gameWrapper->IsInFreeplay()) return;
 
     ServerWrapper server = this->plugin->gameWrapper->GetGameEventAsServer();
@@ -70,8 +80,9 @@ void SaveStateComponent::save()
 
 void SaveStateComponent::load()
 {
-    if (!this->plugin->gameWrapper->IsInFreeplay()) return;
+    if (!this->isComponentEnabled()) return;
     if (!this->isSaved) return;
+    if (!this->plugin->gameWrapper->IsInFreeplay()) return;
 
     ServerWrapper server = this->plugin->gameWrapper->GetGameEventAsServer();
     if (server.IsNull()) return;
@@ -79,7 +90,28 @@ void SaveStateComponent::load()
     this->saveState.applyTo(server);
 }
 
+bool SaveStateComponent::isComponentEnabled()
+{
+    return this->plugin->cvarManager->getCvar("st_savestate_save_enabled").getBoolValue();
+}
+
+void SaveStateComponent::setComponentEnabled(bool enabled)
+{
+    this->plugin->cvarManager->getCvar("st_savestate_save_enabled").setValue(enabled);
+}
+
+void SaveStateComponent::onComponentEnabledChanged()
+{
+    if (!this->isComponentEnabled())
+    {
+        this->isSaved = false;
+        this->saveState = GameState();
+    }
+}
+
 bool SaveStateComponent::isStateSaved() const
 {
     return this->isSaved;
 }
+
+

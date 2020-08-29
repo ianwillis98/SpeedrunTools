@@ -14,9 +14,10 @@ public:
     float getGameGravity();
     void setGameGravity(float gravity);
 
-private:
     bool isComponentEnabled();
     void setComponentEnabled(bool enabled);
+
+private:
     void onComponentEnabledChanged();
 
     float getSvSoccarGameGravity();

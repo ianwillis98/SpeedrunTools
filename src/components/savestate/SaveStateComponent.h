@@ -5,6 +5,10 @@
 
 class SaveStateComponent : public PluginComponent
 {
+private:
+    bool isSaved;
+    GameState saveState;
+
 public:
     explicit SaveStateComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
@@ -16,7 +20,9 @@ public:
     void load();
     bool isStateSaved() const;
 
+    bool isComponentEnabled();
+    void setComponentEnabled(bool enabled);
+
 private:
-    GameState saveState;
-    bool isSaved;
+    void onComponentEnabledChanged();
 };
