@@ -47,7 +47,7 @@ void RewindStateComponent::onUnload()
 void RewindStateComponent::render()
 {
     bool isComponentEnabled = this->isComponentEnabled();
-    if (ImGui::Checkbox("Rewind the game state back in time a short amount", &isComponentEnabled))
+    if (ImGui::Checkbox("Rewind the game back in time", &isComponentEnabled))
     {
         this->plugin->gameWrapper->Execute([this, isComponentEnabled](GameWrapper *gw) {
             this->setComponentEnabled(isComponentEnabled);
@@ -164,6 +164,7 @@ void RewindStateComponent::onComponentEnabledChanged()
     {
         this->rewindBuffer.clear();
     }
+    this->plugin->gameWrapper->GetGameEventAsServer();
 }
 
 float RewindStateComponent::getRewindLength()

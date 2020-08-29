@@ -13,7 +13,7 @@ add_library(
         SpeedrunTools SHARED
         src/plugin/BaseBakkesModPlugin.cpp src/plugin/BaseBakkesModPlugin.h
         src/SpeedrunToolsPlugin.cpp src/SpeedrunToolsPlugin.h
-        src/toolkit/game/GameToolkit.cpp src/toolkit/game/GameToolkit.h
+        src/toolkit/mutators/MutatorsToolkit.cpp src/toolkit/mutators/MutatorsToolkit.h
         src/components/game/GameGravityComponent.cpp src/components/game/GameGravityComponent.h
         src/plugin/PluginComponent.cpp src/plugin/PluginComponent.h
         src/components/game/GameSpeedComponent.cpp src/components/game/GameSpeedComponent.h
@@ -30,7 +30,7 @@ add_library(
         src/components/livesplit/LiveSplitComponent.cpp src/components/livesplit/LiveSplitComponent.h
         src/toolkit/livesplit/LiveSplitToolkit.cpp src/toolkit/livesplit/LiveSplitToolkit.h
         src/services/LiveSplitClient.h src/services/LiveSplitClient.cpp
-)
+        src/components/car/AutoAirRollComponent.cpp src/components/car/AutoAirRollComponent.h)
 
 target_include_directories(
         SpeedrunTools PRIVATE

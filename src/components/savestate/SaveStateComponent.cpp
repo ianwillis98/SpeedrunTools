@@ -30,7 +30,7 @@ void SaveStateComponent::onUnload()
 void SaveStateComponent::render()
 {
     bool isComponentEnabled = this->isComponentEnabled();
-    if (ImGui::Checkbox("Save the current game state to be loaded whenever", &isComponentEnabled))
+    if (ImGui::Checkbox("Save the current game state to be loaded back whenever", &isComponentEnabled))
     {
         this->plugin->gameWrapper->Execute([this, isComponentEnabled](GameWrapper *gw) {
             this->setComponentEnabled(isComponentEnabled);

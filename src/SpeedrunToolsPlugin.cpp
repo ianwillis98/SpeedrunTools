@@ -1,5 +1,5 @@
 #include "SpeedrunToolsPlugin.h"
-#include "toolkit/game/GameToolkit.h"
+#include "toolkit/mutators/MutatorsToolkit.h"
 #include "toolkit/savestate/SaveStateToolkit.h"
 #include "toolkit/livesplit/LiveSplitToolkit.h"
 
@@ -12,8 +12,8 @@ const char *SpeedrunToolsPlugin::PLUGIN_MENU_NAME = "speedruntools";
 SpeedrunToolsPlugin::SpeedrunToolsPlugin()
         : BaseBakkesModPlugin(SpeedrunToolsPlugin::PLUGIN_TITLE, SpeedrunToolsPlugin::PLUGIN_MENU_NAME), toolkits()
 {
-    this->toolkits.push_back(std::make_unique<GameToolkit>(this));
     this->toolkits.push_back(std::make_unique<SaveStateToolkit>(this));
+    this->toolkits.push_back(std::make_unique<MutatorsToolkit>(this));
     this->toolkits.push_back(std::make_unique<LiveSplitToolkit>(this));
 }
 

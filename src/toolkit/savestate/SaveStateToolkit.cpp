@@ -8,7 +8,7 @@ SaveStateToolkit::SaveStateToolkit(BakkesMod::Plugin::BakkesModPlugin *plugin)
 
 std::string SaveStateToolkit::title()
 {
-    return "Save State Toolkit";
+    return "Save States";
 }
 
 void SaveStateToolkit::onLoad()

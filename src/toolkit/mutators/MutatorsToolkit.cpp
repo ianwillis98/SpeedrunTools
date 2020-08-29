@@ -1,29 +1,29 @@
-#include "GameToolkit.h"
+#include "MutatorsToolkit.h"
 
-GameToolkit::GameToolkit(BakkesMod::Plugin::BakkesModPlugin *plugin)
+MutatorsToolkit::MutatorsToolkit(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : PluginToolkit(plugin), gameGravityComponent(plugin), gameSpeedComponent(plugin)
 {
 
 }
 
-std::string GameToolkit::title()
+std::string MutatorsToolkit::title()
 {
-    return "Game Toolkit";
+    return "Mutators";
 }
 
-void GameToolkit::onLoad()
+void MutatorsToolkit::onLoad()
 {
     this->gameGravityComponent.onLoad();
     this->gameSpeedComponent.onLoad();
 }
 
-void GameToolkit::onUnload()
+void MutatorsToolkit::onUnload()
 {
     this->gameGravityComponent.onUnload();
     this->gameSpeedComponent.onUnload();
 }
 
-void GameToolkit::render()
+void MutatorsToolkit::render()
 {
     ImGui::Spacing();
 
