@@ -1,4 +1,3 @@
-#include <cmath>
 #include "GameToolkit.h"
 
 GameToolkit::GameToolkit(BakkesMod::Plugin::BakkesModPlugin *plugin)

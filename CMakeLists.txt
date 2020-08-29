@@ -22,9 +22,12 @@ add_library(
         src/components/savestate/RewindStateComponent.cpp src/components/savestate/RewindStateComponent.h
         src/models/CarState.h src/models/CarState.cpp
         src/models/BallState.h src/models/BallState.cpp
-        src/models/SaveState.h src/models/SaveState.cpp
+        src/models/GameState.h src/models/GameState.cpp
         src/services/MultiEventHooker.h src/services/MultiEventHooker.cpp
-        src/utils/ImGuiExtensions.cpp src/utils/ImGuiExtensions.h src/toolkit/savestate/SaveStateToolkit.cpp src/toolkit/savestate/SaveStateToolkit.h)
+        src/utils/ImGuiExtensions.cpp src/utils/ImGuiExtensions.h
+        src/toolkit/savestate/SaveStateToolkit.cpp src/toolkit/savestate/SaveStateToolkit.h
+        src/components/savestate/RewindBuffer.h src/components/savestate/RewindBuffer.cpp
+)
 
 target_include_directories(
         SpeedrunTools PRIVATE

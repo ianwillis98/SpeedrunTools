@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../plugin/PluginComponent.h"
-#include "../../models/SaveState.h"
+#include "../../models/GameState.h"
 
 class SaveStateComponent : public PluginComponent
 {
@@ -17,6 +17,6 @@ public:
     bool isStateSaved() const;
 
 private:
-    SaveState saveState;
+    GameState saveState;
     bool isSaved;
 };

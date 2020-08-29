@@ -32,13 +32,14 @@ void GameSpeedComponent::onUnload()
 
 void GameSpeedComponent::render()
 {
-    bool enabled = this->isComponentEnabled();
-    if (ImGui::Checkbox("Customize Game Speed", &enabled))
+    bool isComponentEnabled = this->isComponentEnabled();
+    if (ImGui::Checkbox("Customize Game Speed", &isComponentEnabled))
     {
-        this->setComponentEnabled(enabled);
+        this->plugin->gameWrapper->Execute([this, isComponentEnabled](GameWrapper *gw) {
+            this->setComponentEnabled(isComponentEnabled);
+        });
     }
 
-    bool isEnabled = this->isComponentEnabled();
     bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
 
     ImVec4 color = ImGui::GetStyle().Colors[isInFreeplay ? ImGuiCol_TextDisabled : ImGuiCol_Text];
@@ -46,7 +47,7 @@ void GameSpeedComponent::render()
 
     ImGui::Spacing();
 
-    ImGuiExtensions::PushDisabledStyleIf(!isEnabled || !isInFreeplay);
+    ImGuiExtensions::PushDisabledStyleIf(!isComponentEnabled || !isInFreeplay);
 
     float speed = this->getGameSpeed();
     if (ImGui::SliderFloat("Game Speed", &speed, 0.05f, 5.0f, "%.3f"))
@@ -77,7 +78,7 @@ void GameSpeedComponent::render()
         });
     }
 
-    ImGuiExtensions::PopDisabledStyleIf(!isEnabled || !isInFreeplay);
+    ImGuiExtensions::PopDisabledStyleIf(!isComponentEnabled || !isInFreeplay);
 }
 
 bool GameSpeedComponent::isComponentEnabled()

@@ -64,7 +64,7 @@ void SaveStateComponent::save()
     ServerWrapper server = this->plugin->gameWrapper->GetGameEventAsServer();
     if (server.IsNull()) return;
 
-    this->saveState = SaveState(server);
+    this->saveState = GameState(server);
     this->isSaved = true;
 }
 

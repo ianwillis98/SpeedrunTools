@@ -4,12 +4,12 @@
 #include "CarState.h"
 #include "BallState.h"
 
-class SaveState
+class GameState
 {
 public:
-    SaveState();
+    GameState();
 
-    explicit SaveState(ServerWrapper &serverWrapper);
+    explicit GameState(ServerWrapper &serverWrapper);
 
     void applyTo(ServerWrapper &serverWrapper) const;
 

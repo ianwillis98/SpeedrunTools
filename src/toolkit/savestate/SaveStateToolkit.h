@@ -2,6 +2,7 @@
 
 #include "../PluginToolkit.h"
 #include "../../components/savestate/SaveStateComponent.h"
+#include "../../components/savestate/RewindStateComponent.h"
 
 class SaveStateToolkit : public PluginToolkit
 {
@@ -14,5 +15,6 @@ public:
     void render() override;
 
 private:
+    RewindStateComponent rewindStateComponent;
     SaveStateComponent saveStateComponent;
 };

@@ -32,13 +32,14 @@ void GameGravityComponent::onUnload()
 
 void GameGravityComponent::render()
 {
-    bool enabled = this->isComponentEnabled();
-    if (ImGui::Checkbox("Customize Game Gravity", &enabled))
+    bool isComponentEnabled = this->isComponentEnabled();
+    if (ImGui::Checkbox("Customize Game Gravity", &isComponentEnabled))
     {
-        this->setComponentEnabled(enabled);
+        this->plugin->gameWrapper->Execute([this, isComponentEnabled](GameWrapper *gw) {
+            this->setComponentEnabled(isComponentEnabled);
+        });
     }
 
-    bool isEnabled = this->isComponentEnabled();
     bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
 
     ImVec4 color = ImGui::GetStyle().Colors[isInFreeplay ? ImGuiCol_TextDisabled : ImGuiCol_Text];
@@ -46,7 +47,7 @@ void GameGravityComponent::render()
 
     ImGui::Spacing();
 
-    ImGuiExtensions::PushDisabledStyleIf(!isEnabled || !isInFreeplay);
+    ImGuiExtensions::PushDisabledStyleIf(!isComponentEnabled || !isInFreeplay);
 
     float gravity = this->getGameGravity();
     if (ImGui::SliderFloat("Game Gravity", &gravity, -5000.0f, 5000.0f, "%.3f"))
@@ -77,7 +78,7 @@ void GameGravityComponent::render()
         });
     }
 
-    ImGuiExtensions::PopDisabledStyleIf(!isEnabled || !isInFreeplay);
+    ImGuiExtensions::PopDisabledStyleIf(!isComponentEnabled || !isInFreeplay);
 }
 
 bool GameGravityComponent::isComponentEnabled()

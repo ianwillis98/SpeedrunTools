@@ -1,9 +1,9 @@
 #include <imgui.h>
-#include "SaveState.h"
+#include "GameState.h"
 
-SaveState::SaveState() = default;
+GameState::GameState() = default;
 
-SaveState::SaveState(ServerWrapper &serverWrapper)
+GameState::GameState(ServerWrapper &serverWrapper)
 {
     if (serverWrapper.IsNull()) return;
 
@@ -20,7 +20,7 @@ SaveState::SaveState(ServerWrapper &serverWrapper)
     }
 }
 
-void SaveState::applyTo(ServerWrapper &serverWrapper) const
+void GameState::applyTo(ServerWrapper &serverWrapper) const
 {
     if (serverWrapper.IsNull()) return;
 
@@ -37,7 +37,7 @@ void SaveState::applyTo(ServerWrapper &serverWrapper) const
     }
 }
 
-void SaveState::render(const std::string &tag)
+void GameState::render(const std::string &tag)
 {
     this->carState.render(tag + " car");
     ImGui::Spacing();
