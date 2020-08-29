@@ -1,10 +1,5 @@
 #include "GameGravityComponent.h"
-
-GameGravityComponent &GameGravityComponent::getInstance(BakkesMod::Plugin::BakkesModPlugin *plugin)
-{
-    static GameGravityComponent instance(plugin);
-    return instance;
-}
+#include "../../utils/ImGuiExtensions.h"
 
 GameGravityComponent::GameGravityComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : PluginComponent(plugin), svSoccarGameGravity(nullptr), gameGravity(nullptr)
@@ -53,11 +48,7 @@ void GameGravityComponent::render()
 
     ImGui::Spacing();
 
-    if (!isInFreeplay)
-    {
-        ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
-        ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
-    }
+    ImGuiExtensions::PushDisableStyleIf(!isInFreeplay);
 
     float gravity = this->getGameGravity();
     if (ImGui::SliderFloat("Game Gravity", &gravity, -5000.0f, 5000.0f, "%.3f"))
@@ -88,11 +79,7 @@ void GameGravityComponent::render()
         });
     }
 
-    if (!isInFreeplay)
-    {
-        ImGui::PopItemFlag();
-        ImGui::PopStyleVar();
-    }
+    ImGuiExtensions::PopDisableStyleIf(!isInFreeplay);
 
     ImGui::PopID();
 }

@@ -1,5 +1,6 @@
 #include "SpeedrunToolsPlugin.h"
 #include "toolkit/game/GameToolkit.h"
+#include "toolkit/savestate/SaveStateToolkit.h"
 
 BAKKESMOD_PLUGIN(SpeedrunToolsPlugin, SpeedrunToolsPlugin::PLUGIN_TITLE, SpeedrunToolsPlugin::PLUGIN_VERSION, PLUGINTYPE_CUSTOM_TRAINING)
 
@@ -8,11 +9,10 @@ const char *SpeedrunToolsPlugin::PLUGIN_TITLE = "Speedrun Tools";
 const char *SpeedrunToolsPlugin::PLUGIN_MENU_NAME = "speedruntools";
 
 SpeedrunToolsPlugin::SpeedrunToolsPlugin()
-        : BaseBakkesModPlugin(SpeedrunToolsPlugin::PLUGIN_TITLE, SpeedrunToolsPlugin::PLUGIN_MENU_NAME),
-          toolkits(),
-          gameGravityComponent(this), gameSpeedComponent(this)
+        : BaseBakkesModPlugin(SpeedrunToolsPlugin::PLUGIN_TITLE, SpeedrunToolsPlugin::PLUGIN_MENU_NAME), toolkits()
 {
-    this->toolkits.push_back(std::make_unique<GameToolkit>(this, gameGravityComponent, gameSpeedComponent));
+    this->toolkits.push_back(std::make_unique<GameToolkit>(this));
+    this->toolkits.push_back(std::make_unique<SaveStateToolkit>(this));
 }
 
 void SpeedrunToolsPlugin::onLoad()

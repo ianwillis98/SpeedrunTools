@@ -5,8 +5,7 @@
 class GameToolkit : public PluginToolkit
 {
 public:
-    explicit GameToolkit(BakkesMod::Plugin::BakkesModPlugin *plugin, GameGravityComponent &gameGravityComponent,
-                         GameSpeedComponent &gameSpeedComponent);
+    explicit GameToolkit(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
     std::string title() override;
     void onLoad() override;
@@ -14,6 +13,6 @@ public:
     void render() override;
 
 private:
-    GameGravityComponent &gameGravityComponent;
-    GameSpeedComponent &gameSpeedComponent;
+    GameGravityComponent gameGravityComponent;
+    GameSpeedComponent gameSpeedComponent;
 };

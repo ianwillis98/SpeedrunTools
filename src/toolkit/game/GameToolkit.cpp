@@ -1,9 +1,8 @@
 #include <cmath>
 #include "GameToolkit.h"
 
-GameToolkit::GameToolkit(BakkesMod::Plugin::BakkesModPlugin *plugin, GameGravityComponent &gameGravityComponent,
-                         GameSpeedComponent &gameSpeedComponent)
-        : PluginToolkit(plugin), gameGravityComponent(gameGravityComponent), gameSpeedComponent(gameSpeedComponent)
+GameToolkit::GameToolkit(BakkesMod::Plugin::BakkesModPlugin *plugin)
+        : PluginToolkit(plugin), gameGravityComponent(plugin), gameSpeedComponent(plugin)
 {
 
 }

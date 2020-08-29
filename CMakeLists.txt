@@ -14,7 +14,17 @@ add_library(
         src/plugin/BaseBakkesModPlugin.cpp src/plugin/BaseBakkesModPlugin.h
         src/SpeedrunToolsPlugin.cpp src/SpeedrunToolsPlugin.h
         src/toolkit/game/GameToolkit.cpp src/toolkit/game/GameToolkit.h
-        src/components/game/GameGravityComponent.cpp src/components/game/GameGravityComponent.h src/plugin/PluginComponent.cpp src/plugin/PluginComponent.h src/components/game/GameSpeedComponent.cpp src/components/game/GameSpeedComponent.h src/toolkit/PluginToolkit.cpp src/toolkit/PluginToolkit.h)
+        src/components/game/GameGravityComponent.cpp src/components/game/GameGravityComponent.h
+        src/plugin/PluginComponent.cpp src/plugin/PluginComponent.h
+        src/components/game/GameSpeedComponent.cpp src/components/game/GameSpeedComponent.h
+        src/toolkit/PluginToolkit.cpp src/toolkit/PluginToolkit.h
+        src/components/savestate/SaveStateComponent.cpp src/components/savestate/SaveStateComponent.h
+        src/components/savestate/RewindStateComponent.cpp src/components/savestate/RewindStateComponent.h
+        src/models/CarState.h src/models/CarState.cpp
+        src/models/BallState.h src/models/BallState.cpp
+        src/models/SaveState.h src/models/SaveState.cpp
+        src/services/MultiEventHooker.h src/services/MultiEventHooker.cpp
+        src/utils/ImGuiExtensions.cpp src/utils/ImGuiExtensions.h src/toolkit/savestate/SaveStateToolkit.cpp src/toolkit/savestate/SaveStateToolkit.h)
 
 target_include_directories(
         SpeedrunTools PRIVATE

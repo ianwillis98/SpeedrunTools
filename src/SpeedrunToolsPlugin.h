@@ -9,6 +9,7 @@
 #include "toolkit/PluginToolkit.h"
 #include "components/game/GameGravityComponent.h"
 #include "components/game/GameSpeedComponent.h"
+#include "components/savestate/SaveStateComponent.h"
 
 class SpeedrunToolsPlugin : public BaseBakkesModPlugin
 {
@@ -25,8 +26,4 @@ public:
 
 private:
     std::vector<std::unique_ptr<PluginToolkit>> toolkits;
-
-private:
-    GameGravityComponent gameGravityComponent;
-    GameSpeedComponent gameSpeedComponent;
 };

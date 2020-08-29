@@ -5,8 +5,6 @@
 class GameGravityComponent : public PluginComponent
 {
 public:
-    static GameGravityComponent &getInstance(BakkesMod::Plugin::BakkesModPlugin *plugin);
-
     explicit GameGravityComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
     void onLoad() override;

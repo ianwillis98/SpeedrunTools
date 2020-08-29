@@ -1,4 +1,5 @@
 #include "GameSpeedComponent.h"
+#include "../../utils/ImGuiExtensions.h"
 
 GameSpeedComponent::GameSpeedComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : PluginComponent(plugin), svSoccarGameSpeed(nullptr), gameSpeed(nullptr)
@@ -46,12 +47,7 @@ void GameSpeedComponent::render()
     ImGui::TextColored(color, "(only works in freeplay and workshop maps)");
 
     ImGui::Spacing();
-
-    if (!isInFreeplay)
-    {
-        ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
-        ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
-    }
+    ImGuiExtensions::PushDisableStyleIf(!isInFreeplay);
 
     float speed = this->getGameSpeed();
     if (ImGui::SliderFloat("Game Speed", &speed, 0.05f, 5.0f, "%.3f"))
@@ -82,11 +78,7 @@ void GameSpeedComponent::render()
         });
     }
 
-    if (!isInFreeplay)
-    {
-        ImGui::PopItemFlag();
-        ImGui::PopStyleVar();
-    }
+    ImGuiExtensions::PopDisableStyleIf(!isInFreeplay);
 
     ImGui::PopID();
 }
