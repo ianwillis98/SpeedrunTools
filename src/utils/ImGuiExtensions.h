@@ -3,9 +3,9 @@
 class ImGuiExtensions
 {
 public:
-    static void PushDisableStyle();
-    static void PopDisableStyle();
+    static void PushDisabledStyle();
+    static void PopDisabledStyle();
 
-    static void PushDisableStyleIf(bool flag);
-    static void PopDisableStyleIf(bool flag);
+    static void PushDisabledStyleIf(bool flag);
+    static void PopDisabledStyleIf(bool flag);
 };

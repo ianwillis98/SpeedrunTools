@@ -15,12 +15,14 @@ public:
     void setGameGravity(float gravity);
 
 private:
-    std::unique_ptr<CVarWrapper> svSoccarGameGravity;
+    bool isComponentEnabled();
+    void setComponentEnabled(bool enabled);
+    void onComponentEnabledChanged();
+
     float getSvSoccarGameGravity();
     void setSvSoccarGameGravity(float gravity);
-    void onSvSoccarGameGravityChanged(const std::string &oldValue, const CVarWrapper &cvar);
+    void onSvSoccarGameGravityChanged();
 
-    std::unique_ptr<CVarWrapper> gameGravity;
-    void onGameGravityChanged(const std::string &oldValue, const CVarWrapper &cvar);
+    void onGameGravityChanged();
 };
 

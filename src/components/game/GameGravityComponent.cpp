@@ -1,32 +1,27 @@
 #include "GameGravityComponent.h"
 #include "../../utils/ImGuiExtensions.h"
 
-GameGravityComponent::GameGravityComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
-        : PluginComponent(plugin), svSoccarGameGravity(nullptr), gameGravity(nullptr)
+GameGravityComponent::GameGravityComponent(BakkesMod::Plugin::BakkesModPlugin *plugin) : PluginComponent(plugin)
 {
 
 }
 
 void GameGravityComponent::onLoad()
 {
-    CVarWrapper svSoccarGameGravityCVar = this->plugin->cvarManager->getCvar("sv_soccar_gravity");
-    if (svSoccarGameGravityCVar.IsNull())
-    {
-        this->plugin->cvarManager->log("sv_soccar_gravity was null. Custom gravity won't work.");
-    }
-    this->svSoccarGameGravity = std::make_unique<CVarWrapper>(svSoccarGameGravityCVar);
-    svSoccarGameGravityCVar.addOnValueChanged([this](const std::string &oldValue, const CVarWrapper &cvar) {
-        this->onSvSoccarGameGravityChanged(oldValue, cvar);
+    CVarWrapper componentEnabled = this->plugin->cvarManager->registerCvar("st_game_gravity_enabled", "1", "Is custom gravity enabled");
+    componentEnabled.addOnValueChanged([this](const std::string &oldValue, const CVarWrapper &cvar) {
+        this->onComponentEnabledChanged();
     });
 
-    CVarWrapper gameGravityCVar = this->plugin->cvarManager->getCvar("st_g_gravity");
-    if (gameGravityCVar.IsNull())
-    {
-        gameGravityCVar = this->plugin->cvarManager->registerCvar("st_g_gravity", "-650.0", "Current game gravity.");
-    }
-    this->gameGravity = std::make_unique<CVarWrapper>(gameGravityCVar);
-    this->gameGravity->addOnValueChanged([this](const std::string &oldValue, const CVarWrapper &cvar) {
-        this->onGameGravityChanged(oldValue, cvar);
+    CVarWrapper svSoccarGameGravityCVar = this->plugin->cvarManager->getCvar("sv_soccar_gravity");
+    svSoccarGameGravityCVar.addOnValueChanged([this](const std::string &oldValue, const CVarWrapper &cvar) {
+        this->onSvSoccarGameGravityChanged();
+    });
+
+    std::string currentGravity = svSoccarGameGravityCVar.getStringValue();
+    CVarWrapper gameGravityCVar = this->plugin->cvarManager->registerCvar("st_game_gravity", currentGravity, "Current game gravity");
+    gameGravityCVar.addOnValueChanged([this](const std::string &oldValue, const CVarWrapper &cvar) {
+        this->onGameGravityChanged();
     });
 }
 
@@ -37,10 +32,13 @@ void GameGravityComponent::onUnload()
 
 void GameGravityComponent::render()
 {
-    ImGui::PushID(this);
+    bool enabled = this->isComponentEnabled();
+    if (ImGui::Checkbox("Customize Game Gravity", &enabled))
+    {
+        this->setComponentEnabled(enabled);
+    }
 
-    ImGui::Text("Customize Game Gravity");
-
+    bool isEnabled = this->isComponentEnabled();
     bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
 
     ImVec4 color = ImGui::GetStyle().Colors[isInFreeplay ? ImGuiCol_TextDisabled : ImGuiCol_Text];
@@ -48,7 +46,7 @@ void GameGravityComponent::render()
 
     ImGui::Spacing();
 
-    ImGuiExtensions::PushDisableStyleIf(!isInFreeplay);
+    ImGuiExtensions::PushDisabledStyleIf(!isEnabled || !isInFreeplay);
 
     float gravity = this->getGameGravity();
     if (ImGui::SliderFloat("Game Gravity", &gravity, -5000.0f, 5000.0f, "%.3f"))
@@ -79,23 +77,45 @@ void GameGravityComponent::render()
         });
     }
 
-    ImGuiExtensions::PopDisableStyleIf(!isInFreeplay);
+    ImGuiExtensions::PopDisabledStyleIf(!isEnabled || !isInFreeplay);
+}
 
-    ImGui::PopID();
+bool GameGravityComponent::isComponentEnabled()
+{
+    return this->plugin->cvarManager->getCvar("st_game_gravity_enabled").getBoolValue();
+}
+
+void GameGravityComponent::setComponentEnabled(bool enabled)
+{
+    this->plugin->cvarManager->getCvar("st_game_gravity_enabled").setValue(enabled);
+}
+
+void GameGravityComponent::onComponentEnabledChanged()
+{
+    if (this->isComponentEnabled())
+    {
+        this->plugin->cvarManager->getCvar("st_game_gravity").notify();
+    }
+    else
+    {
+        this->setSvSoccarGameGravity(-650.0f);
+    }
 }
 
 float GameGravityComponent::getSvSoccarGameGravity()
 {
-    return (!this->svSoccarGameGravity || this->svSoccarGameGravity->IsNull()) ? 0.0f : this->svSoccarGameGravity->getFloatValue();
+    return this->plugin->cvarManager->getCvar("sv_soccar_gravity").getFloatValue();
 }
 
 void GameGravityComponent::setSvSoccarGameGravity(float gravity)
 {
-    if (!this->svSoccarGameGravity || !this->svSoccarGameGravity->IsNull()) this->svSoccarGameGravity->setValue(gravity);
+    this->plugin->cvarManager->getCvar("sv_soccar_gravity").setValue(gravity);
 }
 
-void GameGravityComponent::onSvSoccarGameGravityChanged(const std::string &oldValue, const CVarWrapper &cvar)
+void GameGravityComponent::onSvSoccarGameGravityChanged()
 {
+    if (!this->isComponentEnabled()) return;
+
     if (this->getGameGravity() != this->getSvSoccarGameGravity())
     {
         this->setGameGravity(this->getSvSoccarGameGravity());
@@ -104,16 +124,18 @@ void GameGravityComponent::onSvSoccarGameGravityChanged(const std::string &oldVa
 
 float GameGravityComponent::getGameGravity()
 {
-    return (!this->gameGravity || this->gameGravity->IsNull()) ? 0.0f : this->gameGravity->getFloatValue();
+    return this->plugin->cvarManager->getCvar("st_game_gravity").getFloatValue();
 }
 
 void GameGravityComponent::setGameGravity(float gravity)
 {
-    if (!this->gameGravity || !this->gameGravity->IsNull()) this->gameGravity->setValue(gravity);
+    this->plugin->cvarManager->getCvar("st_game_gravity").setValue(gravity);
 }
 
-void GameGravityComponent::onGameGravityChanged(const std::string &oldValue, const CVarWrapper &cvar)
+void GameGravityComponent::onGameGravityChanged()
 {
+    if (!this->isComponentEnabled()) return;
+
     if (this->getSvSoccarGameGravity() != this->getGameGravity())
     {
         this->setSvSoccarGameGravity(this->getGameGravity());

@@ -1,31 +1,26 @@
 #include "GameSpeedComponent.h"
 #include "../../utils/ImGuiExtensions.h"
 
-GameSpeedComponent::GameSpeedComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
-        : PluginComponent(plugin), svSoccarGameSpeed(nullptr), gameSpeed(nullptr)
+GameSpeedComponent::GameSpeedComponent(BakkesMod::Plugin::BakkesModPlugin *plugin) : PluginComponent(plugin)
 {
 
 }
 
 void GameSpeedComponent::onLoad()
 {
+    CVarWrapper componentEnabled = this->plugin->cvarManager->registerCvar("st_game_speed_enabled", "1", "Is custom game speed enabled");
+    componentEnabled.addOnValueChanged([this](const std::string &oldValue, const CVarWrapper &cvar) {
+        this->onComponentEnabledChanged();
+    });
+
     CVarWrapper svSoccarGameSpeedCVar = this->plugin->cvarManager->getCvar("sv_soccar_gamespeed");
-    if (svSoccarGameSpeedCVar.IsNull())
-    {
-        this->plugin->cvarManager->log("sv_soccar_gamespeed was null. Custom game speed won't work.");
-    }
-    this->svSoccarGameSpeed = std::make_unique<CVarWrapper>(svSoccarGameSpeedCVar);
-    this->svSoccarGameSpeed->addOnValueChanged([this](const std::string &oldValue, const CVarWrapper &cvar) {
+    svSoccarGameSpeedCVar.addOnValueChanged([this](const std::string &oldValue, const CVarWrapper &cvar) {
         this->onSvSoccarGameSpeedChanged(oldValue, cvar);
     });
 
-    CVarWrapper gameSpeedCVar = this->plugin->cvarManager->getCvar("st_g_speed");
-    if (gameSpeedCVar.IsNull())
-    {
-        gameSpeedCVar = this->plugin->cvarManager->registerCvar("st_g_Speed", "1.0", "Current game speed.");
-    }
-    this->gameSpeed = std::make_unique<CVarWrapper>(gameSpeedCVar);
-    this->gameSpeed->addOnValueChanged([this](const std::string &oldValue, const CVarWrapper &cvar) {
+    std::string currentGameSpeed = svSoccarGameSpeedCVar.getStringValue();
+    CVarWrapper gameSpeedCVar = this->plugin->cvarManager->registerCvar("st_game_speed", currentGameSpeed, "Current game speed");
+    gameSpeedCVar.addOnValueChanged([this](const std::string &oldValue, const CVarWrapper &cvar) {
         this->onGameSpeedChanged(oldValue, cvar);
     });
 }
@@ -37,17 +32,21 @@ void GameSpeedComponent::onUnload()
 
 void GameSpeedComponent::render()
 {
-    ImGui::PushID(this);
+    bool enabled = this->isComponentEnabled();
+    if (ImGui::Checkbox("Customize Game Speed", &enabled))
+    {
+        this->setComponentEnabled(enabled);
+    }
 
-    ImGui::Text("Customize Game Speed");
-
+    bool isEnabled = this->isComponentEnabled();
     bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
 
     ImVec4 color = ImGui::GetStyle().Colors[isInFreeplay ? ImGuiCol_TextDisabled : ImGuiCol_Text];
     ImGui::TextColored(color, "(only works in freeplay and workshop maps)");
 
     ImGui::Spacing();
-    ImGuiExtensions::PushDisableStyleIf(!isInFreeplay);
+
+    ImGuiExtensions::PushDisabledStyleIf(!isEnabled || !isInFreeplay);
 
     float speed = this->getGameSpeed();
     if (ImGui::SliderFloat("Game Speed", &speed, 0.05f, 5.0f, "%.3f"))
@@ -64,37 +63,59 @@ void GameSpeedComponent::render()
         });
     }
     ImGui::SameLine();
-    if (ImGui::Button("Half (0.5)"))
+    if (ImGui::Button("Slo-mo (0.67)"))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->setGameSpeed(0.5f);
+            this->setGameSpeed(0.67f);
         });
     }
     ImGui::SameLine();
-    if (ImGui::Button("Double (2.0)"))
+    if (ImGui::Button("Fast-mo (1.17)"))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->setGameSpeed(2.0f);
+            this->setGameSpeed(1.17f);
         });
     }
 
-    ImGuiExtensions::PopDisableStyleIf(!isInFreeplay);
+    ImGuiExtensions::PopDisabledStyleIf(!isEnabled || !isInFreeplay);
+}
 
-    ImGui::PopID();
+bool GameSpeedComponent::isComponentEnabled()
+{
+    return this->plugin->cvarManager->getCvar("st_game_speed_enabled").getBoolValue();
+}
+
+void GameSpeedComponent::setComponentEnabled(bool enabled)
+{
+    this->plugin->cvarManager->getCvar("st_game_speed_enabled").setValue(enabled);
+}
+
+void GameSpeedComponent::onComponentEnabledChanged()
+{
+    if (this->isComponentEnabled())
+    {
+        this->plugin->cvarManager->getCvar("st_game_speed").notify();
+    }
+    else
+    {
+        this->setSvSoccarGameSpeed(1.0f);
+    }
 }
 
 float GameSpeedComponent::getSvSoccarGameSpeed()
 {
-    return (!this->svSoccarGameSpeed || this->svSoccarGameSpeed->IsNull()) ? 0.0f : this->svSoccarGameSpeed->getFloatValue();
+    return this->plugin->cvarManager->getCvar("sv_soccar_gamespeed").getFloatValue();
 }
 
 void GameSpeedComponent::setSvSoccarGameSpeed(float speed)
 {
-    if (!this->svSoccarGameSpeed || !this->svSoccarGameSpeed->IsNull()) this->svSoccarGameSpeed->setValue(speed);
+    this->plugin->cvarManager->getCvar("sv_soccar_gamespeed").setValue(speed);
 }
 
 void GameSpeedComponent::onSvSoccarGameSpeedChanged(const std::string &oldValue, const CVarWrapper &cvar)
 {
+    if (!this->isComponentEnabled()) return;
+
     if (this->getGameSpeed() != this->getSvSoccarGameSpeed())
     {
         this->setGameSpeed(this->getSvSoccarGameSpeed());
@@ -103,16 +124,18 @@ void GameSpeedComponent::onSvSoccarGameSpeedChanged(const std::string &oldValue,
 
 float GameSpeedComponent::getGameSpeed()
 {
-    return (!this->gameSpeed || this->gameSpeed->IsNull()) ? 0.0f : this->gameSpeed->getFloatValue();
+    return this->plugin->cvarManager->getCvar("st_game_speed").getFloatValue();
 }
 
 void GameSpeedComponent::setGameSpeed(float speed)
 {
-    if (!this->gameSpeed || !this->gameSpeed->IsNull()) this->gameSpeed->setValue(speed);
+    this->plugin->cvarManager->getCvar("st_game_speed").setValue(speed);
 }
 
 void GameSpeedComponent::onGameSpeedChanged(const std::string &oldValue, const CVarWrapper &cvar)
 {
+    if (!this->isComponentEnabled()) return;
+
     if (this->getSvSoccarGameSpeed() != this->getGameSpeed())
     {
         this->setSvSoccarGameSpeed(this->getGameSpeed());

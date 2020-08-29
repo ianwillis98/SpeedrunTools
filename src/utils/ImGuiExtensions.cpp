@@ -2,30 +2,30 @@
 #include <imgui_internal.h>
 #include "ImGuiExtensions.h"
 
-void ImGuiExtensions::PushDisableStyle()
+void ImGuiExtensions::PushDisabledStyle()
 {
     ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
     ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
 }
 
-void ImGuiExtensions::PopDisableStyle()
+void ImGuiExtensions::PopDisabledStyle()
 {
     ImGui::PopItemFlag();
     ImGui::PopStyleVar();
 }
 
-void ImGuiExtensions::PushDisableStyleIf(bool flag)
+void ImGuiExtensions::PushDisabledStyleIf(bool flag)
 {
     if (flag)
     {
-        ImGuiExtensions::PushDisableStyle();
+        ImGuiExtensions::PushDisabledStyle();
     }
 }
 
-void ImGuiExtensions::PopDisableStyleIf(bool flag)
+void ImGuiExtensions::PopDisabledStyleIf(bool flag)
 {
     if (flag)
     {
-        ImGuiExtensions::PopDisableStyle();
+        ImGuiExtensions::PopDisabledStyle();
     }
 }

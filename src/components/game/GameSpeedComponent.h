@@ -15,11 +15,13 @@ public:
     void setGameSpeed(float gameSpeed);
 
 private:
-    std::unique_ptr<CVarWrapper> svSoccarGameSpeed;
+    bool isComponentEnabled();
+    void setComponentEnabled(bool enabled);
+    void onComponentEnabledChanged();
+
     float getSvSoccarGameSpeed();
     void setSvSoccarGameSpeed(float Speed);
     void onSvSoccarGameSpeedChanged(const std::string &oldValue, const CVarWrapper &cvar);
 
-    std::unique_ptr<CVarWrapper> gameSpeed;
     void onGameSpeedChanged(const std::string &oldValue, const CVarWrapper &cvar);
 };

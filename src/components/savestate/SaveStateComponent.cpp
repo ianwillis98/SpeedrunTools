@@ -31,7 +31,7 @@ void SaveStateComponent::render()
     ImVec4 color = ImGui::GetStyle().Colors[isInFreeplay ? ImGuiCol_TextDisabled : ImGuiCol_Text];
     ImGui::TextColored(color, "(only works in freeplay and workshop maps)");
 
-    ImGuiExtensions::PushDisableStyleIf(!isInFreeplay);
+    ImGuiExtensions::PushDisabledStyleIf(!isInFreeplay);
 
     if (ImGui::Button("Save state"))
     {
@@ -40,21 +40,21 @@ void SaveStateComponent::render()
         });
     }
     ImGui::SameLine();
-    ImGuiExtensions::PushDisableStyleIf(isInFreeplay && !this->isSaved);
+    ImGuiExtensions::PushDisabledStyleIf(isInFreeplay && !this->isSaved);
     if (ImGui::Button("Load state"))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
             this->load();
         });
     }
-    ImGuiExtensions::PopDisableStyleIf(isInFreeplay && !this->isSaved);
+    ImGuiExtensions::PopDisabledStyleIf(isInFreeplay && !this->isSaved);
 
     if (this->isSaved)
     {
         this->saveState.render("save state");
     }
 
-    ImGuiExtensions::PopDisableStyleIf(!isInFreeplay);
+    ImGuiExtensions::PopDisabledStyleIf(!isInFreeplay);
 }
 
 void SaveStateComponent::save()
