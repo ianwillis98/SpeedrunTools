@@ -16,7 +16,7 @@ enum ConnectionState
 
 class LiveSplitClient
 {
-private:
+public:
     BakkesMod::Plugin::BakkesModPlugin *plugin;
 
     asio::io_context io_context;

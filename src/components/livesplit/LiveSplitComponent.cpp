@@ -54,19 +54,22 @@ void LiveSplitComponent::onUnload()
 void LiveSplitComponent::render()
 {
     bool isComponentEnabled = this->isComponentEnabled();
+    ImGuiExtensions::PushDisabledStyleIf(this->liveSplitClient.connectionState == ConnectionState::Connecting);
     if (ImGui::Checkbox("Interact with LiveSplit through a LiveSplit Server", &isComponentEnabled))
     {
         this->plugin->gameWrapper->Execute([this, isComponentEnabled](GameWrapper *gw) {
             this->setComponentEnabled(isComponentEnabled);
         });
     }
+    ImGuiExtensions::PopDisabledStyleIf(this->liveSplitClient.connectionState == ConnectionState::Connecting);
 
     ImGui::Spacing();
 
     ImGui::Text("Connection Status:");
     ImGui::SameLine();
     std::string connectionStateString;
-    switch (liveSplitClient.getConnectionState())
+    ConnectionState connectionState = this->liveSplitClient.getConnectionState();
+    switch (connectionState)
     {
         case ConnectionState::Connected:
             connectionStateString = "Connected";
@@ -79,17 +82,24 @@ void LiveSplitComponent::render()
             break;
     }
     ImGui::Text("%s", connectionStateString.c_str());
+    if (connectionState == ConnectionState::Connecting)
+    {
+        ImGui::SameLine();
+        ImGui::Text("%c", "|/-\\"[(int) (ImGui::GetTime() / 0.05f) & 3]);
+    }
 
     ImGui::Spacing();
 
     ImGuiExtensions::PushDisabledStyleIf(!isComponentEnabled);
 
+    ImGuiExtensions::PushDisabledStyleIf(isComponentEnabled && connectionState == ConnectionState::Connecting);
     if (ImGui::Button("Connect"))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
             this->connectAsync();
         });
     }
+    ImGuiExtensions::PopDisabledStyleIf(isComponentEnabled && connectionState == ConnectionState::Connecting);
 
     if (liveSplitClient.getConnectionState() == ConnectionState::Connected)
     {
@@ -203,7 +213,14 @@ void LiveSplitComponent::disconnect()
 {
     if (!this->isComponentEnabled()) return;
 
-    this->liveSplitClient.disconnect();
+    try
+    {
+        this->liveSplitClient.disconnect();
+    }
+    catch (const std::exception &e)
+    {
+        this->plugin->cvarManager->log("LiveSplitToolkit: Error while disconnecting \"" + std::string(e.what()) + "\".");
+    }
 }
 
 void LiveSplitComponent::startOrSplit()
@@ -325,6 +342,12 @@ bool LiveSplitComponent::isComponentEnabled()
 
 void LiveSplitComponent::setComponentEnabled(bool enabled)
 {
+    if (this->liveSplitClient.connectionState == ConnectionState::Connecting)
+    {
+        this->plugin->cvarManager->log("LiveSplitToolkit: cannot disable component while trying to connect.");
+        return;
+    }
+
     this->plugin->cvarManager->getCvar("st_livesplit_enabled").setValue(enabled);
 }
 
@@ -332,6 +355,13 @@ void LiveSplitComponent::onComponentEnabledChanged()
 {
     if (!this->isComponentEnabled())
     {
-        this->liveSplitClient.disconnect();
+        try
+        {
+            this->liveSplitClient.disconnect();
+        }
+        catch (const std::exception &e)
+        {
+            this->plugin->cvarManager->log("LiveSplitToolkit: Error while disconnecting \"" + std::string(e.what()) + "\".");
+        }
     }
 }

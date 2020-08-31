@@ -1,4 +1,3 @@
-
 # Created by https://www.toptal.com/developers/gitignore/api/clion,c++,cmake
 # Edit at https://www.toptal.com/developers/gitignore?templates=clion,c++,cmake
 
@@ -35,6 +34,7 @@
 *.exe
 *.out
 *.app
+!bakkesmod-patch.exe
 
 ### CLion ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider

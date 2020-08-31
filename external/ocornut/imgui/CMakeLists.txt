@@ -25,3 +25,5 @@ add_library(
         imstb_textedit.h
         imstb_truetype.h
 )
+
+set_property(TARGET ImGui PROPERTY MSVC_RUNTIME_LIBRARY MultiThreaded)

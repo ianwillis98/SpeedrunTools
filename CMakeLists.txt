@@ -30,7 +30,10 @@ add_library(
         src/components/livesplit/LiveSplitComponent.cpp src/components/livesplit/LiveSplitComponent.h
         src/toolkit/livesplit/LiveSplitToolkit.cpp src/toolkit/livesplit/LiveSplitToolkit.h
         src/services/LiveSplitClient.h src/services/LiveSplitClient.cpp
-        src/components/car/AutoAirRollComponent.cpp src/components/car/AutoAirRollComponent.h)
+        src/components/car/AirRollComponent.cpp src/components/car/AirRollComponent.h
+        src/components/car/BoostComponent.cpp src/components/car/BoostComponent.h
+        src/components/livesplit/autosplitter/PanicsAirRaceBeachComponent.cpp src/components/livesplit/autosplitter/PanicsAirRaceBeachComponent.h
+)
 
 target_include_directories(
         SpeedrunTools PRIVATE
@@ -46,9 +49,11 @@ target_link_libraries(
         asio
 )
 
+set_property(TARGET SpeedrunTools PROPERTY MSVC_RUNTIME_LIBRARY MultiThreaded)
+
 add_custom_command(
         TARGET SpeedrunTools POST_BUILD
-        COMMAND python tools/bakkes_patchplugin.py $<TARGET_FILE:SpeedrunTools>
+        COMMAND ${BAKKESMOD_PATH}/bakkesmodsdk/bakkesmod-patch.exe $<TARGET_FILE:SpeedrunTools>
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         COMMENT "Running bakkes patch plugin..."
 )

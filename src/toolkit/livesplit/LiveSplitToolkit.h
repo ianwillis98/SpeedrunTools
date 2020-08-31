@@ -6,6 +6,7 @@
 
 #include "../PluginToolkit.h"
 #include "../../components/livesplit/LiveSplitComponent.h"
+#include "../../components/livesplit/autosplitter/PanicsAirRaceBeachComponent.h"
 
 class LiveSplitToolkit : public PluginToolkit
 {
@@ -19,4 +20,5 @@ public:
 
 private:
     LiveSplitComponent liveSplitComponent;
+    PanicsAirRaceBeachComponent panicsAirRaceBeachComponent;
 };

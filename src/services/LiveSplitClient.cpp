@@ -49,9 +49,12 @@ ConnectionState LiveSplitClient::getConnectionState()
 
 void LiveSplitClient::disconnect()
 {
-    this->connectionState = ConnectionState::NotConnected;
-    this->socket.cancel();
+    if (this->connectionState == ConnectionState::NotConnected) return;
+
     this->socket.shutdown(asio::socket_base::shutdown_both);
+    this->socket.close();
+
+    this->connectionState = ConnectionState::NotConnected;
 }
 
 void LiveSplitClient::startOrSplit()

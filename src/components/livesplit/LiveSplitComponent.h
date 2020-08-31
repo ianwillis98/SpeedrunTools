@@ -33,8 +33,9 @@ public:
     void skipSplit();
     void undoSplit();
 
-private:
     bool isComponentEnabled();
     void setComponentEnabled(bool enabled);
+
+private:
     void onComponentEnabledChanged();
 };

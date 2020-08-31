@@ -1,6 +1,8 @@
 #include "../PluginToolkit.h"
 #include "../../components/game/GameGravityComponent.h"
 #include "../../components/game/GameSpeedComponent.h"
+#include "../../components/car/BoostComponent.h"
+#include "../../components/car/AirRollComponent.h"
 
 class MutatorsToolkit : public PluginToolkit
 {
@@ -15,4 +17,6 @@ public:
 private:
     GameGravityComponent gameGravityComponent;
     GameSpeedComponent gameSpeedComponent;
+    BoostComponent boostComponent;
+    AirRollComponent autoAirRollComponent;
 };
