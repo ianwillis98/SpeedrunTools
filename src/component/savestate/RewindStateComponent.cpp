@@ -2,8 +2,8 @@
 #include "../../services/MultiEventHooker.h"
 #include "../../utils/ImGuiExtensions.h"
 
-RewindStateComponent::RewindStateComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
-        : PluginComponent(plugin), previousSaveTime(), rewindBuffer(0.0f)
+RewindStateComponent::RewindStateComponent(BakkesMod::Plugin::BakkesModPlugin *plugin, float rewindLength, float rewindInterval)
+        : PluginComponent(plugin), previousSaveTime(), rewindBuffer(rewindLength), rewindSaveInterval(rewindInterval)
 {
 
 }
@@ -12,27 +12,12 @@ void RewindStateComponent::onLoad()
 {
     // Function TAGame.Mutator_Freeplay_TA.Init
     // Function TAGame.GameEvent_TA.Init
+
     // Function TAGame.GameEvent_TA.Destroyed
     // Function TAGame.GameEvent_TA.EventDestroyed
     // Function TAGame.GameEvent_TA.IsFinished
     // Function GameEvent_Soccar_TA.Active.EndRound
     // Function TAGame.GameEvent_Soccar_TA.EventMatchEnded
-    CVarWrapper componentEnabled = this->plugin->cvarManager->registerCvar("st_savestate_rewind_enabled", "1", "Is rewind state enabled");
-    componentEnabled.addOnValueChanged([this](const std::string &oldValue, const CVarWrapper &cvar) {
-        this->onComponentEnabledChanged();
-    });
-
-    CVarWrapper rewindLength = this->plugin->cvarManager->registerCvar("st_savestate_rewindlength", "6.0", "Rewind length");
-    rewindLength.addOnValueChanged([this](const std::string &oldValue, const CVarWrapper &cvar) {
-        this->onRewindLengthChanged();
-    });
-    this->rewindBuffer.setRewindLength(rewindLength.getFloatValue());
-
-    this->plugin->cvarManager->registerCvar("st_savestate_rewindsaveinterval", "0.1", "Rewind save interval");
-
-    this->plugin->cvarManager->registerNotifier("st_savestate_rewind", [this](const std::vector<std::string> &commands) {
-        this->rewind();
-    }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
 
     MultiEventHooker::getInstance(this->plugin).hookEvent("Function TAGame.Car_TA.SetVehicleInput", [this](const std::string &eventName) {
         this->onPhysicsTick();
@@ -46,13 +31,9 @@ void RewindStateComponent::onUnload()
 
 void RewindStateComponent::render()
 {
-    bool isComponentEnabled = this->isComponentEnabled();
-    if (ImGui::Checkbox("Rewind the game back in time", &isComponentEnabled))
-    {
-        this->plugin->gameWrapper->Execute([this, isComponentEnabled](GameWrapper *gw) {
-            this->setComponentEnabled(isComponentEnabled);
-        });
-    }
+    ImGui::PushID(this);
+
+    ImGui::Text("Rewind the game back in time");
 
     bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
 
@@ -61,7 +42,7 @@ void RewindStateComponent::render()
 
     ImGui::Spacing();
 
-    ImGuiExtensions::PushDisabledStyleIf(!isComponentEnabled || !isInFreeplay);
+    ImGuiExtensions::PushDisabledStyleIf(!isInFreeplay);
 
     if (ImGui::Button("Rewind game state"))
     {
@@ -112,27 +93,13 @@ void RewindStateComponent::render()
 //        });
 //    }
 
-    ImGuiExtensions::PopDisabledStyleIf(!isComponentEnabled || !isInFreeplay);
+    ImGuiExtensions::PopDisabledStyleIf(!isInFreeplay);
+
+    ImGui::PopID();
 }
-
-void RewindStateComponent::rewind()
-{
-    if (!this->isComponentEnabled()) return;
-    if (this->rewindBuffer.empty()) return;
-    if (!this->plugin->gameWrapper->IsInFreeplay()) return;
-
-    ServerWrapper server = this->plugin->gameWrapper->GetGameEventAsServer();
-    if (server.IsNull()) return;
-
-    this->rewindBuffer.removeAllButFront();
-    GameState gameState = this->rewindBuffer.front();
-    gameState.applyTo(server);
-}
-
 
 void RewindStateComponent::onPhysicsTick()
 {
-    if (!this->isComponentEnabled()) return;
     if (!this->plugin->gameWrapper->IsInFreeplay()) return;
 
     ServerWrapper server = this->plugin->gameWrapper->GetGameEventAsServer();
@@ -148,46 +115,34 @@ void RewindStateComponent::onPhysicsTick()
     }
 }
 
-bool RewindStateComponent::isComponentEnabled()
+void RewindStateComponent::rewind()
 {
-    return this->plugin->cvarManager->getCvar("st_savestate_rewind_enabled").getBoolValue();
-}
+    if (this->rewindBuffer.empty()) return;
+    if (!this->plugin->gameWrapper->IsInFreeplay()) return;
 
-void RewindStateComponent::setComponentEnabled(bool enabled)
-{
-    this->plugin->cvarManager->getCvar("st_savestate_rewind_enabled").setValue(enabled);
-}
+    ServerWrapper server = this->plugin->gameWrapper->GetGameEventAsServer();
+    if (server.IsNull()) return;
 
-void RewindStateComponent::onComponentEnabledChanged()
-{
-    if (!this->isComponentEnabled())
-    {
-        this->rewindBuffer.clear();
-    }
-    this->plugin->gameWrapper->GetGameEventAsServer();
+    this->rewindBuffer.removeAllButFront();
+    this->rewindBuffer.front().applyTo(server);
 }
 
 float RewindStateComponent::getRewindLength()
 {
-    return this->plugin->cvarManager->getCvar("st_savestate_rewindlength").getFloatValue();
+    return this->rewindBuffer.getRewindLength();
 }
 
 void RewindStateComponent::setRewindLength(float length)
 {
-    this->plugin->cvarManager->getCvar("st_savestate_rewindlength").setValue(length);
+    this->rewindBuffer.setRewindLength(length);
 }
 
-void RewindStateComponent::onRewindLengthChanged()
+float RewindStateComponent::getRewindSaveInterval() const
 {
-    this->rewindBuffer.setRewindLength(this->getRewindLength());
-}
-
-float RewindStateComponent::getRewindSaveInterval()
-{
-    return this->plugin->cvarManager->getCvar("st_savestate_rewindsaveinterval").getFloatValue();
+    return this->rewindSaveInterval;
 }
 
 void RewindStateComponent::setRewindSaveInterval(float interval)
 {
-    this->plugin->cvarManager->getCvar("st_savestate_rewindsaveinterval").setValue(interval);
+    this->rewindSaveInterval = interval;
 }

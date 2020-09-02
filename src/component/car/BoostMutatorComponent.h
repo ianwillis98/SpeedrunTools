@@ -1,17 +1,21 @@
 #pragma once
 
-#include "../../plugin/PluginComponent.h"
+#include "../PluginComponent.h"
 
-enum BoostMutator {
-    None = 0,
-    Unlimited = 1,
-    Zero = 2
+enum BoostMutator
+{
+    None,
+    Unlimited,
+    Zero
 };
 
-class BoostComponent : public PluginComponent
+class BoostMutatorComponent : public PluginComponent
 {
+private:
+    BoostMutator boostMutator;
+
 public:
-    explicit BoostComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit BoostMutatorComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
     void onLoad() override;
     void onUnload() override;
@@ -23,6 +27,4 @@ public:
 private:
     void onPhysicsTick();
     void setBoostAmount(float amount);
-
-    void onBoostMutatorChanged();
 };

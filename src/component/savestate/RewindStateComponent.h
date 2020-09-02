@@ -1,16 +1,17 @@
 #pragma once
 
-#include "../../plugin/PluginComponent.h"
 #include "RewindBuffer.h"
+#include "../PluginComponent.h"
 
 class RewindStateComponent : public PluginComponent
 {
 private:
-    float previousSaveTime;
     RewindBuffer rewindBuffer;
+    float rewindSaveInterval;
+    float previousSaveTime;
 
 public:
-    explicit RewindStateComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    RewindStateComponent(BakkesMod::Plugin::BakkesModPlugin *plugin, float rewindLength, float rewindInterval);
 
     void onLoad() override;
     void onUnload() override;
@@ -21,16 +22,9 @@ public:
     float getRewindLength();
     void setRewindLength(float length);
 
-    float getRewindSaveInterval();
+    float getRewindSaveInterval() const;
     void setRewindSaveInterval(float interval);
-
-    bool isComponentEnabled();
-    void setComponentEnabled(bool enabled);
 
 private:
     void onPhysicsTick();
-
-    void onComponentEnabledChanged();
-
-    void onRewindLengthChanged();
 };

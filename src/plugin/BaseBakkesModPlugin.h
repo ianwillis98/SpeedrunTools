@@ -14,7 +14,7 @@ private:
 public:
     BaseBakkesModPlugin(const char *menuTitle, const char *menuName, ImGuiWindowFlags flags = 0);
 
-    virtual void RenderBody() = 0;
+    virtual void renderBody() = 0;
 
     void Render() override;
     void SetImGuiContext(uintptr_t ctx) override;

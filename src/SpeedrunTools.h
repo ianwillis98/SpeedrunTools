@@ -7,22 +7,19 @@
 #include <bakkesmod/plugin/bakkesmodplugin.h>
 #include "plugin/BaseBakkesModPlugin.h"
 #include "toolkit/PluginToolkit.h"
-#include "components/game/GameGravityComponent.h"
-#include "components/game/GameSpeedComponent.h"
-#include "components/savestate/SaveStateComponent.h"
 
-class SpeedrunToolsPlugin : public BaseBakkesModPlugin
+class SpeedrunTools : public BaseBakkesModPlugin
 {
 public:
     static const char *PLUGIN_VERSION;
     static const char *PLUGIN_TITLE;
     static const char *PLUGIN_MENU_NAME;
 
-    SpeedrunToolsPlugin();
+    SpeedrunTools();
 
     void onLoad() override;
     void onUnload() override;
-    void RenderBody() override;
+    void renderBody() override;
 
 private:
     std::vector<std::unique_ptr<PluginToolkit>> toolkits;

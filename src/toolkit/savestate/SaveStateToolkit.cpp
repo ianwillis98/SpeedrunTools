@@ -1,7 +1,7 @@
 #include "SaveStateToolkit.h"
 
 SaveStateToolkit::SaveStateToolkit(BakkesMod::Plugin::BakkesModPlugin *plugin)
-        : PluginToolkit(plugin), rewindStateComponent(plugin), saveStateComponent(plugin)
+        : PluginToolkit(plugin), rewindStateComponent(plugin, 6.0f, 0.1f), saveStateComponent(plugin)
 {
 
 }
@@ -15,6 +15,27 @@ void SaveStateToolkit::onLoad()
 {
     this->rewindStateComponent.onLoad();
     this->saveStateComponent.onLoad();
+
+    this->plugin->cvarManager->registerNotifier("speedrun_savestate_rewind", [this](const std::vector<std::string> &commands) {
+        this->rewindStateComponent.rewind();
+    }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
+
+    this->plugin->cvarManager->registerCvar("speedrun_savestate_rewindlength", "6.0", "Rewind length")
+            .addOnValueChanged([this](const std::string &oldValue, CVarWrapper cvar) {
+                this->rewindStateComponent.setRewindLength(cvar.getFloatValue());
+            });
+
+    this->plugin->cvarManager->registerCvar("speedrun_savestate_rewindsaveinterval", "0.1", "Rewind save interval")
+            .addOnValueChanged([this](const std::string &oldValue, CVarWrapper cvar) {
+                this->rewindStateComponent.setRewindSaveInterval(cvar.getFloatValue());
+            });
+
+    this->plugin->cvarManager->registerNotifier("speedrun_savestate_save", [this](const std::vector<std::string> &commands) {
+        this->saveStateComponent.save();
+    }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
+    this->plugin->cvarManager->registerNotifier("speedrun_savestate_load", [this](const std::vector<std::string> &commands) {
+        this->saveStateComponent.load();
+    }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
 }
 
 void SaveStateToolkit::onUnload()

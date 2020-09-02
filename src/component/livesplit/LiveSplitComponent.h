@@ -1,10 +1,6 @@
 #pragma once
 
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-
-#include "../../plugin/PluginComponent.h"
+#include "../PluginComponent.h"
 #include "../../services/LiveSplitClient.h"
 
 class LiveSplitComponent : public PluginComponent
@@ -32,10 +28,4 @@ public:
     void split();
     void skipSplit();
     void undoSplit();
-
-    bool isComponentEnabled();
-    void setComponentEnabled(bool enabled);
-
-private:
-    void onComponentEnabledChanged();
 };

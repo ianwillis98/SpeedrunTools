@@ -1,11 +1,19 @@
+#pragma once
+
 #include "../PluginToolkit.h"
-#include "../../components/game/GameGravityComponent.h"
-#include "../../components/game/GameSpeedComponent.h"
-#include "../../components/car/BoostComponent.h"
-#include "../../components/car/AirRollComponent.h"
+#include "../../component/game/GameGravityComponent.h"
+#include "../../component/game/GameSpeedComponent.h"
+#include "../../component/car/BoostMutatorComponent.h"
+#include "../../component/car/AutoAirRollComponent.h"
 
 class MutatorsToolkit : public PluginToolkit
 {
+private:
+    GameGravityComponent gameGravityComponent;
+    GameSpeedComponent gameSpeedComponent;
+    BoostMutatorComponent boostMutatorComponent;
+    AutoAirRollComponent autoAirRollComponent;
+
 public:
     explicit MutatorsToolkit(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
@@ -13,10 +21,4 @@ public:
     void onLoad() override;
     void onUnload() override;
     void render() override;
-
-private:
-    GameGravityComponent gameGravityComponent;
-    GameSpeedComponent gameSpeedComponent;
-    BoostComponent boostComponent;
-    AirRollComponent autoAirRollComponent;
 };

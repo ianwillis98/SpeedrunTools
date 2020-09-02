@@ -37,9 +37,11 @@ void GameState::applyTo(ServerWrapper &serverWrapper) const
     }
 }
 
-void GameState::render(const std::string &tag)
+void GameState::render()
 {
-    this->carState.render(tag + " car");
+    ImGui::Text("Saved car state:");
+    this->carState.render();
     ImGui::Spacing();
-    this->ballState.render(tag + " ball");
+    ImGui::Text("Saved ball state:");
+    this->ballState.render();
 }

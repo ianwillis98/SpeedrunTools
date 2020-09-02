@@ -1,6 +1,6 @@
 #include "PluginToolkit.h"
 
-PluginToolkit::PluginToolkit(BakkesMod::Plugin::BakkesModPlugin *plugin) : PluginComponent(plugin)
+PluginToolkit::PluginToolkit(BakkesMod::Plugin::BakkesModPlugin *plugin) : plugin(plugin)
 {
 
 }

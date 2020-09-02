@@ -16,7 +16,7 @@ void BaseBakkesModPlugin::Render()
         return;
     }
 
-    this->RenderBody();
+    this->renderBody();
 
     ImGui::End();
 

@@ -13,7 +13,7 @@ public:
 
     void applyTo(ServerWrapper &serverWrapper) const;
 
-    void render(const std::string &tag);
+    void render();
 
 public:
     CarState carState;

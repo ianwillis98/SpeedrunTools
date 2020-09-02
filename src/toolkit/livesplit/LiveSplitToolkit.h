@@ -1,15 +1,13 @@
 #pragma once
 
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-
 #include "../PluginToolkit.h"
-#include "../../components/livesplit/LiveSplitComponent.h"
-#include "../../components/livesplit/autosplitter/PanicsAirRaceBeachComponent.h"
+#include "../../component/livesplit/LiveSplitComponent.h"
 
 class LiveSplitToolkit : public PluginToolkit
 {
+private:
+    LiveSplitComponent liveSplitComponent;
+
 public:
     explicit LiveSplitToolkit(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
@@ -17,8 +15,4 @@ public:
     void onLoad() override;
     void onUnload() override;
     void render() override;
-
-private:
-    LiveSplitComponent liveSplitComponent;
-    PanicsAirRaceBeachComponent panicsAirRaceBeachComponent;
 };

@@ -1,6 +1,3 @@
-#include <map>
-#include <bakkesmod/wrappers/kismet/SequenceWrapper.h>
-#include <bakkesmod/wrappers/kismet/SequenceVariableWrapper.h>
 #include "LiveSplitComponent.h"
 #include "../../utils/ImGuiExtensions.h"
 
@@ -12,38 +9,7 @@ LiveSplitComponent::LiveSplitComponent(BakkesMod::Plugin::BakkesModPlugin *plugi
 
 void LiveSplitComponent::onLoad()
 {
-    CVarWrapper componentEnabled = this->plugin->cvarManager->registerCvar("st_livesplit_enabled", "1", "Is livesplit enabled");
-    componentEnabled.addOnValueChanged([this](const std::string &oldValue, const CVarWrapper &cvar) {
-        this->onComponentEnabledChanged();
-    });
 
-    this->plugin->cvarManager->registerNotifier("st_livesplit_connect", [this](const std::vector<std::string> &commands) {
-        this->connectAsync();
-    }, "", PERMISSION_PAUSEMENU_CLOSED);
-    this->plugin->cvarManager->registerNotifier("st_livesplit_startorsplit", [this](const std::vector<std::string> &commands) {
-        this->startOrSplit();
-    }, "", PERMISSION_PAUSEMENU_CLOSED);
-    this->plugin->cvarManager->registerNotifier("st_livesplit_start", [this](const std::vector<std::string> &commands) {
-        this->start();
-    }, "", PERMISSION_PAUSEMENU_CLOSED);
-    this->plugin->cvarManager->registerNotifier("st_livesplit_pause", [this](const std::vector<std::string> &commands) {
-        this->pause();
-    }, "", PERMISSION_PAUSEMENU_CLOSED);
-    this->plugin->cvarManager->registerNotifier("st_livesplit_resume", [this](const std::vector<std::string> &commands) {
-        this->resume();
-    }, "", PERMISSION_PAUSEMENU_CLOSED);
-    this->plugin->cvarManager->registerNotifier("st_livesplit_reset", [this](const std::vector<std::string> &commands) {
-        this->reset();
-    }, "", PERMISSION_PAUSEMENU_CLOSED);
-    this->plugin->cvarManager->registerNotifier("st_livesplit_split", [this](const std::vector<std::string> &commands) {
-        this->split();
-    }, "", PERMISSION_PAUSEMENU_CLOSED);
-    this->plugin->cvarManager->registerNotifier("st_livesplit_skipsplit", [this](const std::vector<std::string> &commands) {
-        this->skipSplit();
-    }, "", PERMISSION_PAUSEMENU_CLOSED);
-    this->plugin->cvarManager->registerNotifier("st_livesplit_undosplit", [this](const std::vector<std::string> &commands) {
-        this->undoSplit();
-    }, "", PERMISSION_PAUSEMENU_CLOSED);
 }
 
 void LiveSplitComponent::onUnload()
@@ -53,15 +19,7 @@ void LiveSplitComponent::onUnload()
 
 void LiveSplitComponent::render()
 {
-    bool isComponentEnabled = this->isComponentEnabled();
-    ImGuiExtensions::PushDisabledStyleIf(this->liveSplitClient.connectionState == ConnectionState::Connecting);
-    if (ImGui::Checkbox("Interact with LiveSplit through a LiveSplit Server", &isComponentEnabled))
-    {
-        this->plugin->gameWrapper->Execute([this, isComponentEnabled](GameWrapper *gw) {
-            this->setComponentEnabled(isComponentEnabled);
-        });
-    }
-    ImGuiExtensions::PopDisabledStyleIf(this->liveSplitClient.connectionState == ConnectionState::Connecting);
+    ImGui::Text("Interact with LiveSplit through a LiveSplit Server");
 
     ImGui::Spacing();
 
@@ -90,16 +48,14 @@ void LiveSplitComponent::render()
 
     ImGui::Spacing();
 
-    ImGuiExtensions::PushDisabledStyleIf(!isComponentEnabled);
-
-    ImGuiExtensions::PushDisabledStyleIf(isComponentEnabled && connectionState == ConnectionState::Connecting);
+    ImGuiExtensions::PushDisabledStyleIf(connectionState == ConnectionState::Connecting);
     if (ImGui::Button("Connect"))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
             this->connectAsync();
         });
     }
-    ImGuiExtensions::PopDisabledStyleIf(isComponentEnabled && connectionState == ConnectionState::Connecting);
+    ImGuiExtensions::PopDisabledStyleIf(connectionState == ConnectionState::Connecting);
 
     if (liveSplitClient.getConnectionState() == ConnectionState::Connected)
     {
@@ -174,15 +130,11 @@ void LiveSplitComponent::render()
         }
     }
 
-    ImGuiExtensions::PopDisabledStyleIf(!isComponentEnabled);
-
     ImGui::Spacing();
 }
 
 void LiveSplitComponent::connectAsync()
 {
-    if (!this->isComponentEnabled()) return;
-
     this->plugin->cvarManager->log("LiveSplitToolkit: Attempting to establish a connection with the LiveSplit Server...");
 
     try
@@ -211,8 +163,6 @@ void LiveSplitComponent::connectAsync()
 
 void LiveSplitComponent::disconnect()
 {
-    if (!this->isComponentEnabled()) return;
-
     try
     {
         this->liveSplitClient.disconnect();
@@ -225,8 +175,6 @@ void LiveSplitComponent::disconnect()
 
 void LiveSplitComponent::startOrSplit()
 {
-    if (!this->isComponentEnabled()) return;
-
     try
     {
         this->liveSplitClient.startOrSplit();
@@ -239,8 +187,6 @@ void LiveSplitComponent::startOrSplit()
 
 void LiveSplitComponent::start()
 {
-    if (!this->isComponentEnabled()) return;
-
     try
     {
         this->liveSplitClient.start();
@@ -253,8 +199,6 @@ void LiveSplitComponent::start()
 
 void LiveSplitComponent::pause()
 {
-    if (!this->isComponentEnabled()) return;
-
     try
     {
         this->liveSplitClient.pause();
@@ -267,8 +211,6 @@ void LiveSplitComponent::pause()
 
 void LiveSplitComponent::resume()
 {
-    if (!this->isComponentEnabled()) return;
-
     try
     {
         this->liveSplitClient.resume();
@@ -281,8 +223,6 @@ void LiveSplitComponent::resume()
 
 void LiveSplitComponent::reset()
 {
-    if (!this->isComponentEnabled()) return;
-
     try
     {
         this->liveSplitClient.reset();
@@ -295,8 +235,6 @@ void LiveSplitComponent::reset()
 
 void LiveSplitComponent::split()
 {
-    if (!this->isComponentEnabled()) return;
-
     try
     {
         this->liveSplitClient.split();
@@ -309,8 +247,6 @@ void LiveSplitComponent::split()
 
 void LiveSplitComponent::skipSplit()
 {
-    if (!this->isComponentEnabled()) return;
-
     try
     {
         this->liveSplitClient.skipSplit();
@@ -323,8 +259,6 @@ void LiveSplitComponent::skipSplit()
 
 void LiveSplitComponent::undoSplit()
 {
-    if (!this->isComponentEnabled()) return;
-
     try
     {
         this->liveSplitClient.undoSplit();
@@ -332,36 +266,5 @@ void LiveSplitComponent::undoSplit()
     catch (const std::exception &e)
     {
         this->plugin->cvarManager->log("LiveSplitToolkit: Error while trying to send the command 'undoSplit' \"" + std::string(e.what()) + "\".");
-    }
-}
-
-bool LiveSplitComponent::isComponentEnabled()
-{
-    return this->plugin->cvarManager->getCvar("st_livesplit_enabled").getBoolValue();
-}
-
-void LiveSplitComponent::setComponentEnabled(bool enabled)
-{
-    if (this->liveSplitClient.connectionState == ConnectionState::Connecting)
-    {
-        this->plugin->cvarManager->log("LiveSplitToolkit: cannot disable component while trying to connect.");
-        return;
-    }
-
-    this->plugin->cvarManager->getCvar("st_livesplit_enabled").setValue(enabled);
-}
-
-void LiveSplitComponent::onComponentEnabledChanged()
-{
-    if (!this->isComponentEnabled())
-    {
-        try
-        {
-            this->liveSplitClient.disconnect();
-        }
-        catch (const std::exception &e)
-        {
-            this->plugin->cvarManager->log("LiveSplitToolkit: Error while disconnecting \"" + std::string(e.what()) + "\".");
-        }
     }
 }

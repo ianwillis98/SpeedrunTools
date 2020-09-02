@@ -1,23 +1,25 @@
-#include "SpeedrunToolsPlugin.h"
+#include "SpeedrunTools.h"
 #include "toolkit/mutators/MutatorsToolkit.h"
 #include "toolkit/savestate/SaveStateToolkit.h"
+#include "toolkit/analysis/AnalysisToolkit.h"
 #include "toolkit/livesplit/LiveSplitToolkit.h"
 
-BAKKESMOD_PLUGIN(SpeedrunToolsPlugin, SpeedrunToolsPlugin::PLUGIN_TITLE, SpeedrunToolsPlugin::PLUGIN_VERSION, PLUGINTYPE_CUSTOM_TRAINING)
+BAKKESMOD_PLUGIN(SpeedrunTools, SpeedrunTools::PLUGIN_TITLE, SpeedrunTools::PLUGIN_VERSION, PLUGINTYPE_CUSTOM_TRAINING)
 
-const char *SpeedrunToolsPlugin::PLUGIN_VERSION = "1.0";
-const char *SpeedrunToolsPlugin::PLUGIN_TITLE = "Speedrun Tools";
-const char *SpeedrunToolsPlugin::PLUGIN_MENU_NAME = "speedruntools";
+const char *SpeedrunTools::PLUGIN_VERSION = "1.0";
+const char *SpeedrunTools::PLUGIN_TITLE = "Speedrun Tools";
+const char *SpeedrunTools::PLUGIN_MENU_NAME = "speedruntools";
 
-SpeedrunToolsPlugin::SpeedrunToolsPlugin()
-        : BaseBakkesModPlugin(SpeedrunToolsPlugin::PLUGIN_TITLE, SpeedrunToolsPlugin::PLUGIN_MENU_NAME), toolkits()
+SpeedrunTools::SpeedrunTools()
+        : BaseBakkesModPlugin(SpeedrunTools::PLUGIN_TITLE, SpeedrunTools::PLUGIN_MENU_NAME), toolkits()
 {
-    this->toolkits.push_back(std::make_unique<SaveStateToolkit>(this));
     this->toolkits.push_back(std::make_unique<MutatorsToolkit>(this));
+    this->toolkits.push_back(std::make_unique<SaveStateToolkit>(this));
+    this->toolkits.push_back(std::make_unique<AnalysisToolkit>(this));
     this->toolkits.push_back(std::make_unique<LiveSplitToolkit>(this));
 }
 
-void SpeedrunToolsPlugin::onLoad()
+void SpeedrunTools::onLoad()
 {
     for (auto &toolkit : this->toolkits)
     {
@@ -25,7 +27,7 @@ void SpeedrunToolsPlugin::onLoad()
     }
 }
 
-void SpeedrunToolsPlugin::onUnload()
+void SpeedrunTools::onUnload()
 {
     for (auto &toolkit : this->toolkits)
     {
@@ -33,7 +35,7 @@ void SpeedrunToolsPlugin::onUnload()
     }
 }
 
-void SpeedrunToolsPlugin::RenderBody()
+void SpeedrunTools::renderBody()
 {
     static bool showDemoWindow = false;
     ImGui::Checkbox("Show Demo Window", &showDemoWindow);

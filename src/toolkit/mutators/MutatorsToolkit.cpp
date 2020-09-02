@@ -1,7 +1,7 @@
 #include "MutatorsToolkit.h"
 
 MutatorsToolkit::MutatorsToolkit(BakkesMod::Plugin::BakkesModPlugin *plugin)
-        : PluginToolkit(plugin), gameGravityComponent(plugin), gameSpeedComponent(plugin), boostComponent(plugin), autoAirRollComponent(plugin)
+        : PluginToolkit(plugin), gameGravityComponent(plugin), gameSpeedComponent(plugin), boostMutatorComponent(plugin), autoAirRollComponent(plugin)
 {
 
 }
@@ -15,20 +15,79 @@ void MutatorsToolkit::onLoad()
 {
     this->gameGravityComponent.onLoad();
     this->gameSpeedComponent.onLoad();
-    this->boostComponent.onLoad();
+    this->boostMutatorComponent.onLoad();
     this->autoAirRollComponent.onLoad();
+
+    std::string currentGameGravity = this->plugin->cvarManager->getCvar("sv_soccar_gravity").getStringValue();
+    this->plugin->cvarManager->registerCvar("speedrun_mutator_game_gravity", currentGameGravity, "Current game gravity")
+            .addOnValueChanged([this](const std::string &oldValue, CVarWrapper cvar) {
+                if (this->plugin->cvarManager->getCvar("sv_soccar_gravity").getFloatValue() != cvar.getFloatValue())
+                {
+                    this->plugin->cvarManager->getCvar("sv_soccar_gravity").setValue(cvar.getFloatValue());
+                }
+            });
+
+    this->plugin->cvarManager->getCvar("sv_soccar_gravity")
+            .addOnValueChanged([this](const std::string &oldValue, CVarWrapper cvar) {
+                if (this->plugin->cvarManager->getCvar("speedrun_mutator_game_gravity").getFloatValue() != cvar.getFloatValue())
+                {
+                    this->plugin->cvarManager->getCvar("speedrun_mutator_game_gravity").setValue(cvar.getFloatValue());
+                }
+            });
+
+
+    std::string currentGameSpeed = this->plugin->cvarManager->getCvar("sv_soccar_gamespeed").getStringValue();
+    this->plugin->cvarManager->registerCvar("speedrun_mutator_game_speed", currentGameSpeed, "Current game speed")
+            .addOnValueChanged([this](const std::string &oldValue, CVarWrapper cvar) {
+                if (this->plugin->cvarManager->getCvar("sv_soccar_gamespeed").getFloatValue() != cvar.getFloatValue())
+                {
+                    this->plugin->cvarManager->getCvar("sv_soccar_gamespeed").setValue(cvar.getFloatValue());
+                }
+            });
+
+    this->plugin->cvarManager->getCvar("sv_soccar_gamespeed")
+            .addOnValueChanged([this](const std::string &oldValue, CVarWrapper cvar) {
+                if (this->plugin->cvarManager->getCvar("speedrun_mutator_game_speed").getFloatValue() != cvar.getFloatValue())
+                {
+                    this->plugin->cvarManager->getCvar("speedrun_mutator_game_speed").setValue(cvar.getFloatValue());
+                }
+            });
+
+
+    this->plugin->cvarManager->registerCvar("speedrun_mutator_car_boost", "0", "Boost mutator").addOnValueChanged(
+            [this](const std::string &oldValue, CVarWrapper cvar) {
+                int boostMutator = cvar.getIntValue();
+                if (boostMutator == BoostMutator::Unlimited)
+                {
+                    this->boostMutatorComponent.setBoostMutator(BoostMutator::Unlimited);
+                }
+                else if (boostMutator == BoostMutator::Zero)
+                {
+                    this->boostMutatorComponent.setBoostMutator(BoostMutator::Zero);
+                }
+                else
+                {
+                    this->boostMutatorComponent.setBoostMutator(BoostMutator::None);
+                }
+            });
 }
 
 void MutatorsToolkit::onUnload()
 {
     this->gameGravityComponent.onUnload();
     this->gameSpeedComponent.onUnload();
-    this->boostComponent.onUnload();
+    this->boostMutatorComponent.onUnload();
     this->autoAirRollComponent.onUnload();
 }
 
 void MutatorsToolkit::render()
 {
+    ImGui::Spacing();
+
+    this->boostMutatorComponent.render();
+
+    ImGui::Spacing();
+    ImGui::Separator();
     ImGui::Spacing();
 
     this->gameGravityComponent.render();
@@ -38,12 +97,6 @@ void MutatorsToolkit::render()
     ImGui::Spacing();
 
     this->gameSpeedComponent.render();
-
-    ImGui::Spacing();
-    ImGui::Separator();
-    ImGui::Spacing();
-
-    this->boostComponent.render();
 
     ImGui::Spacing();
     ImGui::Separator();
