@@ -7,6 +7,7 @@ class LiveSplitComponent : public PluginComponent
 {
 private:
     LiveSplitClient &liveSplitClient;
+    std::string feedbackMessage;
 
 public:
     explicit LiveSplitComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);

@@ -9,9 +9,9 @@ class GameState
 public:
     GameState();
 
-    explicit GameState(ServerWrapper &serverWrapper);
+    explicit GameState(ServerWrapper &server);
 
-    void applyTo(ServerWrapper &serverWrapper) const;
+    void applyTo(ServerWrapper &server) const;
 
     void render();
 

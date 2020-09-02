@@ -23,5 +23,13 @@ void LiveSplitToolkit::onUnload()
 
 void LiveSplitToolkit::render()
 {
+    ImGui::Spacing();
+
+    ImGui::Text("NOTE: You must have both LiveSplit AND LiveSplit Server installed for this to work");
+
+    ImGui::Spacing();
+    ImGui::Separator();
+    ImGui::Spacing();
+
     this->liveSplitComponent.render();
 }

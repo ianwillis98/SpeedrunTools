@@ -3,38 +3,26 @@
 
 GameState::GameState() = default;
 
-GameState::GameState(ServerWrapper &serverWrapper)
+GameState::GameState(ServerWrapper &server)
 {
-    if (serverWrapper.IsNull()) return;
+    if (server.IsNull()) return;
 
-    CarWrapper carWrapper = serverWrapper.GetGameCar();
-    if (!carWrapper.IsNull())
-    {
-        carState = CarState(carWrapper);
-    }
+    CarWrapper car = server.GetGameCar();
+    carState = CarState(car);
 
-    BallWrapper ballWrapper = serverWrapper.GetBall();
-    if (!ballWrapper.IsNull())
-    {
-        ballState = BallState(ballWrapper);
-    }
+    BallWrapper ball = server.GetBall();
+    ballState = BallState(ball);
 }
 
-void GameState::applyTo(ServerWrapper &serverWrapper) const
+void GameState::applyTo(ServerWrapper &server) const
 {
-    if (serverWrapper.IsNull()) return;
+    if (server.IsNull()) return;
 
-    CarWrapper carWrapper = serverWrapper.GetGameCar();
-    if (!carWrapper.IsNull())
-    {
-        carState.applyTo(carWrapper);
-    }
+    CarWrapper carWrapper = server.GetGameCar();
+    carState.applyTo(carWrapper);
 
-    BallWrapper ballWrapper = serverWrapper.GetBall();
-    if (!ballWrapper.IsNull())
-    {
-        ballState.applyTo(ballWrapper);
-    }
+    BallWrapper ballWrapper = server.GetBall();
+    ballState.applyTo(ballWrapper);
 }
 
 void GameState::render()

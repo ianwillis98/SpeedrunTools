@@ -33,7 +33,7 @@ def get_bakkesmod_plugin_folder():
         print(str(e))
         sys.exit()
 
-    print("Found BakkesModPath = " + bakkesmod_path)
+    # print("Found BakkesModPath = " + bakkesmod_path)
     return bakkesmod_path + "plugins\\"
 
 
@@ -75,6 +75,6 @@ if __name__ == '__main__':
         print("Don't forget to pass the path to the compiled plugin.dll")
         sys.exit()
 
-    print("Plugin path = " + sys.argv[1])
+    # print("Plugin path = " + sys.argv[1])
     plugin_path = sys.argv[1]
     asyncio.get_event_loop().run_until_complete(hotswap())
