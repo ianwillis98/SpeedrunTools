@@ -43,13 +43,13 @@ void RewindStateComponent::render()
     ImGui::Spacing();
 
     ImGuiExtensions::PushDisabledStyleIf(!isInFreeplay);
-
     if (ImGui::Button("Rewind game state"))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
             this->rewind();
         });
     }
+    ImGuiExtensions::PopDisabledStyleIf(!isInFreeplay);
 
     float progress = this->rewindBuffer.progress();
     float frontOffset = this->rewindBuffer.frontOffset();
@@ -92,8 +92,6 @@ void RewindStateComponent::render()
 //            this->setRewindSaveIntervalCVar(*this->rewindSaveInterval);
 //        });
 //    }
-
-    ImGuiExtensions::PopDisabledStyleIf(!isInFreeplay);
 
     ImGui::PopID();
 }

@@ -1,5 +1,6 @@
 #include "BallAnalysisComponent.h"
 #include "../../services/MultiEventHooker.h"
+#include "../../utils/ImGuiExtensions.h"
 
 BallAnalysisComponent::BallAnalysisComponent(BakkesMod::Plugin::BakkesModPlugin *plugin) : PluginComponent(plugin)
 {
@@ -21,7 +22,15 @@ void BallAnalysisComponent::onUnload()
 void BallAnalysisComponent::render()
 {
     ImGui::Text("Current ball state:");
+
+    bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
+
+    ImVec4 color = ImGui::GetStyle().Colors[isInFreeplay ? ImGuiCol_TextDisabled : ImGuiCol_Text];
+    ImGui::TextColored(color, "(only works in freeplay and workshop maps)");
+
+    ImGuiExtensions::PushDisabledStyleIf(!isInFreeplay);
     this->currentBallState.render();
+    ImGuiExtensions::PopDisabledStyleIf(!isInFreeplay);
 }
 
 void BallAnalysisComponent::onPhysicsTick()
