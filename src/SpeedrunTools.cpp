@@ -3,6 +3,8 @@
 #include "toolkit/savestate/SaveStateToolkit.h"
 #include "toolkit/analysis/AnalysisToolkit.h"
 #include "toolkit/livesplit/LiveSplitToolkit.h"
+#include "toolkit/kismet/KismetToolkit.h"
+#include "toolkit/test/TestToolkit.h"
 
 BAKKESMOD_PLUGIN(SpeedrunTools, SpeedrunTools::PLUGIN_TITLE, SpeedrunTools::PLUGIN_VERSION, PLUGINTYPE_CUSTOM_TRAINING)
 
@@ -17,6 +19,9 @@ SpeedrunTools::SpeedrunTools()
     this->toolkits.push_back(std::make_unique<SaveStateToolkit>(this));
     this->toolkits.push_back(std::make_unique<AnalysisToolkit>(this));
     this->toolkits.push_back(std::make_unique<LiveSplitToolkit>(this));
+    this->toolkits.push_back(std::make_unique<KismetToolkit>(this));
+
+    this->toolkits.push_back(std::make_unique<TestToolkit>(this));
 }
 
 void SpeedrunTools::onLoad()
