@@ -141,230 +141,83 @@ void LiveSplitComponent::connectAsync()
 {
     this->feedbackMessage = "Attempting to establish a connection with the LiveSplit Server...";
 
-    try
-    {
-        this->liveSplitClient.connectAsync("localhost", "16834", [this](const int &errorCode, const std::string &errorMessage) {
-            this->plugin->gameWrapper->Execute([this, errorCode, errorMessage](GameWrapper *gw) {
-                if (errorCode == 0)
-                {
-                    this->feedbackMessage = "Connection established with the LiveSplit Server.";
-                }
-                else
-                {
-                    std::string ecs = std::to_string(errorCode);
-                    this->feedbackMessage = "Error while connecting to the LiveSplit Server (" + ecs + ") \"" + errorMessage + "\".";
-                    this->feedbackMessage += "\nMake sure the LiveSplit Server is running and open on port 16834.";
-                }
-            });
-        });
-    }
-    catch (const std::exception &e)
-    {
-        this->feedbackMessage = "LiveSplitToolkit: Error while setting up the connection \"" + std::string(e.what()) + "\".";
-    }
+    this->liveSplitClient.connectAsync("localhost", "16834", [this](const int &errorCode, const std::string &errorMessage) {
+        this->feedbackMessage = (errorCode == 0) ? "Connection established with the LiveSplit Server." :
+                                "Error while connecting to the LiveSplit Server (" + std::to_string(errorCode) + ") \"" + errorMessage + "\"." +
+                                "\nMake sure the LiveSplit Server is running and open on port 16834.";
+    });
 }
 
 void LiveSplitComponent::disconnect()
 {
-    try
-    {
-        this->liveSplitClient.disconnect();
-        this->feedbackMessage = "Disconnected from the LiveSplit Server.";
-    }
-    catch (const std::exception &e)
-    {
-        this->feedbackMessage = "Error while disconnecting \"" + std::string(e.what()) + "\".";
-    }
+    this->liveSplitClient.disconnect([this](const int &errorCode, const std::string &errorMessage) {
+        this->feedbackMessage = (errorCode == 0) ? "Disconnected from the LiveSplit Server." :
+                                "Error while disconnecting from the LiveSplit Server (" + std::to_string(errorCode) + ") \"" + errorMessage + "\".";
+    });
 }
 
 void LiveSplitComponent::startOrSplit()
 {
-    try
-    {
-        this->liveSplitClient.startOrSplit([this](const int &errorCode, const std::string &errorMessage) {
-            this->plugin->gameWrapper->Execute([this, errorCode, errorMessage](GameWrapper *gw) {
-                if (errorCode == 0)
-                {
-                    this->feedbackMessage = "'startOrSplit' message was successfully sent.";
-                }
-                else
-                {
-                    std::string ecs = std::to_string(errorCode);
-                    this->feedbackMessage = "Error while sending message 'startOrSplit' (" + ecs + ") \"" + errorMessage + "\".";
-                }
-            });
-        });
-    }
-    catch (const std::exception &e)
-    {
-        this->feedbackMessage = "Error while trying to send a message to the LiveSplit Server \"" + std::string(e.what()) + "\".";
-    }
+    this->liveSplitClient.startOrSplit([this](const int &errorCode, const std::string &errorMessage) {
+        this->feedbackMessage = (errorCode == 0) ? "'startOrSplit' message was successfully sent." :
+                                "Error while sending message 'startOrSplit' (" + std::to_string(errorCode) + ") \"" + errorMessage + "\".";
+    });
 }
 
 void LiveSplitComponent::start()
 {
-    try
-    {
-        this->liveSplitClient.start([this](const int &errorCode, const std::string &errorMessage) {
-            this->plugin->gameWrapper->Execute([this, errorCode, errorMessage](GameWrapper *gw) {
-                if (errorCode == 0)
-                {
-                    this->feedbackMessage = "'start' message was successfully sent.";
-                }
-                else
-                {
-                    std::string ecs = std::to_string(errorCode);
-                    this->feedbackMessage = "Error while sending message 'start' (" + ecs + ") \"" + errorMessage + "\".";
-                }
-            });
-        });
-    }
-    catch (const std::exception &e)
-    {
-        this->feedbackMessage = "Error while trying to send a message to the LiveSplit Server \"" + std::string(e.what()) + "\".";
-    }
+    this->liveSplitClient.start([this](const int &errorCode, const std::string &errorMessage) {
+        this->feedbackMessage = (errorCode == 0) ? "'start' message was successfully sent." :
+                                "Error while sending message 'start' (" + std::to_string(errorCode) + ") \"" + errorMessage + "\".";
+    });
 }
 
 void LiveSplitComponent::pause()
 {
-    try
-    {
-        this->liveSplitClient.pause([this](const int &errorCode, const std::string &errorMessage) {
-            this->plugin->gameWrapper->Execute([this, errorCode, errorMessage](GameWrapper *gw) {
-                if (errorCode == 0)
-                {
-                    this->feedbackMessage = "'pause' message was successfully sent.";
-                }
-                else
-                {
-                    std::string ecs = std::to_string(errorCode);
-                    this->feedbackMessage = "Error while sending message 'pause' (" + ecs + ") \"" + errorMessage + "\".";
-                }
-            });
-        });
-    }
-    catch (const std::exception &e)
-    {
-        this->feedbackMessage = "Error while trying to send a message to the LiveSplit Server \"" + std::string(e.what()) + "\".";
-    }
+    this->liveSplitClient.pause([this](const int &errorCode, const std::string &errorMessage) {
+        this->feedbackMessage = (errorCode == 0) ? "'pause' message was successfully sent." :
+                                "Error while sending message 'pause' (" + std::to_string(errorCode) + ") \"" + errorMessage + "\".";
+    });
 }
 
 void LiveSplitComponent::resume()
 {
-    try
-    {
-        this->liveSplitClient.resume([this](const int &errorCode, const std::string &errorMessage) {
-            this->plugin->gameWrapper->Execute([this, errorCode, errorMessage](GameWrapper *gw) {
-                if (errorCode == 0)
-                {
-                    this->feedbackMessage = "'resume' message was successfully sent.";
-                }
-                else
-                {
-                    std::string ecs = std::to_string(errorCode);
-                    this->feedbackMessage = "Error while sending message 'resume' (" + ecs + ") \"" + errorMessage + "\".";
-                }
-            });
-        });
-    }
-    catch (const std::exception &e)
-    {
-        this->feedbackMessage = "Error while trying to send a message to the LiveSplit Server \"" + std::string(e.what()) + "\".";
-    }
+
+    this->liveSplitClient.resume([this](const int &errorCode, const std::string &errorMessage) {
+        this->feedbackMessage = (errorCode == 0) ? "'resume' message was successfully sent." :
+                                "Error while sending message 'resume' (" + std::to_string(errorCode) + ") \"" + errorMessage + "\".";
+    });
 }
 
 void LiveSplitComponent::reset()
 {
-    try
-    {
-        this->liveSplitClient.reset([this](const int &errorCode, const std::string &errorMessage) {
-            this->plugin->gameWrapper->Execute([this, errorCode, errorMessage](GameWrapper *gw) {
-                if (errorCode == 0)
-                {
-                    this->feedbackMessage = "'reset' message was successfully sent.";
-                }
-                else
-                {
-                    std::string ecs = std::to_string(errorCode);
-                    this->feedbackMessage = "Error while sending message 'reset' (" + ecs + ") \"" + errorMessage + "\".";
-                }
-            });
-        });
-    }
-    catch (const std::exception &e)
-    {
-        this->feedbackMessage = "Error while trying to send a message to the LiveSplit Server \"" + std::string(e.what()) + "\".";
-    }
+    this->liveSplitClient.reset([this](const int &errorCode, const std::string &errorMessage) {
+        this->feedbackMessage = (errorCode == 0) ? "'reset' message was successfully sent." :
+                                "Error while sending message 'reset' (" + std::to_string(errorCode) + ") \"" + errorMessage + "\".";
+    });
 }
 
 void LiveSplitComponent::split()
 {
-    try
-    {
-        this->liveSplitClient.split([this](const int &errorCode, const std::string &errorMessage) {
-            this->plugin->gameWrapper->Execute([this, errorCode, errorMessage](GameWrapper *gw) {
-                if (errorCode == 0)
-                {
-                    this->feedbackMessage = "'split' message was successfully sent.";
-                }
-                else
-                {
-                    std::string ecs = std::to_string(errorCode);
-                    this->feedbackMessage = "Error while sending message 'split' (" + ecs + ") \"" + errorMessage + "\".";
-                }
-            });
-        });
-    }
-    catch (const std::exception &e)
-    {
-        this->feedbackMessage = "Error while trying to send a message to the LiveSplit Server \"" + std::string(e.what()) + "\".";
-    }
+    this->liveSplitClient.split([this](const int &errorCode, const std::string &errorMessage) {
+        this->feedbackMessage = (errorCode == 0) ? "'split' message was successfully sent." :
+                                "Error while sending message 'split' (" + std::to_string(errorCode) + ") \"" + errorMessage + "\".";
+    });
 }
 
 void LiveSplitComponent::skipSplit()
 {
-    try
-    {
-        this->liveSplitClient.skipSplit([this](const int &errorCode, const std::string &errorMessage) {
-            this->plugin->gameWrapper->Execute([this, errorCode, errorMessage](GameWrapper *gw) {
-                if (errorCode == 0)
-                {
-                    this->feedbackMessage = "'skipSplit' message was successfully sent.";
-                }
-                else
-                {
-                    std::string ecs = std::to_string(errorCode);
-                    this->feedbackMessage = "Error while sending message 'skipSplit' (" + ecs + ") \"" + errorMessage + "\".";
-                }
-            });
-        });
-    }
-    catch (const std::exception &e)
-    {
-        this->feedbackMessage = "Error while trying to send a message to the LiveSplit Server \"" + std::string(e.what()) + "\".";
-    }
+    this->liveSplitClient.skipSplit([this](const int &errorCode, const std::string &errorMessage) {
+        this->feedbackMessage = (errorCode == 0) ? "'skipSplit' message was successfully sent." :
+                                "Error while sending message 'skipSplit' (" + std::to_string(errorCode) + ") \"" + errorMessage + "\".";
+    });
 }
 
 void LiveSplitComponent::undoSplit()
 {
-    try
-    {
-        this->liveSplitClient.undoSplit([this](const int &errorCode, const std::string &errorMessage) {
-            this->plugin->gameWrapper->Execute([this, errorCode, errorMessage](GameWrapper *gw) {
-                if (errorCode == 0)
-                {
-                    this->feedbackMessage = "'undoSplit' message was successfully sent.";
-                }
-                else
-                {
-                    std::string ecs = std::to_string(errorCode);
-                    this->feedbackMessage = "Error while sending message 'undoSplit' (" + ecs + ") \"" + errorMessage + "\".";
-                }
-            });
-        });
-    }
-    catch (const std::exception &e)
-    {
-        this->feedbackMessage = "Error while trying to send a message to the LiveSplit Server \"" + std::string(e.what()) + "\".";
-    }
+
+    this->liveSplitClient.undoSplit([this](const int &errorCode, const std::string &errorMessage) {
+        this->feedbackMessage = (errorCode == 0) ? "'undoSplit' message was successfully sent." :
+                                "Error while sending message 'undoSplit' (" + std::to_string(errorCode) + ") \"" + errorMessage + "\".";
+    });
 }

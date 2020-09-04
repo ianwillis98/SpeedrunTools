@@ -21,4 +21,9 @@ public:
     void onLoad() override;
     void onUnload() override;
     void render() override;
+
+private:
+    void createGameGravityCVar();
+    void createGameSpeedCVar();
+    void createBoostMutatorCVar();
 };

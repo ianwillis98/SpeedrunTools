@@ -29,8 +29,6 @@ void GameSpeedComponent::render()
 
     ImGui::Spacing();
 
-    ImGuiExtensions::PushDisabledStyleIf(!isInFreeplay);
-
     float gameSpeed = this->getGameSpeed();
     if (ImGui::SliderFloat("Game Speed", &gameSpeed, 0.05f, 5.0f, "%.3f"))
     {
@@ -59,8 +57,6 @@ void GameSpeedComponent::render()
             this->setGameSpeed(1.17f);
         });
     }
-
-    ImGuiExtensions::PopDisabledStyleIf(!isInFreeplay);
 
     ImGui::PopID();
 }

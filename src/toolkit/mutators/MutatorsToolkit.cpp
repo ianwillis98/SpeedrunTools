@@ -18,58 +18,9 @@ void MutatorsToolkit::onLoad()
     this->boostMutatorComponent.onLoad();
     this->autoAirRollComponent.onLoad();
 
-    std::string currentGameGravity = this->plugin->cvarManager->getCvar("sv_soccar_gravity").getStringValue();
-    this->plugin->cvarManager->registerCvar("speedrun_mutator_game_gravity", currentGameGravity, "Current game gravity")
-            .addOnValueChanged([this](const std::string &oldValue, CVarWrapper cvar) {
-                if (this->plugin->cvarManager->getCvar("sv_soccar_gravity").getFloatValue() != cvar.getFloatValue())
-                {
-                    this->plugin->cvarManager->getCvar("sv_soccar_gravity").setValue(cvar.getFloatValue());
-                }
-            });
-
-    this->plugin->cvarManager->getCvar("sv_soccar_gravity")
-            .addOnValueChanged([this](const std::string &oldValue, CVarWrapper cvar) {
-                if (this->plugin->cvarManager->getCvar("speedrun_mutator_game_gravity").getFloatValue() != cvar.getFloatValue())
-                {
-                    this->plugin->cvarManager->getCvar("speedrun_mutator_game_gravity").setValue(cvar.getFloatValue());
-                }
-            });
-
-
-    std::string currentGameSpeed = this->plugin->cvarManager->getCvar("sv_soccar_gamespeed").getStringValue();
-    this->plugin->cvarManager->registerCvar("speedrun_mutator_game_speed", currentGameSpeed, "Current game speed")
-            .addOnValueChanged([this](const std::string &oldValue, CVarWrapper cvar) {
-                if (this->plugin->cvarManager->getCvar("sv_soccar_gamespeed").getFloatValue() != cvar.getFloatValue())
-                {
-                    this->plugin->cvarManager->getCvar("sv_soccar_gamespeed").setValue(cvar.getFloatValue());
-                }
-            });
-
-    this->plugin->cvarManager->getCvar("sv_soccar_gamespeed")
-            .addOnValueChanged([this](const std::string &oldValue, CVarWrapper cvar) {
-                if (this->plugin->cvarManager->getCvar("speedrun_mutator_game_speed").getFloatValue() != cvar.getFloatValue())
-                {
-                    this->plugin->cvarManager->getCvar("speedrun_mutator_game_speed").setValue(cvar.getFloatValue());
-                }
-            });
-
-
-    this->plugin->cvarManager->registerCvar("speedrun_mutator_car_boost", "0", "Boost mutator").addOnValueChanged(
-            [this](const std::string &oldValue, CVarWrapper cvar) {
-                int boostMutator = cvar.getIntValue();
-                if (boostMutator == BoostMutator::Unlimited)
-                {
-                    this->boostMutatorComponent.setBoostMutator(BoostMutator::Unlimited);
-                }
-                else if (boostMutator == BoostMutator::Zero)
-                {
-                    this->boostMutatorComponent.setBoostMutator(BoostMutator::Zero);
-                }
-                else
-                {
-                    this->boostMutatorComponent.setBoostMutator(BoostMutator::None);
-                }
-            });
+    this->createGameGravityCVar();
+    this->createGameSpeedCVar();
+    this->createBoostMutatorCVar();
 }
 
 void MutatorsToolkit::onUnload()
@@ -105,4 +56,64 @@ void MutatorsToolkit::render()
     this->autoAirRollComponent.render();
 
     ImGui::Spacing();
+}
+
+void MutatorsToolkit::createGameGravityCVar()
+{
+    std::string currentGameGravity = this->plugin->cvarManager->getCvar("sv_soccar_gravity").getStringValue();
+    this->plugin->cvarManager->registerCvar("speedrun_mutator_game_gravity", currentGameGravity, "Current game gravity")
+            .addOnValueChanged([this](const std::string &oldValue, CVarWrapper cvar) {
+                if (this->plugin->cvarManager->getCvar("sv_soccar_gravity").getFloatValue() != cvar.getFloatValue())
+                {
+                    this->plugin->cvarManager->getCvar("sv_soccar_gravity").setValue(cvar.getFloatValue());
+                }
+            });
+
+    this->plugin->cvarManager->getCvar("sv_soccar_gravity")
+            .addOnValueChanged([this](const std::string &oldValue, CVarWrapper cvar) {
+                if (this->plugin->cvarManager->getCvar("speedrun_mutator_game_gravity").getFloatValue() != cvar.getFloatValue())
+                {
+                    this->plugin->cvarManager->getCvar("speedrun_mutator_game_gravity").setValue(cvar.getFloatValue());
+                }
+            });
+}
+
+void MutatorsToolkit::createGameSpeedCVar()
+{
+    std::string currentGameSpeed = this->plugin->cvarManager->getCvar("sv_soccar_gamespeed").getStringValue();
+    this->plugin->cvarManager->registerCvar("speedrun_mutator_game_speed", currentGameSpeed, "Current game speed")
+            .addOnValueChanged([this](const std::string &oldValue, CVarWrapper cvar) {
+                if (this->plugin->cvarManager->getCvar("sv_soccar_gamespeed").getFloatValue() != cvar.getFloatValue())
+                {
+                    this->plugin->cvarManager->getCvar("sv_soccar_gamespeed").setValue(cvar.getFloatValue());
+                }
+            });
+
+    this->plugin->cvarManager->getCvar("sv_soccar_gamespeed")
+            .addOnValueChanged([this](const std::string &oldValue, CVarWrapper cvar) {
+                if (this->plugin->cvarManager->getCvar("speedrun_mutator_game_speed").getFloatValue() != cvar.getFloatValue())
+                {
+                    this->plugin->cvarManager->getCvar("speedrun_mutator_game_speed").setValue(cvar.getFloatValue());
+                }
+            });
+}
+
+void MutatorsToolkit::createBoostMutatorCVar()
+{
+    this->plugin->cvarManager->registerCvar("speedrun_mutator_car_boost", "0", "Boost mutator").addOnValueChanged(
+            [this](const std::string &oldValue, CVarWrapper cvar) {
+                int boostMutator = cvar.getIntValue();
+                if (boostMutator == BoostMutator::Unlimited)
+                {
+                    this->boostMutatorComponent.setBoostMutator(BoostMutator::Unlimited);
+                }
+                else if (boostMutator == BoostMutator::Zero)
+                {
+                    this->boostMutatorComponent.setBoostMutator(BoostMutator::Zero);
+                }
+                else
+                {
+                    this->boostMutatorComponent.setBoostMutator(BoostMutator::None);
+                }
+            });
 }

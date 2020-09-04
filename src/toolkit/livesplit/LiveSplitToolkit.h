@@ -6,6 +6,8 @@
 class LiveSplitToolkit : public PluginToolkit
 {
 private:
+    LiveSplitClient &liveSplitClient;
+
     LiveSplitComponent liveSplitComponent;
 
 public:
@@ -15,4 +17,21 @@ public:
     void onLoad() override;
     void onUnload() override;
     void render() override;
+
+private:
+    void onConnect();
+    void onDisconnect();
+
+    void onStartOrSplit();
+
+    void onStart();
+    void onPause();
+    void onResume();
+    void onReset();
+
+    void onSplit();
+    void onSkipSplit();
+    void onUndoSplit();
+
+    void log(const std::string& message);
 };

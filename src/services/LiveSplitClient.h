@@ -14,7 +14,7 @@ enum ConnectionState
     Connected
 };
 
-using AsyncCallback = std::function<void(int errorCode, std::string message)>;
+using ErrorCallback = std::function<void(int errorCode, std::string message)>;
 
 class LiveSplitClient
 {
@@ -30,22 +30,22 @@ private:
 public:
     static LiveSplitClient &getInstance();
 
-    void connectAsync(const std::string &host, const std::string &port, const AsyncCallback &callback);
+    void connectAsync(const std::string &host, const std::string &port, const ErrorCallback &callback);
     ConnectionState getConnectionState();
 
-    void disconnect();
+    void disconnect(const ErrorCallback &callback);
 
-    void startOrSplit(const AsyncCallback &callback);
+    void startOrSplit(const ErrorCallback &callback);
 
-    void start(const AsyncCallback &callback);
-    void pause(const AsyncCallback &callback);
-    void resume(const AsyncCallback &callback);
-    void reset(const AsyncCallback &callback);
+    void start(const ErrorCallback &callback);
+    void pause(const ErrorCallback &callback);
+    void resume(const ErrorCallback &callback);
+    void reset(const ErrorCallback &callback);
 
-    void split(const AsyncCallback &callback);
-    void skipSplit(const AsyncCallback &callback);
-    void undoSplit(const AsyncCallback &callback);
+    void split(const ErrorCallback &callback);
+    void skipSplit(const ErrorCallback &callback);
+    void undoSplit(const ErrorCallback &callback);
 
 private:
-    void sendAsync(const std::string &message, const AsyncCallback &callback);
+    void sendAsync(const std::string &message, const ErrorCallback &callback);
 };

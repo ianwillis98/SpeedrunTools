@@ -12,7 +12,7 @@ LiveSplitClient::LiveSplitClient() : io_context(), socket(io_context), resolver(
 
 }
 
-void LiveSplitClient::connectAsync(const std::string &host, const std::string &port, const AsyncCallback &callback)
+void LiveSplitClient::connectAsync(const std::string &host, const std::string &port, const ErrorCallback &callback)
 {
     if (this->connectionState == ConnectionState::Connecting) return;
 
@@ -37,7 +37,7 @@ void LiveSplitClient::connectAsync(const std::string &host, const std::string &p
     catch (const std::exception &e)
     {
         this->connectionState = ConnectionState::NotConnected;
-        throw;
+        callback(3591, std::string(e.what()));
     }
 }
 
@@ -46,63 +46,74 @@ ConnectionState LiveSplitClient::getConnectionState()
     return this->connectionState;
 }
 
-void LiveSplitClient::disconnect()
+void LiveSplitClient::disconnect(const ErrorCallback &callback)
 {
-    if (this->connectionState == ConnectionState::NotConnected) return;
+    if (this->connectionState == ConnectionState::NotConnected)
+    {
+        callback(3594, "A connection must be made before disconnecting");
+        return;
+    }
 
     this->connectionState = ConnectionState::NotConnected;
 
-    this->socket.shutdown(asio::socket_base::shutdown_both);
-    this->socket.close();
+    try
+    {
+        this->socket.shutdown(asio::socket_base::shutdown_both);
+        this->socket.close();
+        callback(0, "Successfully disconnected from the LiveSplit Server");
+    }
+    catch (const std::exception &e)
+    {
+        callback(3593, std::string(e.what()));
+    }
 }
 
-void LiveSplitClient::startOrSplit(const AsyncCallback &callback)
+void LiveSplitClient::startOrSplit(const ErrorCallback &callback)
 {
-    this->sendAsync("startorsplit", [this, callback](const int &errorCode, const std::string &errorMessage) {
-        callback(errorCode, errorMessage);
-    });
+    this->sendAsync("startorsplit", callback);
 }
 
-void LiveSplitClient::start(const AsyncCallback &callback)
+void LiveSplitClient::start(const ErrorCallback &callback)
 {
     this->sendAsync("starttimer", callback);
 }
 
-void LiveSplitClient::pause(const AsyncCallback &callback)
+void LiveSplitClient::pause(const ErrorCallback &callback)
 {
     this->sendAsync("pause", callback);
 }
 
-void LiveSplitClient::resume(const AsyncCallback &callback)
+void LiveSplitClient::resume(const ErrorCallback &callback)
 {
     this->sendAsync("resume", callback);
 }
 
-void LiveSplitClient::reset(const AsyncCallback &callback)
+void LiveSplitClient::reset(const ErrorCallback &callback)
 {
     this->sendAsync("reset", callback);
 }
 
-void LiveSplitClient::split(const AsyncCallback &callback)
+void LiveSplitClient::split(const ErrorCallback &callback)
 {
     this->sendAsync("split", callback);
 }
 
-void LiveSplitClient::skipSplit(const AsyncCallback &callback)
+void LiveSplitClient::skipSplit(const ErrorCallback &callback)
 {
     this->sendAsync("skipsplit", callback);
 }
 
-void LiveSplitClient::undoSplit(const AsyncCallback &callback)
+void LiveSplitClient::undoSplit(const ErrorCallback &callback)
 {
     this->sendAsync("unsplit", callback);
 }
 
-void LiveSplitClient::sendAsync(const std::string &message, const AsyncCallback &callback)
+void LiveSplitClient::sendAsync(const std::string &message, const ErrorCallback &callback)
 {
     if (this->connectionState != ConnectionState::Connected)
     {
-        throw std::exception("A connection must be established before a message can be send to the LiveSplit Server.");
+        callback(3592, "A connection must be established before a message can be send to the LiveSplit Server");
+        return;
     }
 
     try
@@ -124,6 +135,9 @@ void LiveSplitClient::sendAsync(const std::string &message, const AsyncCallback 
     catch (const std::exception &e)
     {
         this->connectionState = ConnectionState::NotConnected;
-        throw;
+        this->disconnect([callback, message](const int &errorCode, const std::string &errorMessage) {
+            int ec = (errorCode == 0) ? 3592 : errorCode;
+            callback(ec, "Error while trying to send a message to the LiveSplit Server (" + message + ")");
+        });
     }
 }

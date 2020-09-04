@@ -29,8 +29,6 @@ void GameGravityComponent::render()
 
     ImGui::Spacing();
 
-    ImGuiExtensions::PushDisabledStyleIf(!isInFreeplay);
-
     float gameGravity = this->getGameGravity();
     if (ImGui::SliderFloat("Game Gravity", &gameGravity, -5000.0f, 5000.0f, "%.3f"))
     {
@@ -59,8 +57,6 @@ void GameGravityComponent::render()
             this->setGameGravity(650.0f);
         });
     }
-
-    ImGuiExtensions::PopDisabledStyleIf(!isInFreeplay);
 
     ImGui::PopID();
 }
