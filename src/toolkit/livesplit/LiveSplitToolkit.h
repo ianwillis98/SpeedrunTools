@@ -2,6 +2,7 @@
 
 #include "../PluginToolkit.h"
 #include "../../component/livesplit/LiveSplitComponent.h"
+#include "../../component/livesplit/autosplitter/PanicsAirRaceBeachAutoSplitter.h"
 
 class LiveSplitToolkit : public PluginToolkit
 {
@@ -9,6 +10,7 @@ private:
     LiveSplitClient &liveSplitClient;
 
     LiveSplitComponent liveSplitComponent;
+    PanicsAirRaceBeachAutoSplitter panicsAirRaceBeachAutoSplitter;
 
 public:
     explicit LiveSplitToolkit(BakkesMod::Plugin::BakkesModPlugin *plugin);
@@ -33,5 +35,5 @@ private:
     void onSkipSplit();
     void onUndoSplit();
 
-    void log(const std::string& message);
+    void log(const std::string &message);
 };

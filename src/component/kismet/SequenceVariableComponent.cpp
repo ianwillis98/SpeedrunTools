@@ -16,10 +16,6 @@ void SequenceVariableComponent::onLoad()
     // Function TAGame.GameEvent_TA.IsFinished
     // Function GameEvent_Soccar_TA.Active.EndRound
     // Function TAGame.GameEvent_Soccar_TA.EventMatchEnded
-
-    MultiEventHooker::getInstance(this->plugin).hookEvent("Function GameEvent_Soccar_TA.Active.EndRound", [this](const std::string &eventName) {
-        //this->variables.clear();
-    });
 }
 
 void SequenceVariableComponent::onUnload()
@@ -84,8 +80,11 @@ void SequenceVariableComponent::loadSequenceVariables()
     if (sequence.memory_address == NULL) return;
 
     this->variables.clear();
-    for (const auto &var : sequence.GetAllSequenceVariables(true))
+    for (auto var : sequence.GetAllSequenceVariables(true))
     {
+        if (var.second.GetVarName() == "Points") {
+            this->plugin->cvarManager->log("points found");
+        }
         this->variables.emplace_back(var.second);
     }
 }

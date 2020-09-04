@@ -34,7 +34,12 @@ add_library(
         src/component/ball/BallAnalysisComponent.cpp src/component/ball/BallAnalysisComponent.h
         src/toolkit/livesplit/LiveSplitToolkit.cpp src/toolkit/livesplit/LiveSplitToolkit.h
         src/component/livesplit/LiveSplitComponent.cpp src/component/livesplit/LiveSplitComponent.h
-        src/services/LiveSplitClient.h src/services/LiveSplitClient.cpp src/component/kismet/SequenceVariableComponent.cpp src/component/kismet/SequenceVariableComponent.h src/toolkit/kismet/KismetToolkit.cpp src/toolkit/kismet/KismetToolkit.h src/toolkit/test/TestToolkit.cpp src/toolkit/test/TestToolkit.h src/models/KismetSequenceVariable.cpp src/models/KismetSequenceVariable.h)
+        src/services/LiveSplitClient.h src/services/LiveSplitClient.cpp
+        src/component/kismet/SequenceVariableComponent.cpp src/component/kismet/SequenceVariableComponent.h
+        src/toolkit/kismet/KismetToolkit.cpp src/toolkit/kismet/KismetToolkit.h
+        src/toolkit/test/TestToolkit.cpp src/toolkit/test/TestToolkit.h
+        src/models/KismetSequenceVariable.cpp src/models/KismetSequenceVariable.h
+        src/component/livesplit/autosplitter/PanicsAirRaceBeachAutoSplitter.cpp src/component/livesplit/autosplitter/PanicsAirRaceBeachAutoSplitter.h)
 
 target_include_directories(
         SpeedrunTools PRIVATE

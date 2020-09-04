@@ -4,6 +4,7 @@
 #include <bakkesmod/wrappers/kismet/SequenceVariableWrapper.h>
 #include <bakkesmod/wrappers/kismet/SequenceOpWrapper.h>
 #include <bakkesmod/wrappers/kismet/SequenceObjectWrapper.h>
+#include <bakkesmod/wrappers/Engine/UnrealStringWrapper.h>
 
 enum KismetSequenceVariableType
 {

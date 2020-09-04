@@ -50,18 +50,21 @@ std::stringstream TestToolkit::recursiveList(SequenceWrapper sequence)
     for (auto var : list)
     {
         ss << "Object name = " + var.GetObjName().ToString() << "\n";
-        if (var.GetObjName().ToString() == "Int")
+        if (var.GetObjName().ToString() == "Object")
         {
             SequenceVariableWrapper v(var.memory_address);
-            if (v.GetVarName() != "None" && v.GetVarName() != "QWordProperty")
-                this->plugin->cvarManager->log(v.GetVarName());
+            if (v.GetVarName() == "Points")
+            {
+                int points = v.GetInt();
+                this->plugin->cvarManager->log(std::to_string(points));
+            }
         }
     }
 
     auto subs = sequence.GetNestedSequences();
     for (const auto &sub : subs)
     {
-        //ss << this->recursiveList(sub).str();
+        ss << this->recursiveList(sub).str();
     }
 
     return ss;
