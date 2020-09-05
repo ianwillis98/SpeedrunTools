@@ -15,6 +15,8 @@ private:
     LiveSplitClient &liveSplitClient;
     bool isAutoSplitterRunning;
 
+    std::vector<int> gateSplits;
+    std::vector<int> checkpointSplits;
     int previousCount;
     int previousCpCount;
 
@@ -25,8 +27,9 @@ public:
     void onUnload() override;
     void render() override;
 
+    void startAutoSplitter();
+    void stopAutoSplitter();
+
 private:
     void onPhysicsTick();
-
-    void startAutoSplitter();
 };

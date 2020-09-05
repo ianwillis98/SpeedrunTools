@@ -2,6 +2,11 @@
 #include <cmath>
 #include "CarState.h"
 
+CarState::CarState() : position(), rotation(), velocity(), angularVelocity(), boostAmount()
+{
+
+}
+
 CarState::CarState(CarWrapper &car)
 {
     if (car.IsNull()) return;
@@ -17,15 +22,6 @@ CarState::CarState(CarWrapper &car)
     this->boostAmount = boost.GetCurrentBoostAmount();
 }
 
-CarState::CarState(Vector position, Rotator rotation, Vector velocity, Vector angularVelocity,
-                   float boostAmount)
-{
-    this->position = position;
-    this->rotation = rotation;
-    this->velocity = velocity;
-    this->angularVelocity = angularVelocity;
-    this->boostAmount = boostAmount;
-}
 
 void CarState::applyTo(CarWrapper &car) const
 {

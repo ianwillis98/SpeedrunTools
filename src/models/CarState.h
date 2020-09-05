@@ -13,14 +13,8 @@ public:
     Vector angularVelocity;
     float boostAmount;
 
+    CarState();
     explicit CarState(CarWrapper &car);
-    explicit CarState(
-            Vector position = Vector(0, 0, 0),
-            Rotator rotation = Rotator(0, 0, 0),
-            Vector velocity = Vector(0, 0, 0),
-            Vector angularVelocity = Vector(0, 0, 0),
-            float boostAmount = 0.0f
-    );
 
     void applyTo(CarWrapper &car) const;
 

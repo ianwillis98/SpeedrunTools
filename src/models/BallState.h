@@ -11,13 +11,8 @@ public:
     Vector velocity;
     Vector angularVelocity;
 
+    BallState();
     explicit BallState(BallWrapper &ball);
-    explicit BallState(
-            Vector position = Vector(0, 0, 0),
-            Rotator rotation = Rotator(0, 0, 0),
-            Vector velocity = Vector(0, 0, 0),
-            Vector angularVelocity = Vector(0, 0, 0)
-    );
 
     void applyTo(BallWrapper &ball) const;
 

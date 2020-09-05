@@ -9,7 +9,6 @@ PanicsAirRaceBeachAutoSplitter::PanicsAirRaceBeachAutoSplitter(BakkesMod::Plugin
 
 void PanicsAirRaceBeachAutoSplitter::onLoad()
 {
-
     MultiEventHooker::getInstance(this->plugin).hookEvent("Function TAGame.Car_TA.SetVehicleInput", [this](const std::string &eventName) {
         this->onPhysicsTick();
     });
@@ -28,12 +27,7 @@ void PanicsAirRaceBeachAutoSplitter::render()
     }
     else
     {
-        if (ImGui::Button("Start the Auto Splitter"))
-        {
-            this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-                this->startAutoSplitter();
-            });
-        }
+        ImGui::Checkbox("Auto Splitter", &this->isAutoSplitterRunning);
     }
 }
 
@@ -54,19 +48,19 @@ void PanicsAirRaceBeachAutoSplitter::onPhysicsTick()
         if (count == 0 && count != this->previousCount)
         {
             this->liveSplitClient.reset([this](const int &errorCode, const std::string &errorMessage) {
-                this->plugin->cvarManager->log("reset " + std::to_string(errorCode));
+                this->plugin->cvarManager->log("reset");
             });
         }
         if (count == 1 && count != this->previousCount)
         {
             this->liveSplitClient.start([this](const int &errorCode, const std::string &errorMessage) {
-                this->plugin->cvarManager->log("start " + std::to_string(errorCode));
+                this->plugin->cvarManager->log("start");
             });
         }
         if (count > 0 && count % 5 == 0 && count != this->previousCount)
         {
             this->liveSplitClient.split([this](const int &errorCode, const std::string &errorMessage) {
-                this->plugin->cvarManager->log("split " + std::to_string(errorCode));
+                this->plugin->cvarManager->log("split gate");
             });
         }
 
@@ -80,8 +74,8 @@ void PanicsAirRaceBeachAutoSplitter::onPhysicsTick()
         if (cpCount == 12 && cpCount != this->previousCpCount)
         {
             this->plugin->cvarManager->log("IT CHANGED ====== " + std::to_string(cpCount));
-            this->liveSplitClient.startOrSplit([this](const int &errorCode, const std::string &errorMessage) {
-                this->plugin->cvarManager->log("start or split ending" + std::to_string(errorCode));
+            this->liveSplitClient.split([this](const int &errorCode, const std::string &errorMessage) {
+                this->plugin->cvarManager->log("split end");
             });
         }
 
@@ -94,4 +88,11 @@ void PanicsAirRaceBeachAutoSplitter::startAutoSplitter()
     if (this->isAutoSplitterRunning) return;
 
     this->isAutoSplitterRunning = true;
+}
+
+void PanicsAirRaceBeachAutoSplitter::stopAutoSplitter()
+{
+    if (!this->isAutoSplitterRunning) return;
+
+    this->isAutoSplitterRunning = false;
 }

@@ -2,6 +2,11 @@
 #include <cmath>
 #include "BallState.h"
 
+BallState::BallState() : position(), rotation(), velocity(), angularVelocity()
+{
+
+}
+
 BallState::BallState(BallWrapper &ball)
 {
     if (ball.IsNull()) return;
@@ -10,14 +15,6 @@ BallState::BallState(BallWrapper &ball)
     this->rotation = ball.GetRotation();
     this->velocity = ball.GetVelocity();
     this->angularVelocity = ball.GetAngularVelocity();
-}
-
-BallState::BallState(Vector position, Rotator rotation, Vector velocity, Vector angularVelocity)
-{
-    this->position = position;
-    this->rotation = rotation;
-    this->velocity = velocity;
-    this->angularVelocity = angularVelocity;
 }
 
 void BallState::applyTo(BallWrapper &ball) const

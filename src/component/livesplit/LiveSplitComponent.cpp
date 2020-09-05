@@ -2,7 +2,7 @@
 #include "../../utils/ImGuiExtensions.h"
 
 LiveSplitComponent::LiveSplitComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
-        : PluginComponent(plugin), liveSplitClient(LiveSplitClient::getInstance()), feedbackMessage("Waiting for connection...")
+        : PluginComponent(plugin), liveSplitClient(LiveSplitClient::getInstance()), feedbackMessage("Waiting for connect...")
 {
 
 }
@@ -19,12 +19,6 @@ void LiveSplitComponent::onUnload()
 
 void LiveSplitComponent::render()
 {
-    ImGui::Text("Interact with LiveSplit through LiveSplit Server");
-
-    ImGui::Spacing();
-
-    ImGui::Text("Connection Status:");
-    ImGui::SameLine();
     std::string connectionStateString;
     ConnectionState connectionState = this->liveSplitClient.getConnectionState();
     switch (connectionState)
@@ -33,22 +27,18 @@ void LiveSplitComponent::render()
             connectionStateString = "Connected";
             break;
         case ConnectionState::Connecting:
-            connectionStateString = "Connecting";
+            connectionStateString = "Connecting ";
+            connectionStateString += "|/-\\"[(int) (ImGui::GetTime() / 0.05f) & 3];
             break;
         case ConnectionState::NotConnected:
             connectionStateString = "Not Connected";
             break;
     }
-    ImGui::Text("%s", connectionStateString.c_str());
-    if (connectionState == ConnectionState::Connecting)
-    {
-        ImGui::SameLine();
-        ImGui::Text("%c", "|/-\\"[(int) (ImGui::GetTime() / 0.05f) & 3]);
-    }
+    ImGui::Text("LiveSplit Client: %s", connectionStateString.c_str());
 
     ImGui::Spacing();
 
-    ImGui::Text("Feedback message: %s", this->feedbackMessage.c_str());
+    ImGui::Text("%s", this->feedbackMessage.c_str());
 
     ImGui::Spacing();
 
