@@ -20,10 +20,11 @@ void GameSpeedComponent::render()
 {
     ImGui::PushID(this);
 
-    ImGui::Text("Customize game speed");
+    ImGui::Text("Custom Game Speed");
 
     bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
 
+    ImGui::SameLine();
     ImVec4 color = ImGui::GetStyle().Colors[isInFreeplay ? ImGuiCol_TextDisabled : ImGuiCol_Text];
     ImGui::TextColored(color, "(only works in freeplay and workshop maps)");
 
@@ -37,24 +38,24 @@ void GameSpeedComponent::render()
         });
     }
 
-    if (ImGui::Button("Default (1.0)"))
+    if (ImGui::Button("Default"))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
             this->setGameSpeed(1.0f);
         });
     }
     ImGui::SameLine();
-    if (ImGui::Button("Slo-mo (0.67)"))
+    if (ImGui::Button("Slow-mo"))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
             this->setGameSpeed(0.67f);
         });
     }
     ImGui::SameLine();
-    if (ImGui::Button("Fast-mo (1.17)"))
+    if (ImGui::Button("Fast-mo"))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->setGameSpeed(1.17f);
+            this->setGameSpeed(1.5f);
         });
     }
 

@@ -20,38 +20,39 @@ void GameGravityComponent::render()
 {
     ImGui::PushID(this);
 
-    ImGui::Text("Customize game gravity");
+    ImGui::Text("Custom Game Gravity");
 
     bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
 
+    ImGui::SameLine();
     ImVec4 color = ImGui::GetStyle().Colors[isInFreeplay ? ImGuiCol_TextDisabled : ImGuiCol_Text];
     ImGui::TextColored(color, "(only works in freeplay and workshop maps)");
 
     ImGui::Spacing();
 
     float gameGravity = this->getGameGravity();
-    if (ImGui::SliderFloat("Game Gravity", &gameGravity, -5000.0f, 5000.0f, "%.3f"))
+    if (ImGui::SliderFloat("Game Gravity", &gameGravity, -2000.0f, 2000.0f, "%.3f"))
     {
         this->plugin->gameWrapper->Execute([this, gameGravity](GameWrapper *gw) {
             this->setGameGravity(gameGravity);
         });
     }
 
-    if (ImGui::Button("Default (-650.0)"))
+    if (ImGui::Button("Default"))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
             this->setGameGravity(-650.0f);
         });
     }
     ImGui::SameLine();
-    if (ImGui::Button("Zero (-0.001)"))
+    if (ImGui::Button("Zero"))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
             this->setGameGravity(-0.001f);
         });
     }
     ImGui::SameLine();
-    if (ImGui::Button("Inverted (650.0)"))
+    if (ImGui::Button("Inverse"))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
             this->setGameGravity(650.0f);

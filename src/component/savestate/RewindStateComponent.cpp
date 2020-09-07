@@ -10,15 +10,6 @@ RewindStateComponent::RewindStateComponent(BakkesMod::Plugin::BakkesModPlugin *p
 
 void RewindStateComponent::onLoad()
 {
-    // Function TAGame.Mutator_Freeplay_TA.Init
-    // Function TAGame.GameEvent_TA.Init
-
-    // Function TAGame.GameEvent_TA.Destroyed
-    // Function TAGame.GameEvent_TA.EventDestroyed
-    // Function TAGame.GameEvent_TA.IsFinished
-    // Function GameEvent_Soccar_TA.Active.EndRound
-    // Function TAGame.GameEvent_Soccar_TA.EventMatchEnded
-
     MultiEventHooker::getInstance(this->plugin).hookEvent("Function TAGame.Car_TA.SetVehicleInput", [this](const std::string &eventName) {
         this->onPhysicsTick();
     });
@@ -33,17 +24,18 @@ void RewindStateComponent::render()
 {
     ImGui::PushID(this);
 
-    ImGui::Text("Rewind the game back in time");
+    ImGui::Text("Rewind the Game Back in Time");
 
     bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
 
+    ImGui::SameLine();
     ImVec4 color = ImGui::GetStyle().Colors[isInFreeplay ? ImGuiCol_TextDisabled : ImGuiCol_Text];
     ImGui::TextColored(color, "(only works in freeplay and workshop maps)");
 
     ImGui::Spacing();
 
     ImGuiExtensions::PushDisabledStyleIf(!isInFreeplay);
-    if (ImGui::Button("Rewind game state"))
+    if (ImGui::Button("Rewind"))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
             this->rewind();
@@ -51,9 +43,7 @@ void RewindStateComponent::render()
     }
     ImGuiExtensions::PopDisabledStyleIf(!isInFreeplay);
 
-    float progress = this->rewindBuffer.progress();
-    float frontOffset = this->rewindBuffer.frontOffset();
-    ImGui::ProgressBar(progress, ImVec2(0.f, 0.f), std::to_string(frontOffset).c_str());
+    ImGui::ProgressBar(this->rewindBuffer.progress(), ImVec2(0.f, 0.f), std::to_string(this->rewindBuffer.frontOffset()).c_str());
     ImGui::SameLine(0.0f, ImGui::GetStyle().ItemInnerSpacing.x);
     ImGui::Text("Rewind buffer (in seconds)");
 
@@ -65,33 +55,26 @@ void RewindStateComponent::render()
         });
     }
 
-    if (ImGui::Button("Default (6.0)"))
+    if (ImGui::Button("Default"))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
             this->setRewindLength(6.0f);
         });
     }
     ImGui::SameLine();
-    if (ImGui::Button("Short (2.0)"))
+    if (ImGui::Button("Short"))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->setRewindLength(2.0f);
+            this->setRewindLength(3.0f);
         });
     }
     ImGui::SameLine();
-    if (ImGui::Button("Long (12.0)"))
+    if (ImGui::Button("Long"))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
             this->setRewindLength(12.0f);
         });
     }
-
-//    if (ImGui::SliderFloat("Rewind save interval (in seconds)", this->rewindSaveInterval.get(), 0.001, 0.25, "%.3f"))
-//    {
-//        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-//            this->setRewindSaveIntervalCVar(*this->rewindSaveInterval);
-//        });
-//    }
 
     ImGui::PopID();
 }

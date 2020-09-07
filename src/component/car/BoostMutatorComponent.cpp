@@ -23,24 +23,30 @@ void BoostMutatorComponent::render()
 {
     ImGui::PushID(this);
 
-    ImGui::Text("Boost mutator");
+    ImGui::Text("Boost Mutator");
+
+    bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
+
+    ImGui::SameLine();
+    ImVec4 color = ImGui::GetStyle().Colors[isInFreeplay ? ImGuiCol_TextDisabled : ImGuiCol_Text];
+    ImGui::TextColored(color, "(only works in freeplay and workshop maps)");
 
     ImGui::Spacing();
 
     static int radioBoostMutator = BoostMutator::None;
-    if (ImGui::RadioButton("None", &radioBoostMutator, BoostMutator::None))
+    if (ImGui::RadioButton("No Mutator", &radioBoostMutator, BoostMutator::None))
     {
         this->setBoostMutator(BoostMutator::None);
-    }
-    ImGui::SameLine();
-    if (ImGui::RadioButton("Unlimited Boost", &radioBoostMutator, BoostMutator::Unlimited))
-    {
-        this->setBoostMutator(BoostMutator::Unlimited);
     }
     ImGui::SameLine();
     if (ImGui::RadioButton("Zero Boost", &radioBoostMutator, BoostMutator::Zero))
     {
         this->setBoostMutator(BoostMutator::Zero);
+    }
+    ImGui::SameLine();
+    if (ImGui::RadioButton("Unlimited Boost", &radioBoostMutator, BoostMutator::Unlimited))
+    {
+        this->setBoostMutator(BoostMutator::Unlimited);
     }
 
     ImGui::PopID();
