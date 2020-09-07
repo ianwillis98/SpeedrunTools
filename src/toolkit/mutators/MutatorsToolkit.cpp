@@ -103,17 +103,17 @@ void MutatorsToolkit::createBoostMutatorCVar()
     this->plugin->cvarManager->registerCvar("speedrun_mutator_car_boost", "0", "Boost mutator").addOnValueChanged(
             [this](const std::string &oldValue, CVarWrapper cvar) {
                 int boostMutator = cvar.getIntValue();
-                if (boostMutator == BoostMutator::Unlimited)
+                if (boostMutator == BoostMutatorComponent::BoostMutator::Unlimited)
                 {
-                    this->boostMutatorComponent.setBoostMutator(BoostMutator::Unlimited);
+                    this->boostMutatorComponent.setBoostMutator(BoostMutatorComponent::BoostMutator::Unlimited);
                 }
-                else if (boostMutator == BoostMutator::Zero)
+                else if (boostMutator == BoostMutatorComponent::BoostMutator::Zero)
                 {
-                    this->boostMutatorComponent.setBoostMutator(BoostMutator::Zero);
+                    this->boostMutatorComponent.setBoostMutator(BoostMutatorComponent::BoostMutator::Zero);
                 }
                 else
                 {
-                    this->boostMutatorComponent.setBoostMutator(BoostMutator::None);
+                    this->boostMutatorComponent.setBoostMutator(BoostMutatorComponent::BoostMutator::None);
                 }
             });
 }

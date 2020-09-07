@@ -21,5 +21,9 @@ public:
     void render() override;
 
 private:
+    void onPhysicsTick();
+    void onPhysicsTick(CarWrapper cw, ControllerInput *input, std::string event);
+
+
     std::stringstream recursiveList(SequenceWrapper sequence);
 };

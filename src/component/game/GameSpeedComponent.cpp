@@ -22,11 +22,11 @@ void GameSpeedComponent::render()
 
     ImGui::Text("Custom Game Speed");
 
-    bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
-
-    ImGui::SameLine();
-    ImVec4 color = ImGui::GetStyle().Colors[isInFreeplay ? ImGuiCol_TextDisabled : ImGuiCol_Text];
-    ImGui::TextColored(color, "(only works in freeplay and workshop maps)");
+//    bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
+//
+//    ImGui::SameLine();
+//    ImVec4 color = ImGui::GetStyle().Colors[isInFreeplay ? ImGuiCol_TextDisabled : ImGuiCol_Text];
+//    ImGui::TextColored(color, "(only works in freeplay and workshop maps)");
 
     ImGui::Spacing();
 

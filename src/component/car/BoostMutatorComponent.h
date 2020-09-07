@@ -2,17 +2,18 @@
 
 #include "../PluginComponent.h"
 
-enum BoostMutator
-{
-    None,
-    Unlimited,
-    Zero
-};
-
 class BoostMutatorComponent : public PluginComponent
 {
+public:
+    enum BoostMutator
+    {
+        None,
+        Unlimited,
+        Zero
+    };
+
 private:
-    BoostMutator boostMutator;
+    BoostMutator mutator;
 
 public:
     explicit BoostMutatorComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
@@ -22,7 +23,7 @@ public:
     void render() override;
 
     BoostMutator getBoostMutator();
-    void setBoostMutator(BoostMutator mutator);
+    void setBoostMutator(BoostMutator m);
 
 private:
     void onPhysicsTick();

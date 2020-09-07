@@ -2,7 +2,7 @@
 #include "../../services/MultiEventHooker.h"
 
 BoostMutatorComponent::BoostMutatorComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
-        : PluginComponent(plugin), boostMutator(BoostMutator::None)
+        : PluginComponent(plugin), mutator(BoostMutator::None)
 {
 
 }
@@ -25,26 +25,25 @@ void BoostMutatorComponent::render()
 
     ImGui::Text("Boost Mutator");
 
-    bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
-
-    ImGui::SameLine();
-    ImVec4 color = ImGui::GetStyle().Colors[isInFreeplay ? ImGuiCol_TextDisabled : ImGuiCol_Text];
-    ImGui::TextColored(color, "(only works in freeplay and workshop maps)");
+//    bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
+//
+//    ImGui::SameLine();
+//    ImVec4 color = ImGui::GetStyle().Colors[isInFreeplay ? ImGuiCol_TextDisabled : ImGuiCol_Text];
+//    ImGui::TextColored(color, "(only works in freeplay and workshop maps)");
 
     ImGui::Spacing();
 
-    static int radioBoostMutator = BoostMutator::None;
-    if (ImGui::RadioButton("No Mutator", &radioBoostMutator, BoostMutator::None))
+    if (ImGui::RadioButton("No Mutator", this->mutator == BoostMutator::None))
     {
         this->setBoostMutator(BoostMutator::None);
     }
     ImGui::SameLine();
-    if (ImGui::RadioButton("Zero Boost", &radioBoostMutator, BoostMutator::Zero))
+    if (ImGui::RadioButton("Zero Boost", this->mutator == BoostMutator::Zero))
     {
         this->setBoostMutator(BoostMutator::Zero);
     }
     ImGui::SameLine();
-    if (ImGui::RadioButton("Unlimited Boost", &radioBoostMutator, BoostMutator::Unlimited))
+    if (ImGui::RadioButton("Unlimited Boost", this->mutator == BoostMutator::Unlimited))
     {
         this->setBoostMutator(BoostMutator::Unlimited);
     }
@@ -58,7 +57,7 @@ void BoostMutatorComponent::onPhysicsTick()
 
     switch (this->getBoostMutator())
     {
-        case None:
+        case BoostMutator::None:
             // do nothing
             break;
         case BoostMutator::Unlimited:
@@ -81,12 +80,12 @@ void BoostMutatorComponent::setBoostAmount(float amount)
     boost.SetBoostAmount(amount);
 }
 
-BoostMutator BoostMutatorComponent::getBoostMutator()
+BoostMutatorComponent::BoostMutator BoostMutatorComponent::getBoostMutator()
 {
-    return this->boostMutator;
+    return this->mutator;
 }
 
-void BoostMutatorComponent::setBoostMutator(BoostMutator mutator)
+void BoostMutatorComponent::setBoostMutator(BoostMutator m)
 {
-    this->boostMutator = mutator;
+    this->mutator = m;
 }

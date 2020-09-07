@@ -39,7 +39,9 @@ add_library(
         src/toolkit/kismet/KismetToolkit.cpp src/toolkit/kismet/KismetToolkit.h
         src/toolkit/test/TestToolkit.cpp src/toolkit/test/TestToolkit.h
         src/models/KismetSequenceVariable.cpp src/models/KismetSequenceVariable.h
-        src/component/livesplit/autosplitter/PanicsAirRaceBeachAutoSplitter.cpp src/component/livesplit/autosplitter/PanicsAirRaceBeachAutoSplitter.h)
+        src/component/livesplit/autosplitter/PanicsAirRaceBeachAutoSplitter.cpp src/component/livesplit/autosplitter/PanicsAirRaceBeachAutoSplitter.h
+        src/utils/LocalControllerInputFix.h src/utils/LocalControllerInputFix.cpp
+)
 
 target_include_directories(
         SpeedrunTools PRIVATE

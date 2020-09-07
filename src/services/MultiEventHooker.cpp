@@ -42,8 +42,7 @@ void MultiEventHooker::handleEventCallback(const std::string &eventName)
     }
 }
 
-void MultiEventHooker::hookEventPost(const std::string &eventName,
-                                     const std::function<void(std::string)> &callback)
+void MultiEventHooker::hookEventPost(const std::string &eventName, const std::function<void(std::string)> &callback)
 {
     if (eventPostCallbacks.find(eventName) == eventPostCallbacks.end())
     {
@@ -51,7 +50,7 @@ void MultiEventHooker::hookEventPost(const std::string &eventName,
         eventPostCallbacks[eventName] = emptyVector;
         plugin->gameWrapper->UnhookEventPost(eventName);
         plugin->gameWrapper->HookEventPost(eventName, [this](const std::string &eventName) {
-            this->handleEventCallback(eventName);
+            this->handleEventPostCallback(eventName);
         });
     }
     eventPostCallbacks[eventName].push_back(callback);
