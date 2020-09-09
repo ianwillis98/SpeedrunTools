@@ -4,11 +4,11 @@ Speedrun Tools is a [Bakkes Mod Plugin](https://bakkesplugins.com/) aimed at mak
 
 ## How to open the in-game menu
 
-Open the console and type `toggle menu speedruntools`
+Press `F9` while in game. If that doesn't work try one of the following:
 
-You can also bind this command to a key in the console `bind F9 "toggle menu speedruntools"`
-
-You can also open it through the settings window at `Bakkesmod settings (F2)` -> `Plugins` -> `Speedrun Tools`
+* Open the console and type `toggle menu speedruntools`
+  * You can also bind this command to a key in the console `bind F9 "toggle menu speedruntools"`
+* Open it through the settings window at `Bakkesmod settings (F2)` -> `Plugins` -> `Speedrun Tools`
 
 ## Toolkits
 

@@ -30,6 +30,14 @@ void SpeedrunTools::onLoad()
     {
         toolkit->onLoad();
     }
+
+    this->cvarManager->registerCvar("speedrun_gui_keybind", "F9");
+    this->cvarManager->registerNotifier("speedrun_gui_changekeybind", [this](const std::vector<std::string> &commands) {
+        CVarWrapper keybind = this->cvarManager->getCvar("speedrun_gui_keybind");
+        std::string command = "bind \"" + keybind.getStringValue() + "\" \"togglemenu " + SpeedrunTools::PLUGIN_MENU_NAME + "\"";
+        this->cvarManager->executeCommand(command);
+    }, "", PERMISSION_ALL);
+    this->cvarManager->executeCommand("speedrun_gui_changekeybind");
 }
 
 void SpeedrunTools::onUnload()
