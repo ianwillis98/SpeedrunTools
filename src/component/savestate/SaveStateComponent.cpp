@@ -24,13 +24,7 @@ void SaveStateComponent::render()
     ImGui::Text("Save and Load Game States");
 
     bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
-
-    ImGui::SameLine();
-    ImVec4 color = ImGui::GetStyle().Colors[isInFreeplay ? ImGuiCol_TextDisabled : ImGuiCol_Text];
-    ImGui::TextColored(color, "(only works in freeplay and workshop maps)");
-
     ImGuiExtensions::PushDisabledStyleIf(!isInFreeplay);
-
     if (ImGui::Button("Save state"))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {

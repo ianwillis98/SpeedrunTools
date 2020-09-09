@@ -9,6 +9,8 @@ BoostMutatorComponent::BoostMutatorComponent(BakkesMod::Plugin::BakkesModPlugin 
 
 void BoostMutatorComponent::onLoad()
 {
+    //"Function TAGame.Mutator_Freeplay_TA.Init"
+    //"Function TAGame.GameEvent_Soccar_TA.Destroyed"
     MultiEventHooker::getInstance(this->plugin).hookEvent("Function TAGame.Car_TA.SetVehicleInput", [this](const std::string &eventName) {
         this->onPhysicsTick();
     });
@@ -25,15 +27,9 @@ void BoostMutatorComponent::render()
 
     ImGui::Text("Boost Mutator");
 
-//    bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
-//
-//    ImGui::SameLine();
-//    ImVec4 color = ImGui::GetStyle().Colors[isInFreeplay ? ImGuiCol_TextDisabled : ImGuiCol_Text];
-//    ImGui::TextColored(color, "(only works in freeplay and workshop maps)");
-
     ImGui::Spacing();
 
-    if (ImGui::RadioButton("No Mutator", this->mutator == BoostMutator::None))
+    if (ImGui::RadioButton("Off", this->mutator == BoostMutator::None))
     {
         this->setBoostMutator(BoostMutator::None);
     }

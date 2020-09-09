@@ -28,7 +28,7 @@ void AutoAirRollComponent::render()
 
     ImGui::Spacing();
 
-    if (ImGui::RadioButton("No Mutator", this->mutator == AirRollMutator::None))
+    if (ImGui::RadioButton("Off", this->mutator == AirRollMutator::None))
     {
         this->setAirRollMutator(AirRollMutator::None);
     }

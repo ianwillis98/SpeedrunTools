@@ -27,6 +27,13 @@ void AnalysisToolkit::render()
 {
     ImGui::Spacing();
 
+    ImGui::Text("Analysis Toolkit allows you to view important stats about the current game.");
+    ImGui::Text("The following tools will only work in freeplay and workshop maps.");
+
+    ImGui::Spacing();
+    ImGui::Separator();
+    ImGui::Spacing();
+
     this->carAnalysisComponent.render();
 
     ImGui::Spacing();
@@ -36,4 +43,5 @@ void AnalysisToolkit::render()
     this->ballAnalysisComponent.render();
 
     ImGui::Spacing();
+    ImGui::Separator();
 }

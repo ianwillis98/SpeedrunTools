@@ -24,16 +24,11 @@ void RewindStateComponent::render()
 {
     ImGui::PushID(this);
 
-    ImGui::Text("Rewind the Game Back in Time");
-
-    bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
-
-    ImGui::SameLine();
-    ImVec4 color = ImGui::GetStyle().Colors[isInFreeplay ? ImGuiCol_TextDisabled : ImGuiCol_Text];
-    ImGui::TextColored(color, "(only works in freeplay and workshop maps)");
+    ImGui::Text("Rewind Game State");
 
     ImGui::Spacing();
 
+    bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
     ImGuiExtensions::PushDisabledStyleIf(!isInFreeplay);
     if (ImGui::Button("Rewind"))
     {

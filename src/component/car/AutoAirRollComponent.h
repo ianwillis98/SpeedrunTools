@@ -7,10 +7,10 @@ class AutoAirRollComponent : public PluginComponent
 public:
     enum AirRollMutator
     {
-        None,
-        DisableAirRoll,
-        AutoAirRollLeft,
-        AutoAirRollRight,
+        None = 0,
+        DisableAirRoll = 1,
+        AutoAirRollLeft = 2,
+        AutoAirRollRight = 3,
     };
 
 private:

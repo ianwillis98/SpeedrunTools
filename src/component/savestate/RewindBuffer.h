@@ -5,11 +5,12 @@
 #include <chrono>
 #include "../../models/GameState.h"
 
-using time_point = std::chrono::time_point<std::chrono::system_clock>;
-using duration = std::chrono::duration<float>;
 
 class RewindBuffer
 {
+    using time_point = std::chrono::time_point<std::chrono::system_clock>;
+    using duration = std::chrono::duration<float>;
+
 private:
     float rewindLength;
     std::deque<std::pair<time_point, GameState>> buffer;

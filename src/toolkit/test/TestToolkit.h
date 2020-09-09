@@ -19,11 +19,4 @@ public:
     void onLoad() override;
     void onUnload() override;
     void render() override;
-
-private:
-    void onPhysicsTick();
-    void onPhysicsTick(CarWrapper cw, ControllerInput *input, std::string event);
-
-
-    std::stringstream recursiveList(SequenceWrapper sequence);
 };

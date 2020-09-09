@@ -21,7 +21,7 @@ SpeedrunTools::SpeedrunTools()
     this->toolkits.push_back(std::make_unique<LiveSplitToolkit>(this));
     this->toolkits.push_back(std::make_unique<KismetToolkit>(this));
 
-    this->toolkits.push_back(std::make_unique<TestToolkit>(this));
+//    this->toolkits.push_back(std::make_unique<TestToolkit>(this));
 }
 
 void SpeedrunTools::onLoad()
@@ -42,12 +42,12 @@ void SpeedrunTools::onUnload()
 
 void SpeedrunTools::renderBody()
 {
-    static bool showDemoWindow = false;
-    ImGui::Checkbox("Show Demo Window", &showDemoWindow);
-    if (showDemoWindow)
-    {
-        ImGui::ShowDemoWindow();
-    }
+//    static bool showDemoWindow = false;
+//    ImGui::Checkbox("Show Demo Window", &showDemoWindow);
+//    if (showDemoWindow)
+//    {
+//        ImGui::ShowDemoWindow();
+//    }
 
     ImGui::Text("%s (version %s)", PLUGIN_TITLE, PLUGIN_VERSION);
 

@@ -31,9 +31,6 @@ void SequenceVariableComponent::render()
 
     bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
 
-    ImVec4 color = ImGui::GetStyle().Colors[isInFreeplay ? ImGuiCol_TextDisabled : ImGuiCol_Text];
-    ImGui::TextColored(color, "(only works in freeplay and workshop maps)");
-
     ImGuiExtensions::PushDisabledStyleIf(!isInFreeplay);
 
     if (ImGui::Button("Refresh Table"))
@@ -82,7 +79,8 @@ void SequenceVariableComponent::loadSequenceVariables()
     this->variables.clear();
     for (auto var : sequence.GetAllSequenceVariables(true))
     {
-        if (var.second.GetVarName() == "Points") {
+        if (var.second.GetVarName() == "Points")
+        {
             this->plugin->cvarManager->log("points found");
         }
         this->variables.emplace_back(var.second);

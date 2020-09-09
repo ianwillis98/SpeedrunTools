@@ -7,9 +7,9 @@ class BoostMutatorComponent : public PluginComponent
 public:
     enum BoostMutator
     {
-        None,
-        Unlimited,
-        Zero
+        None = 0,
+        Zero = 1,
+        Unlimited = 2,
     };
 
 private:

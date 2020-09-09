@@ -21,6 +21,7 @@ void MutatorsToolkit::onLoad()
     this->createGameGravityCVar();
     this->createGameSpeedCVar();
     this->createBoostMutatorCVar();
+    this->createAutoAirRollMutator();
 }
 
 void MutatorsToolkit::onUnload()
@@ -35,7 +36,20 @@ void MutatorsToolkit::render()
 {
     ImGui::Spacing();
 
+    ImGui::Text("Mutators Toolkit allows you to set custom mutators for fun and for custom run categories.");
+    ImGui::Text("The following tools will only work in freeplay and workshop maps.");
+
+    ImGui::Spacing();
+    ImGui::Separator();
+    ImGui::Spacing();
+
     this->boostMutatorComponent.render();
+
+    ImGui::Spacing();
+    ImGui::Separator();
+    ImGui::Spacing();
+
+    this->autoAirRollComponent.render();
 
     ImGui::Spacing();
     ImGui::Separator();
@@ -51,11 +65,6 @@ void MutatorsToolkit::render()
 
     ImGui::Spacing();
     ImGui::Separator();
-    ImGui::Spacing();
-
-    this->autoAirRollComponent.render();
-
-    ImGui::Spacing();
 }
 
 void MutatorsToolkit::createGameGravityCVar()
@@ -114,6 +123,30 @@ void MutatorsToolkit::createBoostMutatorCVar()
                 else
                 {
                     this->boostMutatorComponent.setBoostMutator(BoostMutatorComponent::BoostMutator::None);
+                }
+            });
+}
+
+void MutatorsToolkit::createAutoAirRollMutator()
+{
+    this->plugin->cvarManager->registerCvar("speedrun_mutator_car_autoairroll", "0", "Boost mutator").addOnValueChanged(
+            [this](const std::string &oldValue, CVarWrapper cvar) {
+                int autoAirRollMutator = cvar.getIntValue();
+                if (autoAirRollMutator == AutoAirRollComponent::AirRollMutator::DisableAirRoll)
+                {
+                    this->autoAirRollComponent.setAirRollMutator(AutoAirRollComponent::AirRollMutator::DisableAirRoll);
+                }
+                else if (autoAirRollMutator == AutoAirRollComponent::AirRollMutator::AutoAirRollLeft)
+                {
+                    this->autoAirRollComponent.setAirRollMutator(AutoAirRollComponent::AirRollMutator::AutoAirRollLeft);
+                }
+                else if (autoAirRollMutator == AutoAirRollComponent::AirRollMutator::AutoAirRollRight)
+                {
+                    this->autoAirRollComponent.setAirRollMutator(AutoAirRollComponent::AirRollMutator::AutoAirRollRight);
+                }
+                else
+                {
+                    this->autoAirRollComponent.setAirRollMutator(AutoAirRollComponent::AirRollMutator::None);
                 }
             });
 }

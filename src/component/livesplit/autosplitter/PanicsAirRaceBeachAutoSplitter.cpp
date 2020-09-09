@@ -27,7 +27,8 @@ void PanicsAirRaceBeachAutoSplitter::render()
     }
     else
     {
-        ImGui::Checkbox("Auto Splitter", &this->isAutoSplitterRunning);
+        ImGui::Text("Auto splitter will split after crossing the 6th ring and after crossing each check point.");
+        ImGui::Checkbox("Auto Splitter Enabled", &this->isAutoSplitterRunning);
     }
 }
 
@@ -48,19 +49,34 @@ void PanicsAirRaceBeachAutoSplitter::onPhysicsTick()
         if (count == 0 && count != this->previousCount)
         {
             this->liveSplitClient.reset([this](const int &errorCode, const std::string &errorMessage) {
-                this->plugin->cvarManager->log("reset");
+                if (errorCode == 0)
+                {
+                    this->plugin->gameWrapper->Execute([](GameWrapper *gw) {
+                        gw->LogToChatbox("AutoSplitter: reset", "SPEEDRUNTOOLS");
+                    });
+                }
             });
         }
         if (count == 1 && count != this->previousCount)
         {
             this->liveSplitClient.start([this](const int &errorCode, const std::string &errorMessage) {
-                this->plugin->cvarManager->log("start");
+                if (errorCode == 0)
+                {
+                    this->plugin->gameWrapper->Execute([](GameWrapper *gw) {
+                        gw->LogToChatbox("AutoSplitter: start", "SPEEDRUNTOOLS");
+                    });
+                }
             });
         }
-        if (count > 0 && count % 5 == 0 && count != this->previousCount)
+        if (count == 6 && count != this->previousCount)
         {
             this->liveSplitClient.split([this](const int &errorCode, const std::string &errorMessage) {
-                this->plugin->cvarManager->log("split gate");
+                if (errorCode == 0)
+                {
+                    this->plugin->gameWrapper->Execute([](GameWrapper *gw) {
+                        gw->LogToChatbox("AutoSplitter: split", "SPEEDRUNTOOLS");
+                    });
+                }
             });
         }
 
@@ -71,11 +87,15 @@ void PanicsAirRaceBeachAutoSplitter::onPhysicsTick()
     if (cpCountVar != vars.end())
     {
         int cpCount = cpCountVar->second.GetInt();
-        if (cpCount == 12 && cpCount != this->previousCpCount)
+        if (cpCount > 0 && cpCount != this->previousCpCount)
         {
-            this->plugin->cvarManager->log("IT CHANGED ====== " + std::to_string(cpCount));
-            this->liveSplitClient.split([this](const int &errorCode, const std::string &errorMessage) {
-                this->plugin->cvarManager->log("split end");
+            this->liveSplitClient.split([this, cpCount](const int &errorCode, const std::string &errorMessage) {
+                if (errorCode == 0)
+                {
+                    this->plugin->gameWrapper->Execute([](GameWrapper *gw) {
+                        gw->LogToChatbox("AutoSplitter: split", "SPEEDRUNTOOLS");
+                    });
+                }
             });
         }
 

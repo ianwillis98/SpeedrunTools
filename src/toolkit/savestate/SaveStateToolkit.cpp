@@ -48,6 +48,13 @@ void SaveStateToolkit::render()
 {
     ImGui::Spacing();
 
+    ImGui::Text("Save States Toolkit allows you to save the current game state to be loaded back or rewound for practice.");
+    ImGui::Text("The following tools will only work in freeplay and workshop maps.");
+
+    ImGui::Spacing();
+    ImGui::Separator();
+    ImGui::Spacing();
+
     this->rewindStateComponent.render();
 
     ImGui::Spacing();
@@ -57,4 +64,5 @@ void SaveStateToolkit::render()
     this->saveStateComponent.render();
 
     ImGui::Spacing();
+    ImGui::Separator();
 }

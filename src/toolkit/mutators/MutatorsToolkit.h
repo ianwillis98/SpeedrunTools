@@ -26,4 +26,5 @@ private:
     void createGameGravityCVar();
     void createGameSpeedCVar();
     void createBoostMutatorCVar();
+    void createAutoAirRollMutator();
 };

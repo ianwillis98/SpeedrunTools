@@ -31,7 +31,19 @@ void KismetToolkit::onUnload()
 
 void KismetToolkit::render()
 {
+    ImGui::Spacing();
+
+    ImGui::Text("Kismet Toolkit allows you to view kismet sequence variables (useful in workshop maps).");
+    ImGui::Text("The following tools will only work in freeplay and workshop maps.");
+
+    ImGui::Spacing();
+    ImGui::Separator();
+    ImGui::Spacing();
+
     this->sequenceVariableComponent.render();
+
+    ImGui::Spacing();
+    ImGui::Separator();
 }
 
 void KismetToolkit::onListSequenceVars()

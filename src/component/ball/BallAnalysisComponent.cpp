@@ -21,12 +21,9 @@ void BallAnalysisComponent::onUnload()
 
 void BallAnalysisComponent::render()
 {
-    ImGui::Text("Current ball state:");
+    ImGui::Text("Current Ball State:");
 
     bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
-
-    ImVec4 color = ImGui::GetStyle().Colors[isInFreeplay ? ImGuiCol_TextDisabled : ImGuiCol_Text];
-    ImGui::TextColored(color, "(only works in freeplay and workshop maps)");
 
     ImGuiExtensions::PushDisabledStyleIf(!isInFreeplay);
     this->currentBallState.render();
