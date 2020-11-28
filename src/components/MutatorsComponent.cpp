@@ -21,6 +21,13 @@ void MutatorsComponent::onLoad()
 
 void MutatorsComponent::render()
 {
+    ImGui::Spacing();
+    ImGui::Text("Set custom mutators that can be used for alternate speedrun categories.");
+    ImGui::Text("Note that speedrun.com doesn't have categories for mutated runs.");
+    ImGui::Spacing();
+
+    ImGui::Separator();
+
     this->renderBoostMutator();
     ImGui::Separator();
     this->renderAirRollMutator();

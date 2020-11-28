@@ -47,12 +47,12 @@ void LiveSplitComponent::onLoad()
 
 void LiveSplitComponent::render()
 {
+    ImGui::Spacing();
     ImGui::Text("LiveSplit Toolkit allows you to interact with LiveSplit (and auto splitters coming soon).");
     ImGui::Text("NOTE: You must have both 'LiveSplit' AND 'LiveSplit Server' installed for this to work.");\
+    ImGui::Spacing();
 
-    ImGui::Spacing();
     ImGui::Separator();
-    ImGui::Spacing();
 
     std::string connectionStateString;
     ConnectionState connectionState = this->liveSplitClient.getConnectionState();
@@ -69,8 +69,8 @@ void LiveSplitComponent::render()
             connectionStateString = "Not Connected";
             break;
     }
+    ImGui::Spacing();
     ImGui::Text("LiveSplit Client: %s", connectionStateString.c_str());
-
     ImGui::Spacing();
     ImGui::Text("%s", this->feedbackMessage.c_str());
     ImGui::Spacing();

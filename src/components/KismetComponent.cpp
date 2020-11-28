@@ -20,21 +20,27 @@ void KismetComponent::onLoad()
 
 void KismetComponent::render()
 {
+    ImGui::Spacing();
     ImGui::Text("Kismet Viewer allows you to view kismet sequence variables (useful in workshop maps).");
     ImGui::Text("Editing kismet vars is not yet supported by BakkesMod (coming soon hopefully).");
+    ImGui::Spacing();
 
     ImGui::Separator();
 
+    ImGui::Spacing();
     ImGui::Text("Kismet Sequence Variables:");
 
     bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
     ImGuiExtensions::PushDisabledStyleIf(!isInFreeplay);
+    ImGui::Spacing();
     if (ImGui::Button("Refresh Table"))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
             this->loadSequenceVariables();
         });
     }
+    ImGui::Spacing();
+
     ImGui::Columns(3, "Sequence Vars");
     ImGui::Separator();
     ImGui::Text("Name");
@@ -115,7 +121,7 @@ void KismetComponent::loadSequenceVariables()
     SequenceWrapper sequence = this->plugin->gameWrapper->GetMainSequence();
     if (sequence.memory_address == NULL) return;
 
-    for (const auto& var : sequence.GetAllSequenceVariables(true))
+    for (const auto &var : sequence.GetAllSequenceVariables(true))
     {
         this->kismetVars.emplace_back(var.second);
     }
