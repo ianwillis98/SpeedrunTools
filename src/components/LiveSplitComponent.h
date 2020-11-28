@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../PluginComponent.h"
-#include "../../services/LiveSplitClient.h"
+#include "../services/LiveSplitClient.h"
 
 class LiveSplitComponent : public PluginComponent
 {
@@ -12,10 +12,11 @@ private:
 public:
     explicit LiveSplitComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
+    std::string title() override;
     void onLoad() override;
-    void onUnload() override;
     void render() override;
 
+private:
     void connectAsync();
     void disconnect();
 
@@ -29,4 +30,6 @@ public:
     void split();
     void skipSplit();
     void undoSplit();
+
+    void log(const std::string &message);
 };

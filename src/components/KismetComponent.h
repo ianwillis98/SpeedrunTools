@@ -1,26 +1,28 @@
 #pragma once
 
+#include <sstream>
 #include <map>
 #include <bakkesmod/wrappers/kismet/SequenceWrapper.h>
 #include <bakkesmod/wrappers/kismet/SequenceVariableWrapper.h>
 #include <bakkesmod/wrappers/kismet/SequenceOpWrapper.h>
 #include <bakkesmod/wrappers/kismet/SequenceObjectWrapper.h>
 #include "../PluginComponent.h"
-#include "../../models/KismetSequenceVariable.h"
+#include "../models/KismetSequenceVariable.h"
 
-class SequenceVariableComponent : public PluginComponent
+class KismetComponent : public PluginComponent
 {
 private:
-    std::vector<KismetSequenceVariable> variables;
+    std::vector<KismetSequenceVariable> kismetVars;
     int selectedRow;
 
 public:
-    explicit SequenceVariableComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit KismetComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
+    std::string title() override;
     void onLoad() override;
-    void onUnload() override;
     void render() override;
 
 private:
+    void listSequenceVars();
     void loadSequenceVariables();
 };

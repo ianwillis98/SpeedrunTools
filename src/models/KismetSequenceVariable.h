@@ -6,7 +6,7 @@
 #include <bakkesmod/wrappers/kismet/SequenceObjectWrapper.h>
 #include <bakkesmod/wrappers/Engine/UnrealStringWrapper.h>
 
-enum KismetSequenceVariableType
+enum class KismetSequenceVariableType
 {
     Bool,
     Int,

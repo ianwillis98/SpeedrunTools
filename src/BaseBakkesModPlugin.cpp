@@ -10,7 +10,7 @@ BaseBakkesModPlugin::BaseBakkesModPlugin(const char *menuTitle, const char *menu
 
 void BaseBakkesModPlugin::Render()
 {
-    if (!ImGui::Begin(this->menuTitle, &isMenuOpen, flags))
+    if (!ImGui::Begin(this->menuTitle, &this->isMenuOpen, this->flags))
     {
         ImGui::End();
         return;
@@ -54,7 +54,6 @@ void BaseBakkesModPlugin::OnOpen()
 void BaseBakkesModPlugin::OnClose()
 {
     isMenuOpen = false;
-    this->cvarManager->backupCfg("./bakkesmod/cfg/config.cfg");
 }
 
 // Name of the menu that is used to toggle the window.

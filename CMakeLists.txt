@@ -9,39 +9,9 @@ get_filename_component(BAKKESMOD_PATH "[HKEY_CURRENT_USER\\Software\\BakkesMod\\
 add_subdirectory(external/ocornut/imgui)
 add_subdirectory(external/asio)
 
-add_library(
-        SpeedrunTools SHARED
-        src/SpeedrunTools.cpp src/SpeedrunTools.h
-        src/plugin/BaseBakkesModPlugin.h src/plugin/BaseBakkesModPlugin.cpp
-        src/toolkit/PluginToolkit.h src/toolkit/PluginToolkit.cpp
-        src/component/PluginComponent.h src/component/PluginComponent.cpp
-        src/toolkit/mutators/MutatorsToolkit.cpp src/toolkit/mutators/MutatorsToolkit.h
-        src/component/game/GameGravityComponent.cpp src/component/game/GameGravityComponent.h
-        src/utils/ImGuiExtensions.h src/utils/ImGuiExtensions.cpp
-        src/component/game/GameSpeedComponent.cpp src/component/game/GameSpeedComponent.h
-        src/component/car/AutoAirRollComponent.cpp src/component/car/AutoAirRollComponent.h
-        src/component/car/BoostMutatorComponent.cpp src/component/car/BoostMutatorComponent.h
-        src/services/MultiEventHooker.h src/services/MultiEventHooker.cpp
-        src/models/CarState.h src/models/CarState.cpp
-        src/models/BallState.h src/models/BallState.cpp
-        src/models/GameState.h src/models/GameState.cpp
-        src/component/savestate/RewindStateComponent.cpp src/component/savestate/RewindStateComponent.h
-        src/component/savestate/RewindBuffer.h src/component/savestate/RewindBuffer.cpp
-        src/toolkit/savestate/SaveStateToolkit.cpp src/toolkit/savestate/SaveStateToolkit.h
-        src/component/savestate/SaveStateComponent.cpp src/component/savestate/SaveStateComponent.h
-        src/toolkit/analysis/AnalysisToolkit.cpp src/toolkit/analysis/AnalysisToolkit.h
-        src/component/car/CarAnalysisComponent.cpp src/component/car/CarAnalysisComponent.h
-        src/component/ball/BallAnalysisComponent.cpp src/component/ball/BallAnalysisComponent.h
-        src/toolkit/livesplit/LiveSplitToolkit.cpp src/toolkit/livesplit/LiveSplitToolkit.h
-        src/component/livesplit/LiveSplitComponent.cpp src/component/livesplit/LiveSplitComponent.h
-        src/services/LiveSplitClient.h src/services/LiveSplitClient.cpp
-        src/component/kismet/SequenceVariableComponent.cpp src/component/kismet/SequenceVariableComponent.h
-        src/toolkit/kismet/KismetToolkit.cpp src/toolkit/kismet/KismetToolkit.h
-        src/toolkit/test/TestToolkit.cpp src/toolkit/test/TestToolkit.h
-        src/models/KismetSequenceVariable.cpp src/models/KismetSequenceVariable.h
-        src/component/livesplit/autosplitter/PanicsAirRaceBeachAutoSplitter.cpp src/component/livesplit/autosplitter/PanicsAirRaceBeachAutoSplitter.h
-        src/utils/LocalControllerInputFix.h src/utils/LocalControllerInputFix.cpp
-)
+file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "src/*.h" "src/*.cpp")
+
+add_library(SpeedrunTools SHARED ${SOURCE_FILES} src/PluginComponent.h src/components/MutatorsComponent.cpp src/components/MutatorsComponent.h src/components/SaveStatesComponent.cpp src/components/SaveStatesComponent.h src/components/LiveSplitComponent.cpp src/components/LiveSplitComponent.h src/components/KismetComponent.cpp src/components/KismetComponent.h)
 
 target_include_directories(
         SpeedrunTools PRIVATE
@@ -55,6 +25,14 @@ target_link_libraries(
         "${BAKKESMOD_PATH}/bakkesmodsdk/lib/pluginsdk.lib"
         ImGui
         asio
+)
+
+target_link_options(SpeedrunTools PUBLIC "/DEBUG")
+set_target_properties(SpeedrunTools PROPERTIES COMPILE_OPTIONS "/Zi")
+set_target_properties(
+        SpeedrunTools PROPERTIES
+        COMPILE_PDB_NAME "SpeedrunTools"
+        COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
 )
 
 set_property(TARGET SpeedrunTools PROPERTY MSVC_RUNTIME_LIBRARY MultiThreaded)

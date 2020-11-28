@@ -3,8 +3,7 @@
 #include <bakkesmod/plugin/bakkesmodplugin.h>
 #include <deque>
 #include <chrono>
-#include "../../models/GameState.h"
-
+#include "GameState.h"
 
 class RewindBuffer
 {

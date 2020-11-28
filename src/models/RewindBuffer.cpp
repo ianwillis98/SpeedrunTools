@@ -1,3 +1,4 @@
+#include <cmath>
 #include "RewindBuffer.h"
 
 RewindBuffer::RewindBuffer(float rewindLength) : rewindLength(rewindLength)
@@ -91,5 +92,5 @@ float RewindBuffer::getRewindLength() const
 
 void RewindBuffer::setRewindLength(float length)
 {
-    this->rewindLength = length;
+    this->rewindLength = std::fmax(length, 0.0f);
 }

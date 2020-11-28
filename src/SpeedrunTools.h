@@ -1,15 +1,13 @@
 #pragma once
 
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-
-#include <bakkesmod/plugin/bakkesmodplugin.h>
-#include "plugin/BaseBakkesModPlugin.h"
-#include "toolkit/PluginToolkit.h"
+#include "BaseBakkesModPlugin.h"
+#include "PluginComponent.h"
 
 class SpeedrunTools : public BaseBakkesModPlugin
 {
+private:
+    std::vector<std::unique_ptr<PluginComponent>> components;
+
 public:
     static const char *PLUGIN_VERSION;
     static const char *PLUGIN_TITLE;
@@ -22,5 +20,5 @@ public:
     void renderBody() override;
 
 private:
-    std::vector<std::unique_ptr<PluginToolkit>> toolkits;
+    void setupEvents();
 };

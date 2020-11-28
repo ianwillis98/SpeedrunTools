@@ -29,7 +29,7 @@ void GameState::render()
 {
     ImGui::Text("Saved car state:");
     this->carState.render();
-    ImGui::Spacing();
+    ImGui::Separator();
     ImGui::Text("Saved ball state:");
     this->ballState.render();
 }

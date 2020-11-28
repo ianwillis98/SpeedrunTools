@@ -29,6 +29,8 @@ void BallState::applyTo(BallWrapper &ball) const
 
 void BallState::render()
 {
+    ImGui::PushID(this);
+
     float positionArray[3] = {this->position.X, this->position.Y, this->position.Z};
     ImGui::InputFloat3("position (x,y,z)", positionArray, 2, ImGuiInputTextFlags_ReadOnly);
 
@@ -42,4 +44,6 @@ void BallState::render()
     ImGui::ProgressBar(speed / 2300.0f, ImVec2(0.f, 0.f), std::to_string(speed).c_str());
     ImGui::SameLine(0.0f, ImGui::GetStyle().ItemInnerSpacing.x);
     ImGui::Text("speed");
+
+    ImGui::PopID();
 }

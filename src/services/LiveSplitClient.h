@@ -7,14 +7,14 @@
 #include<bakkesmod/plugin/bakkesmodplugin.h>
 #include "asio.hpp"
 
-enum ConnectionState
+enum class ConnectionState
 {
     NotConnected,
     Connecting,
     Connected
 };
 
-using ErrorCallback = std::function<void(int errorCode, std::string message)>;
+using ErrorCallback = std::function<void(int errorCode, std::string errorMessage)>;
 
 class LiveSplitClient
 {

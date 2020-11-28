@@ -7,15 +7,12 @@
 class GameState
 {
 public:
-    GameState();
+    CarState carState;
+    BallState ballState;
 
+    GameState();
     explicit GameState(ServerWrapper &server);
 
     void applyTo(ServerWrapper &server) const;
-
     void render();
-
-public:
-    CarState carState;
-    BallState ballState;
 };

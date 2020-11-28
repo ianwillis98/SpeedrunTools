@@ -17,6 +17,5 @@ public:
     explicit CarState(CarWrapper &car);
 
     void applyTo(CarWrapper &car) const;
-
     void render();
 };

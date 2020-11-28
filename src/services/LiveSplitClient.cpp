@@ -2,7 +2,6 @@
 
 LiveSplitClient &LiveSplitClient::getInstance()
 {
-    // assume there will only ever be one plugin instance
     static LiveSplitClient instance;
     return instance;
 }
