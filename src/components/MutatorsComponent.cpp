@@ -23,17 +23,30 @@ void MutatorsComponent::render()
 {
     ImGui::Spacing();
     ImGui::Text("Set custom mutators that can be used for alternate speedrun categories.");
-    ImGui::Text("Note that speedrun.com doesn't have categories for mutated runs.");
     ImGui::Spacing();
 
+    ImGui::Spacing();
     ImGui::Separator();
+    ImGui::Spacing();
 
     this->renderBoostMutator();
+
+    ImGui::Spacing();
     ImGui::Separator();
+    ImGui::Spacing();
+
     this->renderAirRollMutator();
+
+    ImGui::Spacing();
     ImGui::Separator();
+    ImGui::Spacing();
+
     this->renderGameGravityMutator();
+
+    ImGui::Spacing();
     ImGui::Separator();
+    ImGui::Spacing();
+
     this->renderGameSpeedMutator();
 }
 

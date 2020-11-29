@@ -48,8 +48,8 @@ void LiveSplitComponent::onLoad()
 void LiveSplitComponent::render()
 {
     ImGui::Spacing();
-    ImGui::Text("LiveSplit Toolkit allows you to interact with LiveSplit (and auto splitters coming soon).");
-    ImGui::Text("NOTE: You must have both 'LiveSplit' AND 'LiveSplit Server' installed for this to work.");\
+    ImGui::Text("Interact with LiveSplit (auto splitters coming soon).");
+    ImGui::Text("Note: You must have both 'LiveSplit' and 'LiveSplit Server' installed for this to work.");\
     ImGui::Spacing();
 
     ImGui::Separator();

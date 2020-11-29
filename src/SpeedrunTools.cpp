@@ -38,16 +38,16 @@ void SpeedrunTools::onUnload()
 
 void SpeedrunTools::renderBody()
 {
-    static bool showDemoWindow = false;
-    ImGui::Checkbox("Show Demo Window", &showDemoWindow);
-    if (showDemoWindow)
-    {
-        ImGui::ShowDemoWindow();
-    }
+//    static bool showDemoWindow = false;
+//    ImGui::Checkbox("Show Demo Window", &showDemoWindow);
+//    if (showDemoWindow)
+//    {
+//        ImGui::ShowDemoWindow();
+//    }
 
-    ImGui::Text("%s (version %s)", PLUGIN_TITLE, PLUGIN_VERSION);
-
-    ImGui::Spacing();
+//    ImGui::Text("%s (version %s)", PLUGIN_TITLE, PLUGIN_VERSION);
+//
+//    ImGui::Spacing();
 
     ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
     if (ImGui::BeginTabBar("MainTabBar", tab_bar_flags))

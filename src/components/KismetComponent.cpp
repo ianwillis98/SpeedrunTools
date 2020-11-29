@@ -8,7 +8,7 @@ KismetComponent::KismetComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
 
 std::string KismetComponent::title()
 {
-    return "Kismet Viewer";
+    return "Kismet Editor";
 }
 
 void KismetComponent::onLoad()
@@ -21,11 +21,13 @@ void KismetComponent::onLoad()
 void KismetComponent::render()
 {
     ImGui::Spacing();
-    ImGui::Text("Kismet Viewer allows you to view kismet sequence variables (useful in workshop maps).");
-    ImGui::Text("Editing kismet vars is not yet supported by BakkesMod (coming soon hopefully).");
+    ImGui::Text("View kismet sequence variables (useful in workshop maps).");
+    ImGui::Text("Editing kismet vars is not yet supported by BakkesMod (likely coming soon).");
     ImGui::Spacing();
 
+    ImGui::Spacing();
     ImGui::Separator();
+    ImGui::Spacing();
 
     ImGui::Spacing();
     ImGui::Text("Kismet Sequence Variables:");

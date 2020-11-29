@@ -20,14 +20,20 @@ void SaveStatesComponent::onLoad()
 void SaveStatesComponent::render()
 {
     ImGui::Spacing();
-    ImGui::Text("Save the current game state and load it back at a future time (kinda like custom checkpoints)");
-    ImGui::Text("and rewind the game state back in time to allow for a do-overs.");
+    ImGui::Text("Save the current game state and load it back at a future time (essentially a custom checkpoint).");
+    ImGui::Text("Rewind the game state back in time to allow for do-overs.");
     ImGui::Spacing();
 
+    ImGui::Spacing();
     ImGui::Separator();
+    ImGui::Spacing();
 
     this->renderSaveState();
+
+    ImGui::Spacing();
     ImGui::Separator();
+    ImGui::Spacing();
+
     this->renderRewind();
 }
 
