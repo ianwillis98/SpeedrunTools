@@ -10,8 +10,7 @@ add_subdirectory(external/ocornut/imgui)
 add_subdirectory(external/asio)
 
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "src/*.h" "src/*.cpp")
-
-add_library(SpeedrunTools SHARED ${SOURCE_FILES} src/PluginComponent.h src/components/MutatorsComponent.cpp src/components/MutatorsComponent.h src/components/SaveStatesComponent.cpp src/components/SaveStatesComponent.h src/components/LiveSplitComponent.cpp src/components/LiveSplitComponent.h src/components/KismetComponent.cpp src/components/KismetComponent.h)
+add_library(SpeedrunTools SHARED ${SOURCE_FILES})
 
 target_include_directories(
         SpeedrunTools PRIVATE
@@ -27,13 +26,13 @@ target_link_libraries(
         asio
 )
 
-target_link_options(SpeedrunTools PUBLIC "/DEBUG")
-set_target_properties(SpeedrunTools PROPERTIES COMPILE_OPTIONS "/Zi")
-set_target_properties(
-        SpeedrunTools PROPERTIES
-        COMPILE_PDB_NAME "SpeedrunTools"
-        COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
-)
+#target_link_options(SpeedrunTools PUBLIC "/DEBUG")
+#set_target_properties(SpeedrunTools PROPERTIES COMPILE_OPTIONS "/Zi")
+#set_target_properties(
+#        SpeedrunTools PROPERTIES
+#        COMPILE_PDB_NAME "SpeedrunTools"
+#        COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+#)
 
 set_property(TARGET SpeedrunTools PROPERTY MSVC_RUNTIME_LIBRARY MultiThreaded)
 

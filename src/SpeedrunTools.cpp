@@ -46,7 +46,6 @@ void SpeedrunTools::renderBody()
 //    }
 
 //    ImGui::Text("%s (version %s)", PLUGIN_TITLE, PLUGIN_VERSION);
-//
 //    ImGui::Spacing();
 
     ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
