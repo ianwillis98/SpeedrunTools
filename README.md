@@ -1,7 +1,12 @@
-# Speedrun Tools (version 1.0)
+# Speedrun Tools
 
 Speedrun Tools is a [Bakkes Mod Plugin](https://bakkesplugins.com/) aimed at making speedrunning easier and more efficient.
 The following tools will only work in freeplay and workshop maps.
+
+## Download
+
+* [BakkesMod](https://bakkesmod.com/download.php) (if you don't have it already)
+* [Speedrun Tools Plugin](https://bakkesplugins.com/plugins/view/165)
 
 ## Features
 
@@ -15,7 +20,7 @@ The following tools will only work in freeplay and workshop maps.
   * Game state rewind
 * LiveSplit Client
   * Connect to and control LiveSplit
-  * Autosplitters (coming soon)
+  * Auto splitters (coming soon)
 * Kismet Sequence Variable Editor
   * View all active kismet vars for the current map
   * Modify active kismet vars (coming soon)

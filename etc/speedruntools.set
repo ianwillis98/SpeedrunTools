@@ -1,0 +1,3 @@
+Speedrun Tools
+0|Bind in-game menu to F9|bind F9 "togglemenu speedruntools"
+0|Open in-game menu|plugin load speedruntools; writeplugins; togglemenu speedruntools

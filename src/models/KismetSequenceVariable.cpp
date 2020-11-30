@@ -90,6 +90,8 @@ std::string KismetSequenceVariable::getValueAsString()
             return this->stringValue;
         case KismetSequenceVariableType::Unknown:
             return "Unknown";
+        default:
+            return "Type Not Registered";
     }
 }
 std::string KismetSequenceVariable::getTypeAsString()
@@ -108,5 +110,7 @@ std::string KismetSequenceVariable::getTypeAsString()
             return "string";
         case KismetSequenceVariableType::Unknown:
             return "Unknown";
+        default:
+            return "Type Not Registered";
     }
 }
