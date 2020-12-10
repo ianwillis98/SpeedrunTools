@@ -25,11 +25,15 @@ void GameState::applyTo(ServerWrapper &server) const
     ballState.applyTo(ballWrapper);
 }
 
-void GameState::render()
+bool GameState::render()
 {
+    bool hasChanged = false;
+
     ImGui::Text("Saved car state:");
-    this->carState.render();
+    if (this->carState.render()) hasChanged = true;
     ImGui::Separator();
     ImGui::Text("Saved ball state:");
-    this->ballState.render();
+    if (this->ballState.render()) hasChanged = true;
+
+    return hasChanged;
 }

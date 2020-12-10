@@ -9,14 +9,14 @@
 #include "../PluginComponent.h"
 #include "../models/KismetSequenceVariable.h"
 
-class KismetComponent : public PluginComponent
+class KismetEditorComponent : public PluginComponent
 {
 private:
     std::vector<KismetSequenceVariable> kismetVars;
     int selectedRow;
 
 public:
-    explicit KismetComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit KismetEditorComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
     std::string title() override;
     void onLoad() override;

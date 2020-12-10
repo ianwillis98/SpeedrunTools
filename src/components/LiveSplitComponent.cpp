@@ -1,59 +1,100 @@
 #include "LiveSplitComponent.h"
 
 LiveSplitComponent::LiveSplitComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
-        : PluginComponent(plugin), liveSplitClient(LiveSplitClient::getInstance()), feedbackMessage("Waiting for connect...")
+        : PluginComponent(plugin), liveSplitClient(LiveSplitClient::getInstance()), feedbackMessage("Waiting for connect..."),
+          autoSplitterManager(AutoSplitterManager::getInstance(plugin)), currentMap(""), isCurrentMapSupported(false),
+          isAutoSplitterRunning(false)
 {
 
 }
 
 std::string LiveSplitComponent::title()
 {
-    return "LiveSplit Client";
+    return "LiveSplit & Auto Splitter";
 }
 
 void LiveSplitComponent::onLoad()
 {
     this->plugin->cvarManager->registerNotifier("speedrun_livesplit_connect", [this](const std::vector<std::string> &commands) {
         this->connectAsync();
-    }, "", PERMISSION_PAUSEMENU_CLOSED);
+    }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
     this->plugin->cvarManager->registerNotifier("speedrun_livesplit_disconnect", [this](const std::vector<std::string> &commands) {
         this->disconnect();
-    }, "", PERMISSION_PAUSEMENU_CLOSED);
+    }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
     this->plugin->cvarManager->registerNotifier("speedrun_livesplit_startorsplit", [this](const std::vector<std::string> &commands) {
         this->startOrSplit();
-    }, "", PERMISSION_PAUSEMENU_CLOSED);
+    }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
     this->plugin->cvarManager->registerNotifier("speedrun_livesplit_start", [this](const std::vector<std::string> &commands) {
         this->start();
-    }, "", PERMISSION_PAUSEMENU_CLOSED);
+    }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
     this->plugin->cvarManager->registerNotifier("speedrun_livesplit_pause", [this](const std::vector<std::string> &commands) {
         this->pause();
-    }, "", PERMISSION_PAUSEMENU_CLOSED);
+    }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
     this->plugin->cvarManager->registerNotifier("speedrun_livesplit_resume", [this](const std::vector<std::string> &commands) {
         this->resume();
-    }, "", PERMISSION_PAUSEMENU_CLOSED);
+    }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
     this->plugin->cvarManager->registerNotifier("speedrun_livesplit_reset", [this](const std::vector<std::string> &commands) {
         this->reset();
-    }, "", PERMISSION_PAUSEMENU_CLOSED);
+    }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
     this->plugin->cvarManager->registerNotifier("speedrun_livesplit_split", [this](const std::vector<std::string> &commands) {
         this->split();
-    }, "", PERMISSION_PAUSEMENU_CLOSED);
+    }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
     this->plugin->cvarManager->registerNotifier("speedrun_livesplit_skipsplit", [this](const std::vector<std::string> &commands) {
         this->skipSplit();
-    }, "", PERMISSION_PAUSEMENU_CLOSED);
+    }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
     this->plugin->cvarManager->registerNotifier("speedrun_livesplit_undosplit", [this](const std::vector<std::string> &commands) {
         this->undoSplit();
-    }, "", PERMISSION_PAUSEMENU_CLOSED);
+    }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
 }
 
 void LiveSplitComponent::render()
 {
-    ImGui::Spacing();
-    ImGui::Text("Interact with LiveSplit (auto splitters coming soon).");
-    ImGui::Text("Note: You must have both 'LiveSplit' and 'LiveSplit Server' installed for this to work.");\
-    ImGui::Spacing();
+    ImGuiExtensions::BigSpacing();
 
-    ImGui::Separator();
+    this->renderLiveSplitClient();
 
+    if (this->liveSplitClient.getConnectionState() == ConnectionState::Connected)
+    {
+        ImGuiExtensions::BigSeparator();
+
+        this->renderAutoSplitter();
+    }
+
+}
+
+void LiveSplitComponent::onEvent(std::string eventName, bool post, void *params)
+{
+    if (eventName == "Function TAGame.Car_TA.SetVehicleInput" && !post)
+    {
+        if (!this->plugin->gameWrapper->IsInGame()) return;
+
+        this->currentMap = this->plugin->gameWrapper->GetCurrentMap();
+        this->isCurrentMapSupported = this->autoSplitterManager.isCurrentMapSupported();
+        if (!this->isCurrentMapSupported) this->isAutoSplitterRunning = false;
+
+        if (this->isAutoSplitterRunning)
+        {
+            if (this->autoSplitterManager.update())
+            {
+                if (this->autoSplitterManager.shouldStartTimer())
+                {
+                    this->start();
+                }
+                if (this->autoSplitterManager.shouldSplitTimer())
+                {
+                    this->split();
+                }
+                if (this->autoSplitterManager.shouldResetTimer())
+                {
+                    this->reset();
+                }
+            }
+        }
+    }
+}
+
+void LiveSplitComponent::renderLiveSplitClient()
+{
     std::string connectionStateString;
     ConnectionState connectionState = this->liveSplitClient.getConnectionState();
     switch (connectionState)
@@ -158,6 +199,23 @@ void LiveSplitComponent::render()
     }
 }
 
+void LiveSplitComponent::renderAutoSplitter()
+{
+    if (!this->plugin->gameWrapper->IsInGame())
+    {
+        ImGui::Text("Auto Splitter: Waiting for player to load a map...");
+    }
+    else
+    {
+        ImGui::Text("Current Map: %s", this->currentMap.c_str());
+        ImGui::Text("Is current map supported? %s", std::to_string(this->isCurrentMapSupported).c_str());
+        if (this->isCurrentMapSupported)
+        {
+            ImGui::Checkbox("Turn on/off auto splitter", &this->isAutoSplitterRunning);
+        }
+    }
+}
+
 void LiveSplitComponent::connectAsync()
 {
     this->feedbackMessage = "Attempting to establish a connection with the LiveSplit Server...";
@@ -256,4 +314,7 @@ void LiveSplitComponent::undoSplit()
 void LiveSplitComponent::log(const std::string &message)
 {
     this->plugin->cvarManager->log("LiveSplit Client: " + message);
+    this->plugin->gameWrapper->Execute([this, message](GameWrapper *gw) {
+        this->plugin->gameWrapper->LogToChatbox("LiveSplit Client: " + message, "SPEEDRUNTOOLS");
+    });
 }

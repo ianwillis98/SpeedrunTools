@@ -1,24 +1,24 @@
-#include "KismetComponent.h"
+#include "KismetEditorComponent.h"
 
-KismetComponent::KismetComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
+KismetEditorComponent::KismetEditorComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : PluginComponent(plugin), kismetVars(), selectedRow(-1)
 {
 
 }
 
-std::string KismetComponent::title()
+std::string KismetEditorComponent::title()
 {
     return "Kismet Editor";
 }
 
-void KismetComponent::onLoad()
+void KismetEditorComponent::onLoad()
 {
     this->plugin->cvarManager->registerNotifier("speedrun_kismet_list", [this](const std::vector<std::string> &commands) {
         this->listSequenceVars();
     }, "", PERMISSION_PAUSEMENU_CLOSED);
 }
 
-void KismetComponent::render()
+void KismetEditorComponent::render()
 {
     ImGui::Spacing();
     ImGui::Text("View kismet sequence variables (useful in workshop maps).");
@@ -70,7 +70,7 @@ void KismetComponent::render()
     ImGuiExtensions::PopDisabledStyleIf(!isInFreeplay);
 }
 
-void KismetComponent::listSequenceVars()
+void KismetEditorComponent::listSequenceVars()
 {
     SequenceWrapper sequence = this->plugin->gameWrapper->GetMainSequence();
     if (sequence.memory_address == NULL)
@@ -116,7 +116,7 @@ void KismetComponent::listSequenceVars()
     }
 }
 
-void KismetComponent::loadSequenceVariables()
+void KismetEditorComponent::loadSequenceVariables()
 {
     this->kismetVars.clear();
 

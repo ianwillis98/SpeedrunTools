@@ -32,6 +32,16 @@ KismetSequenceVariable::KismetSequenceVariable(SequenceVariableWrapper var)
         this->type = KismetSequenceVariableType::String;
         this->stringValue = var.GetString();
     }
+//    else if (var.IsObjectList())
+//    {
+//        this->type = KismetSequenceVariableType::ObjectList;
+//        this->stringValue = "Its an object list";
+//    }
+//    else if (var.IsActor())
+//    {
+//        this->type = KismetSequenceVariableType::Actor;
+//        this->stringValue = "Its an actor";
+//    }
     else
     {
         this->type = KismetSequenceVariableType::Unknown;
@@ -88,6 +98,10 @@ std::string KismetSequenceVariable::getValueAsString()
                    std::to_string(this->vectorValue.Z) + ")";
         case KismetSequenceVariableType::String:
             return this->stringValue;
+//        case KismetSequenceVariableType::ObjectList:
+//            return this->stringValue;
+//        case KismetSequenceVariableType::Actor:
+//            return this->stringValue;
         case KismetSequenceVariableType::Unknown:
             return "Unknown";
         default:
@@ -108,9 +122,33 @@ std::string KismetSequenceVariable::getTypeAsString()
             return "Vector";
         case KismetSequenceVariableType::String:
             return "string";
+//        case KismetSequenceVariableType::ObjectList:
+//            return "Object List";
+//        case KismetSequenceVariableType::Actor:
+//            return "Actor";
         case KismetSequenceVariableType::Unknown:
             return "Unknown";
         default:
             return "Type Not Registered";
     }
 }
+//void KismetSequenceVariable::setBool(bool value)
+//{
+//
+//}
+//void KismetSequenceVariable::setInt(int value)
+//{
+//
+//}
+//void KismetSequenceVariable::setFloat(float value)
+//{
+//
+//}
+//void KismetSequenceVariable::setVector(Vector value)
+//{
+//
+//}
+//void KismetSequenceVariable::setString(std::string value)
+//{
+//
+//}

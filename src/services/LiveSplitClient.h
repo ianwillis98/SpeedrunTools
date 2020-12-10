@@ -25,7 +25,7 @@ private:
 
     ConnectionState connectionState;
 
-    explicit LiveSplitClient();
+    LiveSplitClient();
 
 public:
     static LiveSplitClient &getInstance();

@@ -15,5 +15,5 @@ public:
     explicit BallState(BallWrapper &ball);
 
     void applyTo(BallWrapper &ball) const;
-    void render();
+    bool render();
 };

@@ -8,4 +8,7 @@ public:
 
     static void PushDisabledStyleIf(bool flag);
     static void PopDisabledStyleIf(bool flag);
+
+    static void BigSpacing();
+    static void BigSeparator();
 };

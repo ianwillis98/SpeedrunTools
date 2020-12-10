@@ -14,5 +14,5 @@ public:
     explicit GameState(ServerWrapper &server);
 
     void applyTo(ServerWrapper &server) const;
-    void render();
+    bool render();
 };

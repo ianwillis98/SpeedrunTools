@@ -1,3 +1,5 @@
+#pragma once
+
 #include <map>
 #include <bakkesmod/wrappers/wrapperstructs.h>
 #include <bakkesmod/wrappers/kismet/SequenceWrapper.h>

@@ -38,29 +38,47 @@ void CarState::applyTo(CarWrapper &car) const
     boost.SetBoostAmount(this->boostAmount);
 }
 
-void CarState::render()
+bool CarState::render()
 {
     ImGui::PushID(this);
 
-    float positionArray[3] = {this->position.X, this->position.Y, this->position.Z};
-    ImGui::InputFloat3("position (x,y,z)", positionArray, 2, ImGuiInputTextFlags_ReadOnly);
+    bool hasChanged = false;
 
-    int rotationArray[3] = {this->rotation.Pitch, this->rotation.Yaw, this->rotation.Roll};
-    ImGui::InputInt3("rotation (pitch,yaw,roll)", rotationArray, ImGuiInputTextFlags_ReadOnly);
+    float positionArray[3] = {this->position.X, this->position.Y, this->position.Z};
+    if (ImGui::InputFloat3("position (x,y,z)", positionArray, 2, ImGuiInputTextFlags_EnterReturnsTrue))
+    {
+        this->position = Vector(positionArray[0], positionArray[1], positionArray[2]);
+        hasChanged = true;
+    }
 
     float velocityArray[3] = {this->velocity.X, this->velocity.Y, this->velocity.Z};
-    ImGui::InputFloat3("velocity (x,y,z)", velocityArray, 2, ImGuiInputTextFlags_ReadOnly);
+    if (ImGui::InputFloat3("velocity (x,y,z)", velocityArray, 2, ImGuiInputTextFlags_EnterReturnsTrue))
+    {
+        this->velocity = Vector(velocityArray[0], velocityArray[1], velocityArray[2]);
+        hasChanged = true;
+    }
+
+    int rotationArray[3] = {this->rotation.Pitch, this->rotation.Yaw, this->rotation.Roll};
+    if (ImGui::InputInt3("rotation (pitch,yaw,roll)", rotationArray, ImGuiInputTextFlags_EnterReturnsTrue))
+    {
+        this->rotation = Rotator(rotationArray[0], rotationArray[1], rotationArray[2]);
+        hasChanged = true;
+    }
+
+    float boost = this->boostAmount;
+    boost *= 100.0f;
+    if (ImGui::InputFloat("boost", &boost, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+    {
+        this->boostAmount = boost / 100.0f;
+        hasChanged = true;
+    }
 
     float speed = std::sqrt(this->velocity.X * this->velocity.X + this->velocity.Y * this->velocity.Y + this->velocity.Z * this->velocity.Z);
     ImGui::ProgressBar(speed / 2300.0f, ImVec2(0.f, 0.f), std::to_string(speed).c_str());
     ImGui::SameLine(0.0f, ImGui::GetStyle().ItemInnerSpacing.x);
     ImGui::Text("speed");
 
-    float boost = this->boostAmount;
-    boost *= 100.0f;
-    ImGui::ProgressBar(boost / 100.0f, ImVec2(0.f, 0.f), std::to_string(boost).c_str());
-    ImGui::SameLine(0.0f, ImGui::GetStyle().ItemInnerSpacing.x);
-    ImGui::Text("boost");
-
     ImGui::PopID();
+
+    return hasChanged;
 }

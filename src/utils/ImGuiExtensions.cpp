@@ -29,3 +29,15 @@ void ImGuiExtensions::PopDisabledStyleIf(bool flag)
         ImGuiExtensions::PopDisabledStyle();
     }
 }
+
+void ImGuiExtensions::BigSpacing()
+{
+    ImGui::Dummy(ImVec2(0.0f, 7.0f));
+}
+
+void ImGuiExtensions::BigSeparator()
+{
+    ImGuiExtensions::BigSpacing();
+    ImGui::Separator();
+    ImGuiExtensions::BigSpacing();
+}

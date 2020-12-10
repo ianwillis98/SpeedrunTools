@@ -1,9 +1,10 @@
 #include "SpeedrunTools.h"
-#include "components/MutatorsComponent.h"
+#include "components/GeneralToolsComponent.h"
 #include "components/SaveStatesComponent.h"
 #include "components/LiveSplitComponent.h"
-#include "components/KismetComponent.h"
+#include "components/KismetEditorComponent.h"
 #include "components/MapToolsComponent.h"
+#include "components/TestComponent.h"
 
 BAKKESMOD_PLUGIN(SpeedrunTools, SpeedrunTools::PLUGIN_TITLE, SpeedrunTools::PLUGIN_VERSION, PLUGINTYPE_CUSTOM_TRAINING)
 
@@ -14,11 +15,13 @@ const char *SpeedrunTools::PLUGIN_MENU_NAME = "speedruntools";
 SpeedrunTools::SpeedrunTools()
         : BaseBakkesModPlugin(SpeedrunTools::PLUGIN_TITLE, SpeedrunTools::PLUGIN_MENU_NAME), components()
 {
-    this->components.push_back(std::make_unique<MutatorsComponent>(this));
+    this->components.push_back(std::make_unique<GeneralToolsComponent>(this));
     this->components.push_back(std::make_unique<SaveStatesComponent>(this));
     this->components.push_back(std::make_unique<LiveSplitComponent>(this));
-    this->components.push_back(std::make_unique<KismetComponent>(this));
+    this->components.push_back(std::make_unique<KismetEditorComponent>(this));
     this->components.push_back(std::make_unique<MapToolsComponent>(this));
+
+    this->components.push_back(std::make_unique<TestComponent>(this));
 }
 
 void SpeedrunTools::onLoad()
@@ -40,12 +43,12 @@ void SpeedrunTools::onUnload()
 
 void SpeedrunTools::renderBody()
 {
-//    static bool showDemoWindow = false;
-//    ImGui::Checkbox("Show Demo Window", &showDemoWindow);
-//    if (showDemoWindow)
-//    {
-//        ImGui::ShowDemoWindow();
-//    }
+    static bool showDemoWindow = false;
+    ImGui::Checkbox("Show Demo Window", &showDemoWindow);
+    if (showDemoWindow)
+    {
+        ImGui::ShowDemoWindow();
+    }
 
 //    ImGui::Text("%s (version %s)", PLUGIN_TITLE, PLUGIN_VERSION);
 //    ImGui::Spacing();
