@@ -78,4 +78,15 @@ void SpeedrunTools::setupEvents()
                 }
             }
     );
+    this->gameWrapper->HookEventPost(
+            "Function TAGame.GameEvent_Soccar_TA.InitGame",
+            [this](const std::string &eventName) {
+                this->gameWrapper->SetTimeout([this, eventName](GameWrapper *gw) {
+                    for (auto &component : this->components)
+                    {
+                        component->onEvent(eventName, true, nullptr);
+                    }
+                }, 0.2f);
+            }
+    );
 }

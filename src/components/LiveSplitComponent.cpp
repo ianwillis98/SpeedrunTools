@@ -1,20 +1,25 @@
 #include "LiveSplitComponent.h"
+#include "autosplitters/AutoSplitterNull.h"
+#include "autosplitters/AutoSplitterFactory.h"
 
 LiveSplitComponent::LiveSplitComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : PluginComponent(plugin), liveSplitClient(LiveSplitClient::getInstance()), feedbackMessage("Waiting for connect..."),
-          autoSplitterManager(AutoSplitterManager::getInstance(plugin)), currentMap(""), isCurrentMapSupported(false),
-          isAutoSplitterRunning(false)
+          isCurrentMapSupported(false), autoSplitter(std::make_unique<AutoSplitterNull>()), isAutoSplitterRunning(false)
 {
 
 }
 
 std::string LiveSplitComponent::title()
 {
-    return "LiveSplit & Auto Splitter";
+    return "LiveSplit";
 }
 
 void LiveSplitComponent::onLoad()
 {
+    this->currentMapName = this->plugin->gameWrapper->GetCurrentMap();
+    this->autoSplitter = AutoSplitterFactory::getInstance(this->plugin).getAutoSplitterForMap(this->currentMapName);
+    this->isCurrentMapSupported = AutoSplitterFactory::getInstance(this->plugin).isMapSupported(this->currentMapName);
+
     this->plugin->cvarManager->registerNotifier("speedrun_livesplit_connect", [this](const std::vector<std::string> &commands) {
         this->connectAsync();
     }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
@@ -53,48 +58,38 @@ void LiveSplitComponent::render()
 
     this->renderLiveSplitClient();
 
-    if (this->liveSplitClient.getConnectionState() == ConnectionState::Connected)
-    {
-        ImGuiExtensions::BigSeparator();
+    ImGuiExtensions::BigSeparator();
 
-        this->renderAutoSplitter();
-    }
-
+    this->renderAutoSplitter();
 }
 
 void LiveSplitComponent::onEvent(std::string eventName, bool post, void *params)
 {
     if (eventName == "Function TAGame.Car_TA.SetVehicleInput" && !post)
     {
-        if (!this->plugin->gameWrapper->IsInGame()) return;
-
-        this->currentMap = this->plugin->gameWrapper->GetCurrentMap();
-        this->isCurrentMapSupported = this->autoSplitterManager.isCurrentMapSupported();
-        if (!this->isCurrentMapSupported) this->isAutoSplitterRunning = false;
-
-        if (this->isAutoSplitterRunning)
+        if (this->liveSplitClient.getConnectionState() == ConnectionState::Connected && this->isAutoSplitterRunning)
         {
-            if (this->autoSplitterManager.update())
+            if (this->autoSplitter->update())
             {
-                if (this->autoSplitterManager.shouldStartTimer())
-                {
-                    this->start();
-                }
-                if (this->autoSplitterManager.shouldSplitTimer())
-                {
-                    this->split();
-                }
-                if (this->autoSplitterManager.shouldResetTimer())
-                {
-                    this->reset();
-                }
+                if (this->autoSplitter->shouldTimerStart()) this->start();
+                if (this->autoSplitter->shouldTimerSplit()) this->split();
+                if (this->autoSplitter->shouldTimerReset()) this->reset();
             }
         }
+    }
+    if (eventName == "Function TAGame.GameEvent_Soccar_TA.InitGame" && post)
+    {
+        this->currentMapName = this->plugin->gameWrapper->GetCurrentMap();
+        this->autoSplitter = AutoSplitterFactory::getInstance(this->plugin).getAutoSplitterForMap(this->currentMapName);
+        this->isCurrentMapSupported = AutoSplitterFactory::getInstance(this->plugin).isMapSupported(this->currentMapName);
+        this->isAutoSplitterRunning = false;
     }
 }
 
 void LiveSplitComponent::renderLiveSplitClient()
 {
+    ImGui::Text("--- LiveSplit Client ---");
+
     std::string connectionStateString;
     ConnectionState connectionState = this->liveSplitClient.getConnectionState();
     switch (connectionState)
@@ -111,7 +106,7 @@ void LiveSplitComponent::renderLiveSplitClient()
             break;
     }
     ImGui::Spacing();
-    ImGui::Text("LiveSplit Client: %s", connectionStateString.c_str());
+    ImGui::Text("Connection status: %s", connectionStateString.c_str());
     ImGui::Spacing();
     ImGui::Text("%s", this->feedbackMessage.c_str());
     ImGui::Spacing();
@@ -201,18 +196,27 @@ void LiveSplitComponent::renderLiveSplitClient()
 
 void LiveSplitComponent::renderAutoSplitter()
 {
-    if (!this->plugin->gameWrapper->IsInGame())
+    ImGui::Text("--- Auto Splitter ---");
+    ImGui::Spacing();
+    ImGui::Text("Current map: %s", this->currentMapName.c_str());
+    ImGui::Spacing();
+
+    if (this->isCurrentMapSupported)
     {
-        ImGui::Text("Auto Splitter: Waiting for player to load a map...");
+        ImGui::Text("The current map has auto splitter support.");
+        ImGui::Spacing();
+        if (this->liveSplitClient.getConnectionState() == ConnectionState::Connected)
+        {
+            ImGui::Checkbox("Turn the auto splitter on/off for the current map", &this->isAutoSplitterRunning);
+        }
+        else
+        {
+            ImGui::Text("Waiting for connect...");
+        }
     }
     else
     {
-        ImGui::Text("Current Map: %s", this->currentMap.c_str());
-        ImGui::Text("Is current map supported? %s", std::to_string(this->isCurrentMapSupported).c_str());
-        if (this->isCurrentMapSupported)
-        {
-            ImGui::Checkbox("Turn on/off auto splitter", &this->isAutoSplitterRunning);
-        }
+        ImGui::Text("The current map does not have auto splitter support.");
     }
 }
 
@@ -230,6 +234,7 @@ void LiveSplitComponent::connectAsync()
 
 void LiveSplitComponent::disconnect()
 {
+    this->isAutoSplitterRunning = false;
     this->liveSplitClient.disconnect([this](const int &errorCode, const std::string &errorMessage) {
         this->feedbackMessage = (errorCode == 0) ? "Disconnected from the LiveSplit Server." :
                                 "Error while disconnecting from the LiveSplit Server (" + std::to_string(errorCode) + ") \"" + errorMessage + "\".";

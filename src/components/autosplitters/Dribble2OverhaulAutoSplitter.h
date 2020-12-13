@@ -1,8 +1,8 @@
 #pragma once
 
-#include "AutoSplitter.h"
+#include "AutoSplitterBase.h"
 
-class Dribble2OverhaulAutoSplitter : public AutoSplitter
+class Dribble2OverhaulAutoSplitter : public AutoSplitterBase
 {
 private:
     bool hasUpdatedOnce;
@@ -17,11 +17,9 @@ private:
 public:
     explicit Dribble2OverhaulAutoSplitter(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
-    std::string mapName() override;
-
-    void reset() override;
     bool update() override;
 
-    bool shouldStartTimer() override;
-    bool shouldSplitTimer() override;
+    bool shouldTimerStart() override;
+    bool shouldTimerSplit() override;
+    bool shouldTimerReset() override;
 };

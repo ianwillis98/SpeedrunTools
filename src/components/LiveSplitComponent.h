@@ -2,7 +2,7 @@
 
 #include "../PluginComponent.h"
 #include "../services/LiveSplitClient.h"
-#include "autosplitters/AutoSplitterManager.h"
+#include "autosplitters/AutoSplitter.h"
 
 class LiveSplitComponent : public PluginComponent
 {
@@ -10,9 +10,9 @@ private:
     LiveSplitClient &liveSplitClient;
     std::string feedbackMessage;
 
-    AutoSplitterManager &autoSplitterManager;
-    std::string currentMap;
+    std::string currentMapName;
     bool isCurrentMapSupported;
+    std::unique_ptr<AutoSplitter> autoSplitter;
     bool isAutoSplitterRunning;
 
 public:
@@ -41,5 +41,5 @@ private:
     void skipSplit();
     void undoSplit();
 
-    void log(const std::string &message);
+    void log(const std::string &messageW);
 };

@@ -10,40 +10,10 @@
 
 class AutoSplitter
 {
-protected:
-    BakkesMod::Plugin::BakkesModPlugin *plugin;
-
 public:
-    explicit AutoSplitter(BakkesMod::Plugin::BakkesModPlugin *plugin) : plugin(plugin)
-    {}
+    virtual bool update() = 0;
 
-    virtual std::string mapName()
-    {
-        return "";
-    }
-
-    virtual void reset()
-    {
-
-    }
-
-    virtual bool update()
-    {
-        return true;
-    }
-
-    virtual bool shouldStartTimer()
-    {
-        return false;
-    }
-
-    virtual bool shouldSplitTimer()
-    {
-        return false;
-    }
-
-    virtual bool shouldResetTimer()
-    {
-        return false;
-    }
+    virtual bool shouldTimerStart() = 0;
+    virtual bool shouldTimerSplit() = 0;
+    virtual bool shouldTimerReset() = 0;
 };
