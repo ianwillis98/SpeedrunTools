@@ -12,6 +12,7 @@ class AutoSplitter
 {
 public:
     virtual bool update() = 0;
+    virtual void onEvent(const std::string &eventName, bool post, void *params) = 0;
 
     virtual bool shouldTimerStart() = 0;
     virtual bool shouldTimerSplit() = 0;

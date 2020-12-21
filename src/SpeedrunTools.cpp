@@ -1,10 +1,6 @@
 #include "SpeedrunTools.h"
-#include "components/GeneralToolsComponent.h"
-#include "components/SaveStatesComponent.h"
-#include "components/LiveSplitComponent.h"
-#include "components/KismetEditorComponent.h"
-#include "components/MapToolsComponent.h"
-#include "components/TestComponent.h"
+#include "toolkits/livesplit/LiveSplitToolkit.h"
+
 
 BAKKESMOD_PLUGIN(SpeedrunTools, SpeedrunTools::PLUGIN_TITLE, SpeedrunTools::PLUGIN_VERSION, PLUGINTYPE_CUSTOM_TRAINING)
 
@@ -13,31 +9,26 @@ const char *SpeedrunTools::PLUGIN_TITLE = "Speedrun Tools";
 const char *SpeedrunTools::PLUGIN_MENU_NAME = "speedruntools";
 
 SpeedrunTools::SpeedrunTools()
-        : BaseBakkesModPlugin(SpeedrunTools::PLUGIN_TITLE, SpeedrunTools::PLUGIN_MENU_NAME), components()
+        : BaseBakkesModPlugin(SpeedrunTools::PLUGIN_TITLE, SpeedrunTools::PLUGIN_MENU_NAME),
+          toolkits()
 {
-    this->components.push_back(std::make_unique<GeneralToolsComponent>(this));
-    this->components.push_back(std::make_unique<SaveStatesComponent>(this));
-    this->components.push_back(std::make_unique<LiveSplitComponent>(this));
-    this->components.push_back(std::make_unique<KismetEditorComponent>(this));
-    this->components.push_back(std::make_unique<MapToolsComponent>(this));
-
-    this->components.push_back(std::make_unique<TestComponent>(this));
+    this->toolkits.push_back(std::make_unique<LiveSplitToolkit>(this));
 }
 
 void SpeedrunTools::onLoad()
 {
     this->setupEvents();
-    for (auto &component : this->components)
+    for (auto &toolkit : this->toolkits)
     {
-        component->onLoad();
+        toolkit->onLoad();
     }
 }
 
 void SpeedrunTools::onUnload()
 {
-    for (auto &component : this->components)
+    for (auto &toolkit : this->toolkits)
     {
-        component->onUnload();
+        toolkit->onUnload();
     }
 }
 
@@ -50,17 +41,17 @@ void SpeedrunTools::renderBody()
         ImGui::ShowDemoWindow();
     }
 
-//    ImGui::Text("%s (version %s)", PLUGIN_TITLE, PLUGIN_VERSION);
-//    ImGui::Spacing();
+    ImGui::Text("%s (version %s)", PLUGIN_TITLE, PLUGIN_VERSION);
+    ImGui::Spacing();
 
     ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
     if (ImGui::BeginTabBar("MainTabBar", tab_bar_flags))
     {
-        for (auto &component : this->components)
+        for (auto &toolkit : this->toolkits)
         {
-            if (ImGui::BeginTabItem(component->title().c_str()))
+            if (ImGui::BeginTabItem(toolkit->title().c_str()))
             {
-                component->render();
+                toolkit->render();
                 ImGui::EndTabItem();
             }
         }
@@ -72,19 +63,54 @@ void SpeedrunTools::setupEvents()
     this->gameWrapper->HookEventWithCaller<CarWrapper>(
             "Function TAGame.Car_TA.SetVehicleInput",
             [this](const CarWrapper &cw, void *params, const std::string &eventName) {
-                for (auto &component : this->components)
+                for (auto &toolkit : this->toolkits)
                 {
-                    component->onEvent(eventName, false, params);
+                    toolkit->onEvent(eventName, false, params);
                 }
             }
     );
+    this->setupEventPostDelayed("Function TAGame.GameEvent_Soccar_TA.InitGame", 0.2f);
+    this->setupEventPost("Function TAGame.GameEvent_Soccar_TA.Destroyed");
+
+    this->setupEventPostDelayed("Function TAGame.GameEvent_Tutorial_TA.OnInit", 0.2f);
+    this->setupEventPost("Function GameEvent_Tutorial_Basic_TA.Active.HandleHitGoal");
+}
+
+void SpeedrunTools::setupEvent(const std::string &eventName)
+{
+    this->gameWrapper->HookEvent(
+            eventName,
+            [this](const std::string &eventName) {
+                for (auto &toolkit : this->toolkits)
+                {
+                    toolkit->onEvent(eventName, false, nullptr);
+                }
+            }
+    );
+}
+
+void SpeedrunTools::setupEventPost(const std::string &eventName)
+{
     this->gameWrapper->HookEventPost(
-            "Function TAGame.GameEvent_Soccar_TA.InitGame",
+            eventName,
+            [this](const std::string &eventName) {
+                for (auto &toolkit : this->toolkits)
+                {
+                    toolkit->onEvent(eventName, false, nullptr);
+                }
+            }
+    );
+}
+
+void SpeedrunTools::setupEventPostDelayed(const std::string &eventName, float delay)
+{
+    this->gameWrapper->HookEventPost(
+            eventName,
             [this](const std::string &eventName) {
                 this->gameWrapper->SetTimeout([this, eventName](GameWrapper *gw) {
-                    for (auto &component : this->components)
+                    for (auto &toolkit : this->toolkits)
                     {
-                        component->onEvent(eventName, true, nullptr);
+                        toolkit->onEvent(eventName + " Delayed", true, nullptr);
                     }
                 }, 0.2f);
             }

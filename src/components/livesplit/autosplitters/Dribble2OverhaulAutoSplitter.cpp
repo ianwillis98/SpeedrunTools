@@ -32,6 +32,12 @@ bool Dribble2OverhaulAutoSplitter::update()
     return this->hasUpdatedTwice;
 }
 
+void Dribble2OverhaulAutoSplitter::onEvent(const std::string &eventName, bool post, void *params)
+{
+
+}
+
+
 bool Dribble2OverhaulAutoSplitter::shouldTimerStart()
 {
     return currentTiming && !previousTiming && (currentLevel == 1);

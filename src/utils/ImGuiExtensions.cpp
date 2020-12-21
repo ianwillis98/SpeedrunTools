@@ -16,18 +16,12 @@ void ImGuiExtensions::PopDisabledStyle()
 
 void ImGuiExtensions::PushDisabledStyleIf(bool flag)
 {
-    if (flag)
-    {
-        ImGuiExtensions::PushDisabledStyle();
-    }
+    if (flag) ImGuiExtensions::PushDisabledStyle();
 }
 
 void ImGuiExtensions::PopDisabledStyleIf(bool flag)
 {
-    if (flag)
-    {
-        ImGuiExtensions::PopDisabledStyle();
-    }
+    if (flag) ImGuiExtensions::PopDisabledStyle();
 }
 
 void ImGuiExtensions::BigSpacing()

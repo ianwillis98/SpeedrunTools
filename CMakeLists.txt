@@ -10,7 +10,7 @@ add_subdirectory(external/ocornut/imgui)
 add_subdirectory(external/asio)
 
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "src/*.h" "src/*.cpp")
-add_library(SpeedrunTools SHARED ${SOURCE_FILES} src/components/MapToolsComponent.cpp src/components/MapToolsComponent.h src/components/TestComponent.cpp src/components/TestComponent.h src/components/GeneralToolsComponent.cpp src/components/GeneralToolsComponent.h src/components/autosplitters/AutoSplitter.h src/components/autosplitters/Dribble2OverhaulAutoSplitter.cpp src/components/autosplitters/Dribble2OverhaulAutoSplitter.h src/components/autosplitters/AutoSplitterFactory.cpp src/components/autosplitters/AutoSplitterFactory.h src/components/autosplitters/AutoSplitterBase.cpp src/components/autosplitters/AutoSplitterBase.h src/components/autosplitters/AutoSplitterNull.cpp src/components/autosplitters/AutoSplitterNull.h)
+add_library(SpeedrunTools SHARED ${SOURCE_FILES})
 
 target_include_directories(
         SpeedrunTools PRIVATE

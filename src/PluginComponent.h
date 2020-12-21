@@ -12,27 +12,9 @@
 
 class PluginComponent
 {
-protected:
-    BakkesMod::Plugin::BakkesModPlugin *plugin;
-
 public:
-    explicit PluginComponent(BakkesMod::Plugin::BakkesModPlugin *plugin) : plugin(plugin)
-    {}
-
-    virtual std::string title()
-    {
-        return "";
-    }
-
-    virtual void onLoad()
-    {}
-
-    virtual void onUnload()
-    {}
-
-    virtual void render()
-    {}
-
-    virtual void onEvent(std::string eventName, bool post, void *params)
-    {}
+    virtual void onLoad() = 0;
+    virtual void onUnload() = 0;
+    virtual void render() = 0;
+    virtual void onEvent(const std::string &eventName, bool post, void *params) = 0;
 };

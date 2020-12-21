@@ -45,6 +45,22 @@ ConnectionState LiveSplitClient::getConnectionState()
     return this->connectionState;
 }
 
+bool LiveSplitClient::isConnected()
+{
+    return this->connectionState == ConnectionState::Connected;
+}
+
+bool LiveSplitClient::isConnecting()
+{
+    return this->connectionState == ConnectionState::Connecting;
+}
+
+bool LiveSplitClient::isNotConnected()
+{
+    return this->connectionState == ConnectionState::NotConnected;
+}
+
+
 void LiveSplitClient::disconnect(const ErrorCallback &callback)
 {
     if (this->connectionState == ConnectionState::NotConnected)

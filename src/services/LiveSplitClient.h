@@ -30,9 +30,12 @@ private:
 public:
     static LiveSplitClient &getInstance();
 
-    void connectAsync(const std::string &host, const std::string &port, const ErrorCallback &callback);
     ConnectionState getConnectionState();
+    bool isConnected();
+    bool isConnecting();
+    bool isNotConnected();
 
+    void connectAsync(const std::string &host, const std::string &port, const ErrorCallback &callback);
     void disconnect(const ErrorCallback &callback);
 
     void startOrSplit(const ErrorCallback &callback);

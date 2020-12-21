@@ -18,6 +18,7 @@ public:
     explicit Dribble2OverhaulAutoSplitter(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
     bool update() override;
+    void onEvent(const std::string &eventName, bool post, void *params) override;
 
     bool shouldTimerStart() override;
     bool shouldTimerSplit() override;
