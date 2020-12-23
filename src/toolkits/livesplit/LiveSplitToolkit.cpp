@@ -20,10 +20,10 @@ void LiveSplitToolkit::onLoad()
 
 void LiveSplitToolkit::render()
 {
+    ImGuiExtensions::BigSpacing();
     this->liveSplitRemoteComponent.render();
     ImGuiExtensions::BigSeparator();
     this->autoSplitterComponent.render();
-    ImGuiExtensions::BigSpacing();
 }
 
 void LiveSplitToolkit::onEvent(const std::string &eventName, bool post, void *params)

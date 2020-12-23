@@ -5,8 +5,10 @@
 class TutorialBasicAutoSplitter : public AutoSplitterBase
 {
 private:
-    bool didTutorialStart;
-    bool didScoreGoal;
+    bool shouldStartTimer;
+    bool shouldSplitTimer;
+    bool shouldResetTimer;
+    int level;
 
 public:
     explicit TutorialBasicAutoSplitter(BakkesMod::Plugin::BakkesModPlugin *plugin);

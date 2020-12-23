@@ -1,43 +1,83 @@
 #include "TutorialBasicAutoSplitter.h"
 
-TutorialBasicAutoSplitter::TutorialBasicAutoSplitter(BakkesMod::Plugin::BakkesModPlugin *plugin) : AutoSplitterBase(plugin)
+TutorialBasicAutoSplitter::TutorialBasicAutoSplitter(BakkesMod::Plugin::BakkesModPlugin *plugin)
+        : AutoSplitterBase(plugin),
+          shouldStartTimer(false),
+          shouldSplitTimer(false),
+          shouldResetTimer(false),
+          level(0)
 {
 
 }
 
 bool TutorialBasicAutoSplitter::update()
 {
-
-    return true;
+    return this->plugin->gameWrapper->GetCurrentMap() == "Park_P";
 }
 
 void TutorialBasicAutoSplitter::onEvent(const std::string &eventName, bool post, void *params)
 {
-    if (eventName == "Function TAGame.GameEvent_Tutorial_TA.OnInit Delayed" && post)
+    if (this->plugin->gameWrapper->GetCurrentMap() != "Park_P") return;
+
+    if (eventName == "Function TAGame.GameInfo_Tutorial_TA.PostBeginPlay Delayed" && post)
     {
-        this->plugin->cvarManager->log("map is " + this->plugin->gameWrapper->GetCurrentMap());
-        this->didTutorialStart = true;
+        if (this->level != 0)
+        {
+            this->shouldResetTimer = true;
+            this->level = 0;
+        }
+        else
+        {
+            this->shouldStartTimer = true;
+            this->level++;
+        }
     }
     if (eventName == "Function GameEvent_Tutorial_Basic_TA.Active.HandleHitGoal" && post)
     {
-        this->plugin->cvarManager->log("tut scored");
-        this->didScoreGoal = true;
+        if (this->level < 1 || this->level > 5) return;
+
+        this->shouldSplitTimer = true;
+        this->level++;
+    }
+    if (eventName == "Function TAGame.GFxShell_TA.ShowModalObject" && post)
+    {
+        if (this->level != 6) return;
+
+        CarWrapper cw = this->plugin->gameWrapper->GetLocalCar();
+        if (cw.IsNull()) return;
+
+        int yaw = cw.GetRotation().Yaw;
+        if (yaw > 16000 && yaw < 16600) return;
+
+        this->shouldSplitTimer = true;
+        this->level++;
+    }
+    if (eventName == "Function TAGame.GameEvent_Tutorial_TA.Destroyed" && post)
+    {
+        if (level == 0) return;
+
+        this->shouldResetTimer = true;
+        this->level = 0;
     }
 }
 
 bool TutorialBasicAutoSplitter::shouldTimerStart()
 {
-    bool shouldTimerStart = this->didTutorialStart;
-    this->didTutorialStart = false;
-    return shouldTimerStart;
+    bool temp = this->shouldStartTimer;
+    this->shouldStartTimer = false;
+    return temp;
 }
 
 bool TutorialBasicAutoSplitter::shouldTimerSplit()
 {
-    return false;
+    bool temp = this->shouldSplitTimer;
+    this->shouldSplitTimer = false;
+    return temp;
 }
 
 bool TutorialBasicAutoSplitter::shouldTimerReset()
 {
-    return false;
+    bool temp = this->shouldResetTimer;
+    this->shouldResetTimer = false;
+    return temp;
 }

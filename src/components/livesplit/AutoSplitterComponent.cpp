@@ -18,9 +18,8 @@ void AutoSplitterComponent::onLoad()
 
 void AutoSplitterComponent::render()
 {
-    ImGui::Spacing();
-
     ImGui::Text("Auto Splitter:");
+    ImGui::BulletText("Feedback Message: %s", this->feedbackMessage.c_str());
     ImGui::Spacing();
 
     static int ci = 0;
@@ -33,18 +32,15 @@ void AutoSplitterComponent::render()
 
 void AutoSplitterComponent::onEvent(const std::string &eventName, bool post, void *params)
 {
+    if (!this->liveSplitClient.isConnected()) return;
+
     this->autoSplitter->onEvent(eventName, post, params);
-    if (eventName == "Function TAGame.Car_TA.SetVehicleInput" && !post)
+
+    if (this->autoSplitter->update())
     {
-        if (this->liveSplitClient.getConnectionState() == ConnectionState::Connected || true)
-        {
-            if (this->autoSplitter->update())
-            {
-                if (this->autoSplitter->shouldTimerStart()) this->start();
-                if (this->autoSplitter->shouldTimerSplit()) this->split();
-                if (this->autoSplitter->shouldTimerReset()) this->reset();
-            }
-        }
+        if (this->autoSplitter->shouldTimerStart()) this->start();
+        if (this->autoSplitter->shouldTimerSplit()) this->split();
+        if (this->autoSplitter->shouldTimerReset()) this->reset();
     }
 }
 

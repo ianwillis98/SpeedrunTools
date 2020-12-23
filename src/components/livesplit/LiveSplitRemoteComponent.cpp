@@ -44,8 +44,6 @@ void LiveSplitRemoteComponent::onLoad()
 
 void LiveSplitRemoteComponent::render()
 {
-    ImGui::Spacing();
-
     ImGui::Text("LiveSplit Remote Controller:");
     ImGui::BulletText("Connection Status: %s", this->getConnectionStatusAsString().c_str());
     ImGui::BulletText("Feedback Message: %s", this->feedbackMessage.c_str());
