@@ -1,66 +1,68 @@
 #include "AutoSplitterBase.h"
 
-AutoSplitterBase::AutoSplitterBase(BakkesMod::Plugin::BakkesModPlugin *plugin) : plugin(plugin)
+AutoSplitterBase::AutoSplitterBase(BakkesMod::Plugin::BakkesModPlugin *plugin)
+        : plugin(plugin),
+          shouldTimerStart(false),
+          shouldTimerSplit(false),
+          shouldTimerReset(false)
 {
 
-}
-
-bool AutoSplitterBase::update()
-{
-    return true;
 }
 
 void AutoSplitterBase::onEvent(const std::string &eventName, bool post, void *params)
 {
-
+    this->shouldTimerStart = false;
+    this->shouldTimerSplit = false;
+    this->shouldTimerReset = false;
+    this->onEventReceived(eventName, post, params);
 }
 
-bool AutoSplitterBase::supportsAutoStart()
+bool AutoSplitterBase::start()
 {
-    return false;
+    return this->shouldTimerStart;
 }
 
-bool AutoSplitterBase::supportsAutoSplit()
+bool AutoSplitterBase::split()
 {
-    return false;
+    return this->shouldTimerSplit;
 }
 
-bool AutoSplitterBase::supportsAutoReset()
+bool AutoSplitterBase::reset()
 {
-    return false;
+    return this->shouldTimerReset;
 }
 
-bool AutoSplitterBase::shouldTimerStart()
+bool AutoSplitterBase::supportsStart()
 {
-    return false;
+    return true;
 }
 
-bool AutoSplitterBase::shouldTimerSplit()
+bool AutoSplitterBase::supportsSplit()
 {
-    return false;
+    return true;
 }
 
-bool AutoSplitterBase::shouldTimerReset()
+bool AutoSplitterBase::supportsReset()
 {
-    return false;
+    return true;
+}
+
+std::string AutoSplitterBase::startDescription()
+{
+    return std::string();
+}
+
+std::string AutoSplitterBase::splitDescription()
+{
+    return std::string();
+}
+
+std::string AutoSplitterBase::resetDescription()
+{
+    return std::string();
 }
 
 std::string AutoSplitterBase::getDebug()
-{
-    return std::string();
-}
-
-std::string AutoSplitterBase::autoStartDescription()
-{
-    return std::string();
-}
-
-std::string AutoSplitterBase::autoSplitDescription()
-{
-    return std::string();
-}
-
-std::string AutoSplitterBase::autoResetDescription()
 {
     return std::string();
 }

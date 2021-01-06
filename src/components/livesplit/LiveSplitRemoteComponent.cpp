@@ -44,7 +44,7 @@ void LiveSplitRemoteComponent::onLoad()
 
 void LiveSplitRemoteComponent::render()
 {
-    ImGui::Text("LiveSplit Remote Controller:");
+    ImGui::Text("LiveSplit Remote Controller");
     ImGui::BulletText("Connection Status: ");
     ImGui::SameLine();
     switch (this->liveSplitClient.getConnectionState())

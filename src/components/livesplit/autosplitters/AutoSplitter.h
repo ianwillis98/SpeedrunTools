@@ -11,20 +11,19 @@
 class AutoSplitter
 {
 public:
-    virtual bool update() = 0;
     virtual void onEvent(const std::string &eventName, bool post, void *params) = 0;
 
-    virtual bool supportsAutoStart() = 0;
-    virtual bool supportsAutoSplit() = 0;
-    virtual bool supportsAutoReset() = 0;
+    virtual bool start() = 0;
+    virtual bool split() = 0;
+    virtual bool reset() = 0;
 
-    virtual bool shouldTimerStart() = 0;
-    virtual bool shouldTimerSplit() = 0;
-    virtual bool shouldTimerReset() = 0;
+    virtual bool supportsStart() = 0;
+    virtual bool supportsSplit() = 0;
+    virtual bool supportsReset() = 0;
+
+    virtual std::string startDescription() = 0;
+    virtual std::string splitDescription() = 0;
+    virtual std::string resetDescription() = 0;
 
     virtual std::string getDebug() = 0;
-
-    virtual std::string autoStartDescription() = 0;
-    virtual std::string autoSplitDescription() = 0;
-    virtual std::string autoResetDescription() = 0;
 };

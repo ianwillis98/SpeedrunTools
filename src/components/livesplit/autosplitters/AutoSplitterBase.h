@@ -7,24 +7,27 @@ class AutoSplitterBase : public AutoSplitter
 {
 protected:
     BakkesMod::Plugin::BakkesModPlugin *plugin;
+    bool shouldTimerStart;
+    bool shouldTimerSplit;
+    bool shouldTimerReset;
 
 public:
     explicit AutoSplitterBase(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
-    bool update() override;
-    void onEvent(const std::string &eventName, bool post, void *params) override;
+    void onEvent(const std::string &eventName, bool post, void *params) final;
+    virtual void onEventReceived(const std::string &eventName, bool post, void *params) = 0;
 
-    bool supportsAutoStart() override;
-    bool supportsAutoSplit() override;
-    bool supportsAutoReset() override;
+    bool start() final;
+    bool split() final;
+    bool reset() final;
 
-    bool shouldTimerStart() override;
-    bool shouldTimerSplit() override;
-    bool shouldTimerReset() override;
+    bool supportsStart() override;
+    bool supportsSplit() override;
+    bool supportsReset() override;
+
+    std::string startDescription() override;
+    std::string splitDescription() override;
+    std::string resetDescription() override;
 
     std::string getDebug() override;
-
-    std::string autoStartDescription() override;
-    std::string autoSplitDescription() override;
-    std::string autoResetDescription() override;
 };

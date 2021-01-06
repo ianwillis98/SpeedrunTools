@@ -1,5 +1,4 @@
 #include "AutoSplitterComponent.h"
-#include "autosplitters/AutoSplitterFactory.h"
 #include "autosplitters/AutoSplitterSupportedRun.h"
 
 AutoSplitterComponent::AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
@@ -39,40 +38,35 @@ void AutoSplitterComponent::render()
     if (ImGui::Combo("Run/Category", &comboIndex, runNames, IM_ARRAYSIZE(runNames)))
     {
         this->autoSplitter = this->autoSplitterFactory.getAutoSplitterForRun(runNames[comboIndex]);
+        this->isAutoStartEnabled = true;
+        this->isAutoSplitEnabled = true;
+        this->isAutoResetEnabled = true;
     }
     if (this->autoSplitter == nullptr) return;
 
     ImGui::Spacing();
 
-    if (!this->autoSplitter->autoStartDescription().empty())
+    if (!this->autoSplitter->startDescription().empty())
     {
         ImGui::Spacing();
-        ImGui::Text("Auto Start Description: %s", this->autoSplitter->autoStartDescription().c_str());
+        ImGui::Text("Auto Start Description: %s", this->autoSplitter->startDescription().c_str());
     }
-    if (!this->autoSplitter->autoSplitDescription().empty())
+    if (!this->autoSplitter->splitDescription().empty())
     {
         ImGui::Spacing();
-        ImGui::Text("Auto Split Description: %s", this->autoSplitter->autoSplitDescription().c_str());
+        ImGui::Text("Auto Split Description: %s", this->autoSplitter->splitDescription().c_str());
     }
-    if (!this->autoSplitter->autoResetDescription().empty())
+    if (!this->autoSplitter->resetDescription().empty())
     {
         ImGui::Spacing();
-        ImGui::Text("Auto Reset Description: %s", this->autoSplitter->autoResetDescription().c_str());
+        ImGui::Text("Auto Reset Description: %s", this->autoSplitter->resetDescription().c_str());
     }
 
     ImGui::Spacing();
 
-    ImGuiExtensions::PushDisabledStyleIf(!this->autoSplitter->supportsAutoStart());
-    ImGui::Checkbox("Auto Start Enabled", &this->isAutoStartEnabled);
-    ImGuiExtensions::PopDisabledStyleIf(!this->autoSplitter->supportsAutoStart());
-
-    ImGuiExtensions::PushDisabledStyleIf(!this->autoSplitter->supportsAutoSplit());
-    ImGui::Checkbox("Auto Split Enabled", &this->isAutoSplitEnabled);
-    ImGuiExtensions::PopDisabledStyleIf(!this->autoSplitter->supportsAutoSplit());
-
-    ImGuiExtensions::PushDisabledStyleIf(!this->autoSplitter->supportsAutoReset());
-    ImGui::Checkbox("Auto Reset Enabled", &this->isAutoResetEnabled);
-    ImGuiExtensions::PopDisabledStyleIf(!this->autoSplitter->supportsAutoReset());
+    if (this->autoSplitter->supportsStart()) ImGui::Checkbox("Auto Start Enabled", &this->isAutoStartEnabled);
+    if (this->autoSplitter->supportsSplit()) ImGui::Checkbox("Auto Split Enabled", &this->isAutoSplitEnabled);
+    if (this->autoSplitter->supportsReset()) ImGui::Checkbox("Auto Reset Enabled", &this->isAutoResetEnabled);
 
     ImGui::Spacing();
 
@@ -88,12 +82,9 @@ void AutoSplitterComponent::onEvent(const std::string &eventName, bool post, voi
 
     this->autoSplitter->onEvent(eventName, post, params);
 
-    if (this->autoSplitter->update())
-    {
-        if (this->isAutoStartEnabled && this->autoSplitter->supportsAutoStart() && this->autoSplitter->shouldTimerStart()) this->start();
-        if (this->isAutoSplitEnabled && this->autoSplitter->supportsAutoSplit() && this->autoSplitter->shouldTimerSplit()) this->split();
-        if (this->isAutoResetEnabled && this->autoSplitter->supportsAutoReset() && this->autoSplitter->shouldTimerReset()) this->reset();
-    }
+    if (this->isAutoStartEnabled && this->autoSplitter->supportsStart() && this->autoSplitter->start()) this->start();
+    if (this->isAutoSplitEnabled && this->autoSplitter->supportsSplit() && this->autoSplitter->split()) this->split();
+    if (this->isAutoResetEnabled && this->autoSplitter->supportsReset() && this->autoSplitter->reset()) this->reset();
 }
 
 void AutoSplitterComponent::start()
