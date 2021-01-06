@@ -1,6 +1,6 @@
 #pragma once
 
-#include "AutoSplitterBase.h"
+#include "../AutoSplitterBase.h"
 
 class SpeedJumpRings1AutoSplitter : public AutoSplitterBase
 {

@@ -2,7 +2,7 @@
 
 #include "../PluginComponentBase.h"
 #include "../../services/LiveSplitClient.h"
-#include "AutoSplitter.h"
+#include "autosplitters/AutoSplitter.h"
 
 class LiveSplitRemoteComponent : public PluginComponentBase
 {

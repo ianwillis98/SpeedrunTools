@@ -45,7 +45,20 @@ void LiveSplitRemoteComponent::onLoad()
 void LiveSplitRemoteComponent::render()
 {
     ImGui::Text("LiveSplit Remote Controller:");
-    ImGui::BulletText("Connection Status: %s", this->getConnectionStatusAsString().c_str());
+    ImGui::BulletText("Connection Status: ");
+    ImGui::SameLine();
+    switch (this->liveSplitClient.getConnectionState())
+    {
+        case ConnectionState::Connected:
+            ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Connected");
+            break;
+        case ConnectionState::Connecting:
+            ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Connecting %c", "|/-\\"[(int) (ImGui::GetTime() / 0.05f) & 3]);
+            break;
+        case ConnectionState::NotConnected:
+            ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Not Connected");
+            break;
+    }
     ImGui::BulletText("Feedback Message: %s", this->feedbackMessage.c_str());
 
     ImGuiExtensions::BigSpacing();
@@ -243,6 +256,7 @@ std::string LiveSplitRemoteComponent::getConnectionStatusAsString()
     switch (this->liveSplitClient.getConnectionState())
     {
         case ConnectionState::Connected:
+            ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Yellow");
             return "Connected";
         case ConnectionState::Connecting:
             return "Connecting " + std::string(1, "|/-\\"[(int) (ImGui::GetTime() / 0.05f) & 3]);

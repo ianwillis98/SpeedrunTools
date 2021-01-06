@@ -2,13 +2,15 @@
 
 #include "../PluginComponentBase.h"
 #include "../../services/LiveSplitClient.h"
-#include "AutoSplitter.h"
+#include "autosplitters/AutoSplitterFactory.h"
+#include "autosplitters/AutoSplitter.h"
 
 class AutoSplitterComponent : public PluginComponentBase
 {
 private:
     LiveSplitClient &liveSplitClient;
-    std::string feedbackMessage;
+    AutoSplitterFactory &autoSplitterFactory;
+
     std::unique_ptr<AutoSplitter> autoSplitter;
     bool isAutoStartEnabled;
     bool isAutoSplitEnabled;

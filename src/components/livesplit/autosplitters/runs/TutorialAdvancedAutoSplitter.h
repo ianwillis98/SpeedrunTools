@@ -1,6 +1,6 @@
 #pragma once
 
-#include "AutoSplitterBase.h"
+#include "../AutoSplitterBase.h"
 
 class TutorialAdvancedAutoSplitter : public AutoSplitterBase
 {

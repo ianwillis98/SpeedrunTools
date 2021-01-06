@@ -1,7 +1,7 @@
 #pragma once
 
 #include <bakkesmod/plugin/bakkesmodplugin.h>
-#include "../AutoSplitter.h"
+#include "AutoSplitter.h"
 
 class AutoSplitterBase : public AutoSplitter
 {
