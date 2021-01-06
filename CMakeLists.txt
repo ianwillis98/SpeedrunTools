@@ -10,7 +10,7 @@ add_subdirectory(external/ocornut/imgui)
 add_subdirectory(external/asio)
 
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "src/*.h" "src/*.cpp")
-add_library(SpeedrunTools SHARED ${SOURCE_FILES})
+add_library(SpeedrunTools SHARED ${SOURCE_FILES} src/components/livesplit/autosplitters/runs/PanicsAirRaceBeachAutoSplitter.cpp src/components/livesplit/autosplitters/runs/PanicsAirRaceBeachAutoSplitter.h)
 
 target_include_directories(
         SpeedrunTools PRIVATE

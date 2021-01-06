@@ -32,10 +32,11 @@ void AutoSplitterComponent::render()
     const char *runNames[] = {
             "None",
             AutoSplitterSupportedRun::TUTORIAL_BASIC.runName.c_str(),
-            AutoSplitterSupportedRun::TUTORIAL_ADVANCED.runName.c_str()
+            AutoSplitterSupportedRun::TUTORIAL_ADVANCED.runName.c_str(),
+            AutoSplitterSupportedRun::PANICS_AIR_RACE_BEACH.runName.c_str(),
     };
     static int comboIndex = 0;
-    if (ImGui::Combo("Run/Category", &comboIndex, runNames, IM_ARRAYSIZE(runNames)))
+    if (ImGui::Combo("Run Category", &comboIndex, runNames, IM_ARRAYSIZE(runNames)))
     {
         this->autoSplitter = this->autoSplitterFactory.getAutoSplitterForRun(runNames[comboIndex]);
         this->isAutoStartEnabled = true;
