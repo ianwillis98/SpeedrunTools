@@ -10,6 +10,9 @@ private:
     LiveSplitClient &liveSplitClient;
     std::string feedbackMessage;
     std::unique_ptr<AutoSplitter> autoSplitter;
+    bool isAutoStartEnabled;
+    bool isAutoSplitEnabled;
+    bool isAutoResetEnabled;
 
 public:
     explicit AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);

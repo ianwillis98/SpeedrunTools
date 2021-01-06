@@ -24,5 +24,4 @@ private:
 
     void setupEvent(const std::string &eventName);
     void setupEventPost(const std::string &eventName);
-    void setupEventPostDelayed(const std::string &eventName, float delay);
 };

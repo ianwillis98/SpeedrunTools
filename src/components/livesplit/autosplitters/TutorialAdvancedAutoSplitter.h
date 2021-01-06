@@ -1,17 +1,21 @@
 #pragma once
 
-#include <bakkesmod/plugin/bakkesmodplugin.h>
-#include "../AutoSplitter.h"
+#include "AutoSplitterBase.h"
 
-class AutoSplitterBase : public AutoSplitter
+class TutorialAdvancedAutoSplitter : public AutoSplitterBase
 {
-protected:
-    BakkesMod::Plugin::BakkesModPlugin *plugin;
+private:
+    bool isInTutorial;
+    bool shouldStartTimer;
+    bool shouldSplitTimer;
+    bool shouldResetTimer;
+    int segment;
+    int segment4GoalsScored;
+    int segment5GoalsScored;
 
 public:
-    explicit AutoSplitterBase(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit TutorialAdvancedAutoSplitter(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
-    bool update() override;
     void onEvent(const std::string &eventName, bool post, void *params) override;
 
     bool supportsAutoStart() override;

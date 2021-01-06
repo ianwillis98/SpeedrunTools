@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../PluginToolkitBase.h"
-#include "../../components/livesplit/LiveSplitRemoteComponent.h"
-#include "../../components/livesplit/AutoSplitterComponent.h"
+#include "PluginToolkitBase.h"
+#include "../components/livesplit/LiveSplitRemoteComponent.h"
+#include "../components/livesplit/AutoSplitterComponent.h"
 
 class LiveSplitToolkit : public PluginToolkitBase
 {

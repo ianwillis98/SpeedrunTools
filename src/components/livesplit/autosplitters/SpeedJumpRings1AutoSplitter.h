@@ -1,15 +1,22 @@
 #pragma once
 
-#include <bakkesmod/plugin/bakkesmodplugin.h>
-#include "../AutoSplitter.h"
+#include "AutoSplitterBase.h"
 
-class AutoSplitterBase : public AutoSplitter
+class SpeedJumpRings1AutoSplitter : public AutoSplitterBase
 {
-protected:
-    BakkesMod::Plugin::BakkesModPlugin *plugin;
+private:
+    bool hasUpdatedOnce;
+    bool hasUpdatedTwice;
+
+    int previousRings;
+    int currentRings;
+
+    bool shouldStartTimer;
+    bool shouldSplitTimer;
+    bool shouldResetTimer;
 
 public:
-    explicit AutoSplitterBase(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit SpeedJumpRings1AutoSplitter(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
     bool update() override;
     void onEvent(const std::string &eventName, bool post, void *params) override;

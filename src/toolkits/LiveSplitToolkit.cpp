@@ -2,14 +2,14 @@
 
 LiveSplitToolkit::LiveSplitToolkit(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : PluginToolkitBase(plugin),
-          liveSplitRemoteComponent(this->plugin),
-          autoSplitterComponent(this->plugin)
+          liveSplitRemoteComponent(plugin),
+          autoSplitterComponent(plugin)
 {
 
 }
 std::string LiveSplitToolkit::title()
 {
-    return "Auto splitter testing";
+    return "LiveSplit";
 }
 
 void LiveSplitToolkit::onLoad()

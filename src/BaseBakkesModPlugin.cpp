@@ -47,23 +47,23 @@ bool BaseBakkesModPlugin::IsActiveOverlay()
 // Called when window is opened
 void BaseBakkesModPlugin::OnOpen()
 {
-    isMenuOpen = true;
+    this->isMenuOpen = true;
 }
 
 // Called when window is closed
 void BaseBakkesModPlugin::OnClose()
 {
-    isMenuOpen = false;
+    this->isMenuOpen = false;
 }
 
 // Name of the menu that is used to toggle the window.
 std::string BaseBakkesModPlugin::GetMenuName()
 {
-    return menuName;
+    return this->menuName;
 }
 
 // Title to give the menu
 std::string BaseBakkesModPlugin::GetMenuTitle()
 {
-    return menuTitle;
+    return this->menuTitle;
 }

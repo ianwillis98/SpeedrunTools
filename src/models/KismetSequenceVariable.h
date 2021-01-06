@@ -15,6 +15,8 @@ enum class KismetSequenceVariableType
     Float,
     Vector,
     String,
+    ObjectList,
+    Actor,
     Unknown
 };
 

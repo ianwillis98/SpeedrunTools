@@ -3,7 +3,7 @@
 LiveSplitRemoteComponent::LiveSplitRemoteComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : PluginComponentBase(plugin),
           liveSplitClient(LiveSplitClient::getInstance()),
-          feedbackMessage("Waiting for connection to LiveSplit...")
+          feedbackMessage("Waiting for a connection to the LiveSplit server...")
 {
 
 }

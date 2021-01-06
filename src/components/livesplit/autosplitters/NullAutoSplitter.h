@@ -1,14 +1,11 @@
 #pragma once
 
-#include "../AutoSplitter.h"
+#include "AutoSplitterBase.h"
 
-class NullAutoSplitter : public AutoSplitter
+class NullAutoSplitter : public AutoSplitterBase
 {
 public:
-    bool update() override;
-    void onEvent(const std::string &eventName, bool post, void *params) override;
+    NullAutoSplitter();
 
-    bool shouldTimerStart() override;
-    bool shouldTimerSplit() override;
-    bool shouldTimerReset() override;
+    bool update() override;
 };

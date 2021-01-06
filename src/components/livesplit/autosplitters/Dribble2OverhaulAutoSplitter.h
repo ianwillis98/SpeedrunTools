@@ -9,10 +9,10 @@ private:
     bool hasUpdatedTwice;
 
     bool previousTiming;
-    int previousLevel;
-
     bool currentTiming;
+
     int currentLevel;
+    int previousLevel;
 
 public:
     explicit Dribble2OverhaulAutoSplitter(BakkesMod::Plugin::BakkesModPlugin *plugin);

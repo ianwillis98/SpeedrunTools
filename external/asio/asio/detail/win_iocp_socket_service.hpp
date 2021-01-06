@@ -244,8 +244,8 @@ public:
       const Option& option, asio::error_code& ec)
   {
     socket_ops::setsockopt(impl.socket_, impl.state_,
-        option.level(impl.protocol_), option.name(impl.protocol_),
-        option.data(impl.protocol_), option.size(impl.protocol_), ec);
+                           option.segment(impl.protocol_), option.name(impl.protocol_),
+                           option.data(impl.protocol_), option.size(impl.protocol_), ec);
     return ec;
   }
 
@@ -256,8 +256,8 @@ public:
   {
     std::size_t size = option.size(impl.protocol_);
     socket_ops::getsockopt(impl.socket_, impl.state_,
-        option.level(impl.protocol_), option.name(impl.protocol_),
-        option.data(impl.protocol_), &size, ec);
+                           option.segment(impl.protocol_), option.name(impl.protocol_),
+                           option.data(impl.protocol_), &size, ec);
     if (!ec)
       option.resize(impl.protocol_, size);
     return ec;

@@ -1,7 +1,7 @@
 # Speedrun Tools
 
 Speedrun Tools is a [Bakkes Mod Plugin](https://bakkesplugins.com/) aimed at making speedrunning easier and more efficient.
-The following tools will only work in freeplay and workshop maps.
+The following tools will only work in freeplay and workshop runs.
 
 ## Download
 
