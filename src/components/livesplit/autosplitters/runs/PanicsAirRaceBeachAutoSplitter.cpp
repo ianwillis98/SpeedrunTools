@@ -16,6 +16,9 @@ void PanicsAirRaceBeachAutoSplitter::onEventReceived(const std::string &eventNam
 {
     if (eventName == "Function TAGame.Car_TA.SetVehicleInput" && post)
     {
+        std::string currentMap = this->plugin->gameWrapper->GetCurrentMap();
+        if (currentMap != "panicsairrace") return;
+
         if (this->hasUpdatedOnce && !this->hasUpdatedTwice) this->hasUpdatedTwice = true;
         if (!this->hasUpdatedOnce) this->hasUpdatedOnce = true;
 
@@ -53,6 +56,16 @@ void PanicsAirRaceBeachAutoSplitter::onEventReceived(const std::string &eventNam
             this->shouldTimerReset = true;
         }
     }
+    if (eventName == "Function TAGame.GameEvent_Soccar_TA.Destroyed" && post)
+    {
+        this->shouldTimerReset = this->currentRings > 0;
+        this->hasUpdatedOnce = false;
+        this->hasUpdatedTwice = false;
+        this->previousRings = 0;
+        this->currentRings = 0;
+        this->previousCheckpoint = 0;
+        this->currentCheckpoint = 0;
+    }
 }
 
 std::string PanicsAirRaceBeachAutoSplitter::startDescription()
@@ -82,7 +95,7 @@ std::string PanicsAirRaceBeachAutoSplitter::splitDescription()
 
 std::string PanicsAirRaceBeachAutoSplitter::resetDescription()
 {
-    return AutoSplitterBase::resetDescription();
+    return "The timer will reset when the player resets to the beginning of the map or leaves the match.";
 }
 
 std::string PanicsAirRaceBeachAutoSplitter::getDebug()

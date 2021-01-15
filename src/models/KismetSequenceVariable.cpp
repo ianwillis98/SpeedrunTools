@@ -1,7 +1,13 @@
 #include "KismetSequenceVariable.h"
 
-KismetSequenceVariable::KismetSequenceVariable(SequenceVariableWrapper var)
-        : name(), boolValue(false), intValue(0), floatValue(0.0f), stringValue(), vectorValue()
+KismetSequenceVariable::KismetSequenceVariable(BakkesMod::Plugin::BakkesModPlugin *plugin, SequenceVariableWrapper var)
+        : plugin(plugin),
+          name(),
+          boolValue(false),
+          intValue(0),
+          floatValue(0.0f),
+          stringValue(),
+          vectorValue()
 {
     if (var.memory_address == NULL) return;
 
@@ -48,12 +54,12 @@ KismetSequenceVariable::KismetSequenceVariable(SequenceVariableWrapper var)
     }
 }
 
-std::string KismetSequenceVariable::getName()
+std::string KismetSequenceVariable::getName() const
 {
     return this->name;
 }
 
-KismetSequenceVariableType KismetSequenceVariable::getType()
+KismetSequenceVariableType KismetSequenceVariable::getType() const
 {
     return this->type;
 }
@@ -73,12 +79,12 @@ float KismetSequenceVariable::getFloatValue() const
     return this->floatValue;
 }
 
-struct Vector KismetSequenceVariable::getVectorValue()
+struct Vector KismetSequenceVariable::getVectorValue() const
 {
     return this->vectorValue;
 }
 
-std::string KismetSequenceVariable::getStringValue()
+std::string KismetSequenceVariable::getStringValue() const
 {
     return this->stringValue;
 }
@@ -132,23 +138,47 @@ std::string KismetSequenceVariable::getTypeAsString()
             return "Type Not Registered";
     }
 }
-//void KismetSequenceVariable::setBool(bool value)
-//{
-//
-//}
-//void KismetSequenceVariable::setInt(int value)
-//{
-//
-//}
-//void KismetSequenceVariable::setFloat(float value)
-//{
-//
-//}
-//void KismetSequenceVariable::setVector(Vector value)
-//{
-//
-//}
-//void KismetSequenceVariable::setString(std::string value)
-//{
-//
-//}
+
+bool KismetSequenceVariable::render()
+{
+    if (this->type == KismetSequenceVariableType::Int)
+    {
+        return ImGui::InputInt(("##" + this->name).c_str(), &this->intValue, 1, 1, ImGuiInputTextFlags_EnterReturnsTrue);
+    }
+    if (this->type == KismetSequenceVariableType::Float)
+    {
+        return ImGui::InputFloat(("##" + this->name).c_str(), &this->floatValue, 1.0f, 1.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+    }
+    if (this->type == KismetSequenceVariableType::Bool)
+    {
+        return ImGui::Checkbox(("##" + this->name).c_str(), &this->boolValue);
+    }
+
+    ImGui::AlignTextToFramePadding();
+    ImGui::Text("%s", this->getValueAsString().c_str());
+    return false;
+}
+
+void KismetSequenceVariable::updateMainSequenceValue() const
+{
+    auto sequence = this->plugin->gameWrapper->GetMainSequence();
+    if (sequence.memory_address == NULL) return;
+
+    auto vars = sequence.GetAllSequenceVariables(false);
+
+    auto var = vars.find(this->name);
+    if (var == vars.end()) return;
+
+    if (this->type == KismetSequenceVariableType::Int)
+    {
+        var->second.SetInt(this->intValue);
+    }
+    if (this->type == KismetSequenceVariableType::Float)
+    {
+        var->second.SetFloat(this->floatValue);
+    }
+    if (this->type == KismetSequenceVariableType::Bool)
+    {
+        var->second.SetBool(this->boolValue);
+    }
+}

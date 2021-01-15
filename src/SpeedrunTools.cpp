@@ -75,7 +75,7 @@ void SpeedrunTools::setupEvents()
     );
     this->setupEventPost("Function TAGame.Car_TA.SetVehicleInput");
 
-    // idk
+    // map start end
     this->setupEventPost("Function TAGame.GameEvent_Soccar_TA.InitGame");
     this->setupEventPost("Function TAGame.GameEvent_Soccar_TA.Destroyed");
 

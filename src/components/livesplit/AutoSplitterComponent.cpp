@@ -20,7 +20,7 @@ void AutoSplitterComponent::onLoad()
 
 void AutoSplitterComponent::render()
 {
-    ImGui::Text("Auto Splitter:");
+    ImGui::Text("Auto Splitter");
     ImGui::Spacing();
 
     if (!this->liveSplitClient.isConnected())
@@ -65,9 +65,9 @@ void AutoSplitterComponent::render()
 
     ImGui::Spacing();
 
-    if (this->autoSplitter->supportsStart()) ImGui::Checkbox("Auto Start Enabled", &this->isAutoStartEnabled);
-    if (this->autoSplitter->supportsSplit()) ImGui::Checkbox("Auto Split Enabled", &this->isAutoSplitEnabled);
-    if (this->autoSplitter->supportsReset()) ImGui::Checkbox("Auto Reset Enabled", &this->isAutoResetEnabled);
+    if (this->autoSplitter->supportsStart()) ImGui::Checkbox("Auto Start", &this->isAutoStartEnabled);
+    if (this->autoSplitter->supportsSplit()) ImGui::Checkbox("Auto Split", &this->isAutoSplitEnabled);
+    if (this->autoSplitter->supportsReset()) ImGui::Checkbox("Auto Reset", &this->isAutoResetEnabled);
 
     ImGui::Spacing();
 
@@ -82,7 +82,6 @@ void AutoSplitterComponent::onEvent(const std::string &eventName, bool post, voi
     if (this->autoSplitter == nullptr) return;
 
     this->autoSplitter->onEvent(eventName, post, params);
-
     if (this->isAutoStartEnabled && this->autoSplitter->supportsStart() && this->autoSplitter->start()) this->start();
     if (this->isAutoSplitEnabled && this->autoSplitter->supportsSplit() && this->autoSplitter->split()) this->split();
     if (this->isAutoResetEnabled && this->autoSplitter->supportsReset() && this->autoSplitter->reset()) this->reset();
@@ -91,7 +90,7 @@ void AutoSplitterComponent::onEvent(const std::string &eventName, bool post, voi
 void AutoSplitterComponent::start()
 {
     this->liveSplitClient.start([this](const int &errorCode, const std::string &errorMessage) {
-        std::string log = (errorCode == 0) ? "'start' message was successfully sent." :
+        std::string log = (errorCode == 0) ? "start" :
                           "Error while sending message 'start' (" + std::to_string(errorCode) + ") \"" + errorMessage + "\".";
         this->log(log);
     });
@@ -100,7 +99,7 @@ void AutoSplitterComponent::start()
 void AutoSplitterComponent::split()
 {
     this->liveSplitClient.split([this](const int &errorCode, const std::string &errorMessage) {
-        std::string log = (errorCode == 0) ? "'split' message was successfully sent." :
+        std::string log = (errorCode == 0) ? "split" :
                           "Error while sending message 'split' (" + std::to_string(errorCode) + ") \"" + errorMessage + "\".";
         this->log(log);
     });
@@ -109,7 +108,7 @@ void AutoSplitterComponent::split()
 void AutoSplitterComponent::reset()
 {
     this->liveSplitClient.reset([this](const int &errorCode, const std::string &errorMessage) {
-        std::string log = (errorCode == 0) ? "'reset' message was successfully sent." :
+        std::string log = (errorCode == 0) ? "reset" :
                           "Error while sending message 'reset' (" + std::to_string(errorCode) + ") \"" + errorMessage + "\".";
         this->log(log);
     });

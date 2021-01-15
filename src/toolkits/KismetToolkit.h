@@ -2,11 +2,13 @@
 
 #include "PluginToolkitBase.h"
 #include "../components/kismet/KismetViewerComponent.h"
+#include "../components/kismet/KismetEditorComponent.h"
 
 class KismetToolkit : public PluginToolkitBase
 {
 private:
     KismetViewerComponent kismetViewComponent;
+    KismetEditorComponent kismetEditorComponent;
 
 public:
     explicit KismetToolkit(BakkesMod::Plugin::BakkesModPlugin *plugin);

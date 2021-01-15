@@ -83,7 +83,7 @@ void KismetViewerComponent::loadSequenceVariables()
 
     for (const auto &var : sequence.GetAllSequenceVariables(true))
     {
-        this->kismetVars.emplace_back(var.second);
+        this->kismetVars.emplace_back(this->plugin, var.second);
     }
 }
 void KismetViewerComponent::autoRefreshFunc()
