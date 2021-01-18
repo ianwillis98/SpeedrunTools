@@ -10,7 +10,7 @@ add_subdirectory(external/ocornut/imgui)
 add_subdirectory(external/asio)
 
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "src/*.h" "src/*.cpp")
-add_library(SpeedrunTools SHARED ${SOURCE_FILES} src/components/livesplit/autosplitters/runs/PanicsAirRaceBeachAutoSplitter.cpp src/components/livesplit/autosplitters/runs/PanicsAirRaceBeachAutoSplitter.h src/components/kismet/KismetEditorComponent.cpp src/components/kismet/KismetEditorComponent.h src/toolkits/GeneralToolsToolkit.cpp src/toolkits/GeneralToolsToolkit.h src/components/generaltools/GeneralToolsComponent.cpp src/components/generaltools/GeneralToolsComponent.h src/toolkits/SaveStatesToolkit.cpp src/toolkits/SaveStatesToolkit.h src/components/savestates/SaveStateComponent.cpp src/components/savestates/SaveStateComponent.h src/components/savestates/RewindComponent.cpp src/components/savestates/RewindComponent.h)
+add_library(SpeedrunTools SHARED ${SOURCE_FILES})
 
 target_include_directories(
         SpeedrunTools PRIVATE
