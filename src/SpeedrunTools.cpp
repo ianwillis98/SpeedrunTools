@@ -1,4 +1,6 @@
 #include "SpeedrunTools.h"
+#include "toolkits/GeneralToolsToolkit.h"
+#include "toolkits/SaveStatesToolkit.h"
 #include "toolkits/LiveSplitToolkit.h"
 #include "toolkits/KismetToolkit.h"
 #include "toolkits/MapToolsToolkit.h"
@@ -13,6 +15,8 @@ SpeedrunTools::SpeedrunTools()
         : BaseBakkesModPlugin(SpeedrunTools::PLUGIN_TITLE, SpeedrunTools::PLUGIN_MENU_NAME),
           toolkits()
 {
+    this->toolkits.push_back(std::make_unique<GeneralToolsToolkit>(this));
+    this->toolkits.push_back(std::make_unique<SaveStatesToolkit>(this));
     this->toolkits.push_back(std::make_unique<LiveSplitToolkit>(this));
     this->toolkits.push_back(std::make_unique<KismetToolkit>(this));
     this->toolkits.push_back(std::make_unique<MapToolsToolkit>(this));

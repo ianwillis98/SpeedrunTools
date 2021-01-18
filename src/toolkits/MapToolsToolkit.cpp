@@ -9,7 +9,7 @@ MapToolsToolkit::MapToolsToolkit(BakkesMod::Plugin::BakkesModPlugin *plugin)
 
 std::string MapToolsToolkit::title()
 {
-    return "Map Tools";
+    return "Map Tools (Beta)";
 }
 
 void MapToolsToolkit::onLoad()

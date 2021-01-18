@@ -29,10 +29,14 @@ bool GameState::render()
 {
     bool hasChanged = false;
 
-    ImGui::Text("Saved car state:");
+    ImGui::Text("Saved Car State (click any value to edit)");
     if (this->carState.render()) hasChanged = true;
+
+    ImGui::Spacing();
     ImGui::Separator();
-    ImGui::Text("Saved ball state:");
+    ImGui::Spacing();
+
+    ImGui::Text("Saved Ball State (click any value to edit)");
     if (this->ballState.render()) hasChanged = true;
 
     return hasChanged;
