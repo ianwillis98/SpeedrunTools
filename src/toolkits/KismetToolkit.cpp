@@ -10,7 +10,7 @@ KismetToolkit::KismetToolkit(BakkesMod::Plugin::BakkesModPlugin *plugin)
 
 std::string KismetToolkit::title()
 {
-    return "Kismet Editor";
+    return "Kismet";
 }
 
 void KismetToolkit::onLoad()

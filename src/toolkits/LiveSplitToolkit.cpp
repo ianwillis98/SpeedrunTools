@@ -9,7 +9,7 @@ LiveSplitToolkit::LiveSplitToolkit(BakkesMod::Plugin::BakkesModPlugin *plugin)
 }
 std::string LiveSplitToolkit::title()
 {
-    return "LiveSplit Controller";
+    return "LiveSplit";
 }
 
 void LiveSplitToolkit::onLoad()

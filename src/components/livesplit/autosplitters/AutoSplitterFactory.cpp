@@ -3,6 +3,9 @@
 #include "runs/TutorialBasicAutoSplitter.h"
 #include "runs/TutorialAdvancedAutoSplitter.h"
 #include "runs/PanicsAirRaceBeachAutoSplitter.h"
+#include "runs/SpeedJumpRings1AutoSplitter.h"
+#include "runs/AirDribbleHoopsAutoSplitter.h"
+#include "runs/LethsGiantRingsAutoSplitter.h"
 
 AutoSplitterFactory::AutoSplitterFactory(BakkesMod::Plugin::BakkesModPlugin *plugin) : plugin(plugin)
 {
@@ -28,6 +31,18 @@ std::unique_ptr<AutoSplitter> AutoSplitterFactory::getAutoSplitterForRun(const s
     else if (runName == AutoSplitterSupportedRun::PANICS_AIR_RACE_BEACH.runName)
     {
         return std::make_unique<PanicsAirRaceBeachAutoSplitter>(this->plugin);
+    }
+    else if (runName == AutoSplitterSupportedRun::SPEED_JUMP_RINGS_1.runName)
+    {
+        return std::make_unique<SpeedJumpRings1AutoSplitter>(this->plugin);
+    }
+    else if (runName == AutoSplitterSupportedRun::AIR_DRIBBLE_HOOPS.runName)
+    {
+        return std::make_unique<AirDribbleHoopsAutoSplitter>(this->plugin);
+    }
+    else if (runName == AutoSplitterSupportedRun::LETHS_GIANT_RINGS.runName)
+    {
+        return std::make_unique<LethsGiantRingsAutoSplitter>(this->plugin);
     }
 
     return nullptr;

@@ -2,26 +2,28 @@
 
 #include "../AutoSplitterBase.h"
 
-class SpeedJumpRings1AutoSplitter : public AutoSplitterBase
+class AirDribbleHoopsAutoSplitter : public AutoSplitterBase
 {
 private:
     bool hasUpdatedOnce;
     bool hasUpdatedTwice;
 
-    int currentRings;
-    int previousRings;
+    bool currentTimer;
+    bool previousTimer;
+
+    int currentLevel;
+    int previousLevel;
 
 public:
-    explicit SpeedJumpRings1AutoSplitter(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit AirDribbleHoopsAutoSplitter(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
     void onEventReceived(const std::string &eventName, bool post, void *params) override;
+
+    bool supportsReset() override;
 
     std::string startDescription() override;
     std::string splitDescription() override;
     std::string resetDescription() override;
 
     std::string getDebug() override;
-
-private:
-    void resetRingsKismetToZero();
 };

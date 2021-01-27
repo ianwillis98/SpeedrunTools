@@ -9,7 +9,7 @@ MapToolsToolkit::MapToolsToolkit(BakkesMod::Plugin::BakkesModPlugin *plugin)
 
 std::string MapToolsToolkit::title()
 {
-    return "Map Tools (Beta)";
+    return "Beta Tools";
 }
 
 void MapToolsToolkit::onLoad()
@@ -19,6 +19,8 @@ void MapToolsToolkit::onLoad()
 
 void MapToolsToolkit::render()
 {
+    ImGuiExtensions::BigSpacing();
+
     this->mapToolsComponent.render();
 }
 

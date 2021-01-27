@@ -258,14 +258,14 @@ void GeneralToolsComponent::renderAirRollMutator()
         });
     }
     ImGui::SameLine();
-    if (ImGui::RadioButton("Auto Air Roll Left", this->airRollMutator == AirRollMutator::ForceAirRollLeft))
+    if (ImGui::RadioButton("Force Air Roll Left", this->airRollMutator == AirRollMutator::ForceAirRollLeft))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
             this->plugin->cvarManager->getCvar("speedrun_mutators_car_airroll").setValue(static_cast<int>(AirRollMutator::ForceAirRollLeft));
         });
     }
     ImGui::SameLine();
-    if (ImGui::RadioButton("Auto Air Roll Right", this->airRollMutator == AirRollMutator::ForceAirRollRight))
+    if (ImGui::RadioButton("Force Air Roll Right", this->airRollMutator == AirRollMutator::ForceAirRollRight))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
             this->plugin->cvarManager->getCvar("speedrun_mutators_car_airroll").setValue(static_cast<int>(AirRollMutator::ForceAirRollRight));

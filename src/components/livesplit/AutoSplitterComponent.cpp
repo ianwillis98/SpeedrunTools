@@ -30,10 +30,13 @@ void AutoSplitterComponent::render()
     }
 
     const char *runNames[] = {
-            "None",
+            AutoSplitterSupportedRun::NONE.runName.c_str(),
             AutoSplitterSupportedRun::TUTORIAL_BASIC.runName.c_str(),
             AutoSplitterSupportedRun::TUTORIAL_ADVANCED.runName.c_str(),
             AutoSplitterSupportedRun::PANICS_AIR_RACE_BEACH.runName.c_str(),
+            AutoSplitterSupportedRun::SPEED_JUMP_RINGS_1.runName.c_str(),
+            AutoSplitterSupportedRun::AIR_DRIBBLE_HOOPS.runName.c_str(),
+            AutoSplitterSupportedRun::LETHS_GIANT_RINGS.runName.c_str(),
     };
     static int comboIndex = 0;
     if (ImGui::Combo("Run Category", &comboIndex, runNames, IM_ARRAYSIZE(runNames)))
@@ -43,6 +46,7 @@ void AutoSplitterComponent::render()
         this->isAutoSplitEnabled = true;
         this->isAutoResetEnabled = true;
     }
+
     if (this->autoSplitter == nullptr) return;
 
     ImGui::Spacing();
@@ -82,9 +86,11 @@ void AutoSplitterComponent::onEvent(const std::string &eventName, bool post, voi
     if (this->autoSplitter == nullptr) return;
 
     this->autoSplitter->onEvent(eventName, post, params);
+    if (this->isAutoResetEnabled && this->autoSplitter->supportsReset() && this->autoSplitter->reset()) this->reset();
     if (this->isAutoStartEnabled && this->autoSplitter->supportsStart() && this->autoSplitter->start()) this->start();
     if (this->isAutoSplitEnabled && this->autoSplitter->supportsSplit() && this->autoSplitter->split()) this->split();
-    if (this->isAutoResetEnabled && this->autoSplitter->supportsReset() && this->autoSplitter->reset()) this->reset();
+
+    if (this->autoSplitter->split() && this->autoSplitter->reset()) this->plugin->cvarManager->log("both");
 }
 
 void AutoSplitterComponent::start()

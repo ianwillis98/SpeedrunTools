@@ -13,7 +13,7 @@ void MapToolsComponent::onLoad()
     // 0 -1600 416
     // -1024 1472 512
     // -2048 -64 416
-    this->plugin->cvarManager->registerNotifier("speedrun_tutorial_basic_practice_seg4", [this](const std::vector<std::string> &commands) {
+    this->plugin->cvarManager->registerNotifier("speedrun_tutorial_advanced_practice_seg4", [this](const std::vector<std::string> &commands) {
         ServerWrapper serverWrapper = this->plugin->gameWrapper->GetGameEventAsServer();
         if (serverWrapper.IsNull()) return;
 
@@ -39,7 +39,7 @@ void MapToolsComponent::onLoad()
         serverWrapper.SpawnBall(Vector(-1024.0f, 1472.0f, 512.0f), true, false).Stop();
         serverWrapper.SpawnBall(Vector(-2048.0f, -64.0f, 416.0f), true, false).Stop();
     }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
-    this->plugin->cvarManager->registerNotifier("speedrun_tutorial_basic_practice_seg5", [this](const std::vector<std::string> &commands) {
+    this->plugin->cvarManager->registerNotifier("speedrun_tutorial_advanced_practice_seg5", [this](const std::vector<std::string> &commands) {
         ServerWrapper serverWrapper = this->plugin->gameWrapper->GetGameEventAsServer();
         if (serverWrapper.IsNull()) return;
 
@@ -67,7 +67,26 @@ void MapToolsComponent::onLoad()
 
 void MapToolsComponent::render()
 {
-    PluginComponentBase::render();
+    ImGui::Text("The following tools are still under development and are only shown for testing purposes.");
+    ImGuiExtensions::BigSeparator();
+
+    ImGui::Text("Advanced Tutorial Practice. You must be in freeplay for this to work correctly.");
+    ImGui::Spacing();
+
+    if (ImGui::Button("Load Segment 4"))
+    {
+        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
+            this->plugin->cvarManager->executeCommand("speedrun_tutorial_advanced_practice_seg4");
+        });
+    }
+    ImGui::Spacing();
+
+    if (ImGui::Button("Load Segment 5"))
+    {
+        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
+            this->plugin->cvarManager->executeCommand("speedrun_tutorial_advanced_practice_seg5");
+        });
+    }
 }
 
 void MapToolsComponent::onEvent(const std::string &eventName, bool post, void *params)
