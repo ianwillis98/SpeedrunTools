@@ -16,9 +16,6 @@ void AirDribbleHoopsAutoSplitter::onEventReceived(const std::string &eventName, 
 {
     if (eventName == "Function TAGame.Car_TA.SetVehicleInput" && post)
     {
-        if (this->hasUpdatedOnce && !this->hasUpdatedTwice) this->hasUpdatedTwice = true;
-        if (!this->hasUpdatedOnce) this->hasUpdatedOnce = true;
-
         auto sequence = this->plugin->gameWrapper->GetMainSequence();
         if (sequence.memory_address == NULL) return;
 
@@ -35,6 +32,9 @@ void AirDribbleHoopsAutoSplitter::onEventReceived(const std::string &eventName, 
 
         this->previousLevel = this->currentLevel;
         this->currentLevel = levelVar->second.GetInt();
+
+        if (this->hasUpdatedOnce && !this->hasUpdatedTwice) this->hasUpdatedTwice = true;
+        if (!this->hasUpdatedOnce) this->hasUpdatedOnce = true;
 
         if (this->hasUpdatedTwice)
         {

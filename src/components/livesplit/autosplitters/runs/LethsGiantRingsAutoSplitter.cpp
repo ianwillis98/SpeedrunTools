@@ -16,9 +16,6 @@ void LethsGiantRingsAutoSplitter::onEventReceived(const std::string &eventName, 
 {
     if (eventName == "Function TAGame.Car_TA.SetVehicleInput" && post)
     {
-        if (this->hasUpdatedOnce && !this->hasUpdatedTwice) this->hasUpdatedTwice = true;
-        if (!this->hasUpdatedOnce) this->hasUpdatedOnce = true;
-
         auto sequence = this->plugin->gameWrapper->GetMainSequence();
         if (sequence.memory_address == NULL) return;
 
@@ -36,35 +33,40 @@ void LethsGiantRingsAutoSplitter::onEventReceived(const std::string &eventName, 
         this->previousLevel = this->currentLevel;
         this->currentLevel = levelVar->second.GetInt();
 
+        if (this->hasUpdatedOnce && !this->hasUpdatedTwice) this->hasUpdatedTwice = true;
+        if (!this->hasUpdatedOnce) this->hasUpdatedOnce = true;
+
         if (this->hasUpdatedTwice)
         {
             if (this->currentTiming && !this->previousTiming) this->shouldTimerStart = true;
             if (this->currentLevel != this->previousLevel) this->shouldTimerSplit = true;
-            if (!this->currentTiming && this->previousTiming) this->shouldTimerReset = true;
         }
     }
     if (eventName == "Function TAGame.GameEvent_Soccar_TA.Destroyed" && post)
     {
-        if (this->hasUpdatedTwice && this->currentTiming) this->shouldTimerReset = true;
-
         this->hasUpdatedOnce = false;
         this->hasUpdatedTwice = false;
     }
 }
 
+bool LethsGiantRingsAutoSplitter::supportsReset()
+{
+    return false;
+}
+
 std::string LethsGiantRingsAutoSplitter::startDescription()
 {
-    return "Timer will start when the map's timer starts.";
+    return "The timer will start when the map's timer starts.";
 }
 
 std::string LethsGiantRingsAutoSplitter::splitDescription()
 {
-    return "Timer will split after completing each level.";
+    return "The timer will split after completing each level.";
 }
 
 std::string LethsGiantRingsAutoSplitter::resetDescription()
 {
-    return "Timer will reset when the map's timer turns off.";
+    return "This auto splitter does not support auto reset.";
 }
 
 std::string LethsGiantRingsAutoSplitter::getDebug()

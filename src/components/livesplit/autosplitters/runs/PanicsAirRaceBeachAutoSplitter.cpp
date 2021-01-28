@@ -39,32 +39,32 @@ void PanicsAirRaceBeachAutoSplitter::onEventReceived(const std::string &eventNam
         this->previousCheckpoint = this->currentCheckpoint;
         this->currentCheckpoint = checkpoint->second.GetInt();
 
-        if (this->previousRings == 0 && this->currentRings == 1)
+        if (this->hasUpdatedTwice)
         {
-            this->shouldTimerStart = true;
-        }
-        if (this->previousRings == 5 && this->currentRings == 6)
-        {
-            this->shouldTimerSplit = true;
-        }
-        if (this->previousCheckpoint != this->currentCheckpoint && this->currentCheckpoint > 0)
-        {
-            this->shouldTimerSplit = true;
-        }
-        if (this->previousRings != 0 && this->currentRings == 0)
-        {
-            this->shouldTimerReset = true;
+            if (this->previousRings == 0 && this->currentRings == 1)
+            {
+                this->shouldTimerStart = true;
+            }
+            if (this->previousRings == 5 && this->currentRings == 6)
+            {
+                this->shouldTimerSplit = true;
+            }
+            if (this->previousCheckpoint != this->currentCheckpoint && this->currentCheckpoint > 0)
+            {
+                this->shouldTimerSplit = true;
+            }
+            if (this->previousRings != 0 && this->currentRings == 0)
+            {
+                this->shouldTimerReset = true;
+            }
         }
     }
     if (eventName == "Function TAGame.GameEvent_Soccar_TA.Destroyed" && post)
     {
-        this->shouldTimerReset = this->currentRings > 0;
         this->hasUpdatedOnce = false;
         this->hasUpdatedTwice = false;
-        this->previousRings = 0;
-        this->currentRings = 0;
-        this->previousCheckpoint = 0;
-        this->currentCheckpoint = 0;
+
+        this->shouldTimerReset = this->currentRings > 0;
     }
 }
 

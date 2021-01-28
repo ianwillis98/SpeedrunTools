@@ -19,6 +19,8 @@ public:
 
     void onEventReceived(const std::string &eventName, bool post, void *params) override;
 
+    bool supportsReset() override;
+
     std::string startDescription() override;
     std::string splitDescription() override;
     std::string resetDescription() override;
