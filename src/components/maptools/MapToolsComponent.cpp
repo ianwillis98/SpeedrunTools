@@ -79,6 +79,8 @@ void MapToolsComponent::render()
             this->plugin->cvarManager->executeCommand("speedrun_tutorial_advanced_practice_seg4");
         });
     }
+    ImGui::SameLine();
+    ImGui::Text("speedrun_tutorial_advanced_practice_seg4");
     ImGui::Spacing();
 
     if (ImGui::Button("Load Segment 5"))
@@ -87,18 +89,20 @@ void MapToolsComponent::render()
             this->plugin->cvarManager->executeCommand("speedrun_tutorial_advanced_practice_seg5");
         });
     }
+    ImGui::SameLine();
+    ImGui::Text("speedrun_tutorial_advanced_practice_seg5");
 }
 
 void MapToolsComponent::onEvent(const std::string &eventName, bool post, void *params)
 {
     if (eventName == "Function TAGame.Car_TA.SetVehicleInput" && !post)
     {
-        ServerWrapper serverWrapper = this->plugin->gameWrapper->GetGameEventAsServer();
-        if (serverWrapper.IsNull()) return;
-
-        float x = serverWrapper.GetLocalPrimaryPlayer().GetLocation().X;
-        float y = serverWrapper.GetLocalPrimaryPlayer().GetLocation().Y;
-        float z = serverWrapper.GetLocalPrimaryPlayer().GetLocation().Z;
+//        ServerWrapper serverWrapper = this->plugin->gameWrapper->GetGameEventAsServer();
+//        if (serverWrapper.IsNull()) return;
+//
+//        float x = serverWrapper.GetLocalPrimaryPlayer().GetLocation().X;
+//        float y = serverWrapper.GetLocalPrimaryPlayer().GetLocation().Y;
+//        float z = serverWrapper.GetLocalPrimaryPlayer().GetLocation().Z;
         //this->plugin->cvarManager->log("here12 " + std::to_string(x) + " " + std::to_string(y) + " " + std::to_string(z));
 
 //        auto balls = serverWrapper.GetGameBalls();

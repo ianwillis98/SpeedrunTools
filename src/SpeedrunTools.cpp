@@ -7,7 +7,7 @@
 
 BAKKESMOD_PLUGIN(SpeedrunTools, SpeedrunTools::PLUGIN_TITLE, SpeedrunTools::PLUGIN_VERSION, PLUGINTYPE_CUSTOM_TRAINING)
 
-const char *SpeedrunTools::PLUGIN_VERSION = "1.1";
+const char *SpeedrunTools::PLUGIN_VERSION = "2.0";
 const char *SpeedrunTools::PLUGIN_TITLE = "Speedrun Tools";
 const char *SpeedrunTools::PLUGIN_MENU_NAME = "speedruntools";
 
@@ -41,12 +41,12 @@ void SpeedrunTools::onUnload()
 
 void SpeedrunTools::renderBody()
 {
-    static bool showDemoWindow = false;
-    ImGui::Checkbox("Show Demo Window", &showDemoWindow);
-    if (showDemoWindow)
-    {
-        ImGui::ShowDemoWindow();
-    }
+//    static bool showDemoWindow = false;
+//    ImGui::Checkbox("Show Demo Window", &showDemoWindow);
+//    if (showDemoWindow)
+//    {
+//        ImGui::ShowDemoWindow();
+//    }
 
     ImGui::Text("%s (version %s)", PLUGIN_TITLE, PLUGIN_VERSION);
     ImGui::Spacing();
