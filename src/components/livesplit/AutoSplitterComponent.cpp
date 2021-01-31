@@ -37,6 +37,7 @@ void AutoSplitterComponent::render()
             AutoSplitterSupportedRun::LETHS_GIANT_RINGS.runName.c_str(),
             AutoSplitterSupportedRun::AIR_DRIBBLE_HOOPS.runName.c_str(),
             AutoSplitterSupportedRun::SPEED_JUMP_RINGS_1.runName.c_str(),
+//            AutoSplitterSupportedRun::SPEED_JUMP_TRIALS_1.runName.c_str(),
     };
     static int comboIndex = 0;
     if (ImGui::Combo("Run Category", &comboIndex, runNames, IM_ARRAYSIZE(runNames)))

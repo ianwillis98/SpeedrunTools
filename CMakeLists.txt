@@ -4,7 +4,7 @@ project(SpeedrunTools)
 set(CMAKE_CXX_STANDARD 14)
 
 get_filename_component(BAKKESMOD_PATH "[HKEY_CURRENT_USER\\Software\\BakkesMod\\AppPath;BakkesModPath]" ABSOLUTE)
-message("BAKKESMOD_PATH = ${BAKKESMOD_PATH}")
+#message("BAKKESMOD_PATH = ${BAKKESMOD_PATH}")
 
 add_subdirectory(external/ocornut/imgui)
 add_subdirectory(external/asio)

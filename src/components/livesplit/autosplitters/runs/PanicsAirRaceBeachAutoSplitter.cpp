@@ -16,12 +16,6 @@ void PanicsAirRaceBeachAutoSplitter::onEventReceived(const std::string &eventNam
 {
     if (eventName == "Function TAGame.Car_TA.SetVehicleInput" && post)
     {
-        std::string currentMap = this->plugin->gameWrapper->GetCurrentMap();
-        if (currentMap != "panicsairrace") return;
-
-        if (this->hasUpdatedOnce && !this->hasUpdatedTwice) this->hasUpdatedTwice = true;
-        if (!this->hasUpdatedOnce) this->hasUpdatedOnce = true;
-
         auto sequence = this->plugin->gameWrapper->GetMainSequence();
         if (sequence.memory_address == NULL) return;
 
@@ -38,6 +32,9 @@ void PanicsAirRaceBeachAutoSplitter::onEventReceived(const std::string &eventNam
 
         this->previousCheckpoint = this->currentCheckpoint;
         this->currentCheckpoint = checkpoint->second.GetInt();
+
+        if (this->hasUpdatedOnce && !this->hasUpdatedTwice) this->hasUpdatedTwice = true;
+        if (!this->hasUpdatedOnce) this->hasUpdatedOnce = true;
 
         if (this->hasUpdatedTwice)
         {

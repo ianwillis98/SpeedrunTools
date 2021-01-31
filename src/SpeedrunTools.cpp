@@ -7,7 +7,7 @@
 
 BAKKESMOD_PLUGIN(SpeedrunTools, SpeedrunTools::PLUGIN_TITLE, SpeedrunTools::PLUGIN_VERSION, PLUGINTYPE_CUSTOM_TRAINING)
 
-const char *SpeedrunTools::PLUGIN_VERSION = "2.0";
+const char *SpeedrunTools::PLUGIN_VERSION = "2.1";
 const char *SpeedrunTools::PLUGIN_TITLE = "Speedrun Tools";
 const char *SpeedrunTools::PLUGIN_MENU_NAME = "speedruntools";
 
