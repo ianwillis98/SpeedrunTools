@@ -247,7 +247,7 @@ void LiveSplitRemoteComponent::log(const std::string &message)
 {
     this->plugin->cvarManager->log("LiveSplit Client: " + message);
     this->plugin->gameWrapper->Execute([this, message](GameWrapper *gw) {
-        this->plugin->gameWrapper->LogToChatbox("LiveSplit Client: " + message, "SPEEDRUNTOOLS");
+        //this->plugin->gameWrapper->LogToChatbox("LiveSplit Client: " + message, "SPEEDRUNTOOLS");
     });
 }
 

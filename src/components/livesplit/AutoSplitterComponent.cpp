@@ -8,7 +8,8 @@ AutoSplitterComponent::AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin 
           autoSplitter(nullptr),
           isAutoStartEnabled(true),
           isAutoSplitEnabled(true),
-          isAutoResetEnabled(true)
+          isAutoResetEnabled(true),
+          isVerboseEnabled(false)
 {
 
 }
@@ -46,6 +47,7 @@ void AutoSplitterComponent::render()
         this->isAutoStartEnabled = true;
         this->isAutoSplitEnabled = true;
         this->isAutoResetEnabled = true;
+        this->isVerboseEnabled = false;
     }
 
     if (this->autoSplitter == nullptr) return;
@@ -73,6 +75,7 @@ void AutoSplitterComponent::render()
     if (this->autoSplitter->supportsStart()) ImGui::Checkbox("Auto Start", &this->isAutoStartEnabled);
     if (this->autoSplitter->supportsSplit()) ImGui::Checkbox("Auto Split", &this->isAutoSplitEnabled);
     if (this->autoSplitter->supportsReset()) ImGui::Checkbox("Auto Reset", &this->isAutoResetEnabled);
+    if (this->autoSplitter->supportsReset()) ImGui::Checkbox("Verbose", &this->isVerboseEnabled);
 
     ImGui::Spacing();
 
@@ -125,6 +128,8 @@ void AutoSplitterComponent::log(const std::string &message)
 {
     this->plugin->cvarManager->log("Auto Splitter: " + message);
     this->plugin->gameWrapper->Execute([this, message](GameWrapper *gw) {
+      if (isVerboseEnabled) {
         this->plugin->gameWrapper->LogToChatbox("Auto Splitter: " + message, "SPEEDRUNTOOLS");
+      }
     });
 }
