@@ -1,12 +1,12 @@
 #pragma once
 
 #include "BaseBakkesModPlugin.h"
-#include "PluginToolkit.h"
+#include "PluginComponent.h"
 
 class SpeedrunTools : public BaseBakkesModPlugin
 {
 private:
-    std::vector<std::unique_ptr<PluginToolkit>> toolkits;
+    std::map<std::string, std::unique_ptr<PluginComponent>> tabs;
 
 public:
     static const char *PLUGIN_VERSION;

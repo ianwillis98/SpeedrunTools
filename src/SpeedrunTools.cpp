@@ -1,9 +1,6 @@
 #include "SpeedrunTools.h"
-#include "toolkits/GeneralToolsToolkit.h"
-#include "toolkits/SaveStatesToolkit.h"
-#include "toolkits/LiveSplitToolkit.h"
-#include "toolkits/KismetToolkit.h"
-#include "toolkits/MapToolsToolkit.h"
+#include "components/generaltools/GeneralToolsComponent.h"
+#include "components/kismet/KismetEditorComponent.h"
 
 BAKKESMOD_PLUGIN(SpeedrunTools, SpeedrunTools::PLUGIN_TITLE, SpeedrunTools::PLUGIN_VERSION, PLUGINTYPE_CUSTOM_TRAINING)
 
@@ -13,29 +10,26 @@ const char *SpeedrunTools::PLUGIN_MENU_NAME = "speedruntools";
 
 SpeedrunTools::SpeedrunTools()
         : BaseBakkesModPlugin(SpeedrunTools::PLUGIN_TITLE, SpeedrunTools::PLUGIN_MENU_NAME),
-          toolkits()
+          tabs()
 {
-    this->toolkits.push_back(std::make_unique<MapToolsToolkit>(this));
-    this->toolkits.push_back(std::make_unique<LiveSplitToolkit>(this));
-    this->toolkits.push_back(std::make_unique<GeneralToolsToolkit>(this));
-    this->toolkits.push_back(std::make_unique<SaveStatesToolkit>(this));
-    this->toolkits.push_back(std::make_unique<KismetToolkit>(this));
+    this->tabs["General Tools"] = std::make_unique<GeneralToolsComponent>(this);
+    this->tabs["Kismet"] = std::make_unique<KismetEditorComponent>(this);
 }
 
 void SpeedrunTools::onLoad()
 {
     this->setupEvents();
-    for (auto &toolkit : this->toolkits)
+    for (auto &tab : this->tabs)
     {
-        toolkit->onLoad();
+        tab.second->onLoad();
     }
 }
 
 void SpeedrunTools::onUnload()
 {
-    for (auto &toolkit : this->toolkits)
+    for (auto &tab : this->tabs)
     {
-        toolkit->onUnload();
+        tab.second->onUnload();
     }
 }
 
@@ -51,14 +45,13 @@ void SpeedrunTools::renderBody()
     ImGui::Text("%s (version %s)", PLUGIN_TITLE, PLUGIN_VERSION);
     ImGui::Spacing();
 
-    ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
-    if (ImGui::BeginTabBar("MainTabBar", tab_bar_flags))
+    if (ImGui::BeginTabBar("MainTabBar", ImGuiTabBarFlags_None))
     {
-        for (auto &toolkit : this->toolkits)
+        for (auto &tab : this->tabs)
         {
-            if (ImGui::BeginTabItem(toolkit->title().c_str()))
+            if (ImGui::BeginTabItem(tab.first.c_str()))
             {
-                toolkit->render();
+                tab.second->render();
                 ImGui::EndTabItem();
             }
         }
@@ -71,10 +64,7 @@ void SpeedrunTools::setupEvents()
     this->gameWrapper->HookEventWithCaller<CarWrapper>(
             "Function TAGame.Car_TA.SetVehicleInput",
             [this](const CarWrapper &cw, void *params, const std::string &eventName) {
-                for (auto &toolkit : this->toolkits)
-                {
-                    toolkit->onEvent(eventName, false, params);
-                }
+                for (auto &tab : this->tabs) tab.second->onEvent(eventName, false, params);
             }
     );
     this->setupEventPost("Function TAGame.Car_TA.SetVehicleInput");
@@ -100,10 +90,7 @@ void SpeedrunTools::setupEvent(const std::string &eventName)
     this->gameWrapper->HookEvent(
             eventName,
             [this](const std::string &eventName) {
-                for (auto &toolkit : this->toolkits)
-                {
-                    toolkit->onEvent(eventName, false, nullptr);
-                }
+                for (auto &tab : this->tabs) tab.second->onEvent(eventName, false, nullptr);
             }
     );
 }
@@ -113,10 +100,7 @@ void SpeedrunTools::setupEventPost(const std::string &eventName)
     this->gameWrapper->HookEventPost(
             eventName,
             [this](const std::string &eventName) {
-                for (auto &toolkit : this->toolkits)
-                {
-                    toolkit->onEvent(eventName, true, nullptr);
-                }
+                for (auto &tab : this->tabs) tab.second->onEvent(eventName, true, nullptr);
             }
     );
 }

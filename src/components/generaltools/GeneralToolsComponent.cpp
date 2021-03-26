@@ -17,19 +17,14 @@ void GeneralToolsComponent::onLoad()
 void GeneralToolsComponent::render()
 {
     ImGuiExtensions::BigSpacing();
-
     this->renderCurrentGameState();
     ImGuiExtensions::BigSeparator();
-
     this->renderBoostMutator();
     ImGuiExtensions::BigSeparator();
-
     this->renderAirRollMutator();
     ImGuiExtensions::BigSeparator();
-
     this->renderGameGravityMutator();
     ImGuiExtensions::BigSeparator();
-
     this->renderGameSpeedMutator();
     ImGuiExtensions::BigSpacing();
 }
@@ -143,40 +138,12 @@ void GeneralToolsComponent::createAirRollMutatorCVar()
 
 void GeneralToolsComponent::createGameGravityMutatorCVar()
 {
-    std::string currentGameGravity = this->plugin->cvarManager->getCvar("sv_soccar_gravity").getStringValue();
-    this->plugin->cvarManager->registerCvar("speedrun_mutators_game_gravity", currentGameGravity, "Current game gravity")
-            .addOnValueChanged([this](const std::string &oldValue, CVarWrapper gameGravityMutatorCVar) {
-                if (this->plugin->cvarManager->getCvar("sv_soccar_gravity").getFloatValue() != gameGravityMutatorCVar.getFloatValue())
-                {
-                    this->plugin->cvarManager->getCvar("sv_soccar_gravity").setValue(gameGravityMutatorCVar.getFloatValue());
-                }
-            });
-    this->plugin->cvarManager->getCvar("sv_soccar_gravity")
-            .addOnValueChanged([this](const std::string &oldValue, CVarWrapper svSoccarGravityCVar) {
-                if (this->plugin->cvarManager->getCvar("speedrun_mutators_game_gravity").getFloatValue() != svSoccarGravityCVar.getFloatValue())
-                {
-                    this->plugin->cvarManager->getCvar("speedrun_mutators_game_gravity").setValue(svSoccarGravityCVar.getFloatValue());
-                }
-            });
+    HelperFunctions::createCVarReference(this->plugin, "speedrun_mutators_game_gravity", "sv_soccar_gravity");
 }
 
 void GeneralToolsComponent::createGameSpeedMutatorCVar()
 {
-    std::string currentGameSpeed = this->plugin->cvarManager->getCvar("sv_soccar_gamespeed").getStringValue();
-    this->plugin->cvarManager->registerCvar("speedrun_mutators_game_speed", currentGameSpeed, "Current game speed")
-            .addOnValueChanged([this](const std::string &oldValue, CVarWrapper gameSpeedMutatorCVar) {
-                if (this->plugin->cvarManager->getCvar("sv_soccar_gamespeed").getFloatValue() != gameSpeedMutatorCVar.getFloatValue())
-                {
-                    this->plugin->cvarManager->getCvar("sv_soccar_gamespeed").setValue(gameSpeedMutatorCVar.getFloatValue());
-                }
-            });
-    this->plugin->cvarManager->getCvar("sv_soccar_gamespeed")
-            .addOnValueChanged([this](const std::string &oldValue, CVarWrapper svSoccarGamespeedCVar) {
-                if (this->plugin->cvarManager->getCvar("speedrun_mutators_game_speed").getFloatValue() != svSoccarGamespeedCVar.getFloatValue())
-                {
-                    this->plugin->cvarManager->getCvar("speedrun_mutators_game_speed").setValue(svSoccarGamespeedCVar.getFloatValue());
-                }
-            });
+    HelperFunctions::createCVarReference(this->plugin, "speedrun_mutators_game_speed", "sv_soccar_gamespeed");
 }
 
 void GeneralToolsComponent::renderCurrentGameState()
