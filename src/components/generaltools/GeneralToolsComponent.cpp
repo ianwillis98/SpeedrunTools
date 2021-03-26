@@ -174,7 +174,7 @@ void GeneralToolsComponent::createGameSpeedMutatorCVar()
             .addOnValueChanged([this](const std::string &oldValue, CVarWrapper svSoccarGamespeedCVar) {
                 if (this->plugin->cvarManager->getCvar("speedrun_mutators_game_speed").getFloatValue() != svSoccarGamespeedCVar.getFloatValue())
                 {
-                    this->plugin->cvarManager->getCvar("speedrun_mutatos_game_speed").setValue(svSoccarGamespeedCVar.getFloatValue());
+                    this->plugin->cvarManager->getCvar("speedrun_mutators_game_speed").setValue(svSoccarGamespeedCVar.getFloatValue());
                 }
             });
 }
