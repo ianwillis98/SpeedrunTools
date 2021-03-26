@@ -15,6 +15,7 @@ private:
     bool isAutoStartEnabled;
     bool isAutoSplitEnabled;
     bool isAutoResetEnabled;
+    bool isVerboseEnabled;
 
 public:
     explicit AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
