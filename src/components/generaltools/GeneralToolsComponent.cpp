@@ -1,7 +1,15 @@
 #include "GeneralToolsComponent.h"
 
+const std::string GeneralToolsComponent::BoostMutatorCVarName = "speedrun_mutator_car_boost";
+const std::string GeneralToolsComponent::AirRollMutatorCVarName = "speedrun_mutator_car_airroll";
+const std::string GeneralToolsComponent::GameGravityMutatorCVarName = "speedrun_mutator_game_gravity";
+const std::string GeneralToolsComponent::GameSpeedMutatorCVarName = "speedrun_mutator_game_speed";
+
 GeneralToolsComponent::GeneralToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
-        : PluginComponentBase(plugin), currentGameState(), boostMutator(BoostMutator::None), airRollMutator(AirRollMutator::None)
+        : PluginComponentBase(plugin),
+          currentGameState(),
+          boostMutator(BoostMutator::None),
+          airRollMutator(AirRollMutator::None)
 {
 
 }
@@ -93,7 +101,7 @@ void GeneralToolsComponent::setBoostAmount(float amount)
 
 void GeneralToolsComponent::createBoostMutatorCVar()
 {
-    this->plugin->cvarManager->registerCvar("speedrun_mutators_car_boost", "0", "Boost mutator").addOnValueChanged(
+    this->plugin->cvarManager->registerCvar(BoostMutatorCVarName, "0").addOnValueChanged(
             [this](const std::string &oldValue, CVarWrapper boostMutatorCVar) {
                 switch (boostMutatorCVar.getIntValue())
                 {
@@ -114,7 +122,7 @@ void GeneralToolsComponent::createBoostMutatorCVar()
 
 void GeneralToolsComponent::createAirRollMutatorCVar()
 {
-    this->plugin->cvarManager->registerCvar("speedrun_mutators_car_airroll", "0", "Air roll mutator").addOnValueChanged(
+    this->plugin->cvarManager->registerCvar(AirRollMutatorCVarName, "0").addOnValueChanged(
             [this](const std::string &oldValue, CVarWrapper autoAirRollCVar) {
                 switch (autoAirRollCVar.getIntValue())
                 {
@@ -138,12 +146,12 @@ void GeneralToolsComponent::createAirRollMutatorCVar()
 
 void GeneralToolsComponent::createGameGravityMutatorCVar()
 {
-    CVars::createCVarReference(this->plugin, CVars::GameGravity, "sv_soccar_gravity");
+    CVarFunctions::createCVarReflection(this->plugin, GameGravityMutatorCVarName, "sv_soccar_gravity");
 }
 
 void GeneralToolsComponent::createGameSpeedMutatorCVar()
 {
-    CVars::createCVarReference(this->plugin, "speedrun_mutators_game_speed", "sv_soccar_gamespeed");
+    CVarFunctions::createCVarReflection(this->plugin, GameSpeedMutatorCVarName, "sv_soccar_gamespeed");
 }
 
 void GeneralToolsComponent::renderCurrentGameState()
@@ -168,21 +176,21 @@ void GeneralToolsComponent::renderBoostMutator()
     if (ImGui::RadioButton("Off", this->boostMutator == BoostMutator::None))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->plugin->cvarManager->getCvar("speedrun_mutators_car_boost").setValue(static_cast<int>(BoostMutator::None));
+            this->plugin->cvarManager->getCvar(BoostMutatorCVarName).setValue(static_cast<int>(BoostMutator::None));
         });
     }
     ImGui::SameLine();
     if (ImGui::RadioButton("Zero Boost", this->boostMutator == BoostMutator::ZeroBoost))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->plugin->cvarManager->getCvar("speedrun_mutators_car_boost").setValue(static_cast<int>(BoostMutator::ZeroBoost));
+            this->plugin->cvarManager->getCvar(BoostMutatorCVarName).setValue(static_cast<int>(BoostMutator::ZeroBoost));
         });
     }
     ImGui::SameLine();
     if (ImGui::RadioButton("Unlimited Boost", this->boostMutator == BoostMutator::UnlimitedBoost))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->plugin->cvarManager->getCvar("speedrun_mutators_car_boost").setValue(static_cast<int>(BoostMutator::UnlimitedBoost));
+            this->plugin->cvarManager->getCvar(BoostMutatorCVarName).setValue(static_cast<int>(BoostMutator::UnlimitedBoost));
         });
     }
     ImGui::PopID();
@@ -196,28 +204,29 @@ void GeneralToolsComponent::renderAirRollMutator()
     if (ImGui::RadioButton("Off", this->airRollMutator == AirRollMutator::None))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->plugin->cvarManager->getCvar("speedrun_mutators_car_airroll").setValue(static_cast<int>(AirRollMutator::None));
+            this->plugin->cvarManager->getCvar(AirRollMutatorCVarName).setValue(static_cast<int>(AirRollMutator::None));
         });
     }
     ImGui::SameLine();
     if (ImGui::RadioButton("Disable Air Roll", this->airRollMutator == AirRollMutator::DisableAirRoll))
     {
+        this->plugin->cvarManager->log("its heree ta;dslkjfa");
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->plugin->cvarManager->getCvar("speedrun_mutators_car_airroll").setValue(static_cast<int>(AirRollMutator::DisableAirRoll));
+            this->plugin->cvarManager->getCvar(AirRollMutatorCVarName).setValue(static_cast<int>(AirRollMutator::DisableAirRoll));
         });
     }
     ImGui::SameLine();
     if (ImGui::RadioButton("Force Air Roll Left", this->airRollMutator == AirRollMutator::ForceAirRollLeft))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->plugin->cvarManager->getCvar("speedrun_mutators_car_airroll").setValue(static_cast<int>(AirRollMutator::ForceAirRollLeft));
+            this->plugin->cvarManager->getCvar(AirRollMutatorCVarName).setValue(static_cast<int>(AirRollMutator::ForceAirRollLeft));
         });
     }
     ImGui::SameLine();
     if (ImGui::RadioButton("Force Air Roll Right", this->airRollMutator == AirRollMutator::ForceAirRollRight))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->plugin->cvarManager->getCvar("speedrun_mutators_car_airroll").setValue(static_cast<int>(AirRollMutator::ForceAirRollRight));
+            this->plugin->cvarManager->getCvar(AirRollMutatorCVarName).setValue(static_cast<int>(AirRollMutator::ForceAirRollRight));
         });
     }
     ImGui::PopID();
@@ -228,31 +237,31 @@ void GeneralToolsComponent::renderGameGravityMutator()
     ImGui::PushID(this);
     ImGui::Text("Game Gravity");
     ImGui::Spacing();
-    float gameGravity = this->plugin->cvarManager->getCvar(CVars::GameGravity).getFloatValue();
+    float gameGravity = this->plugin->cvarManager->getCvar(GameGravityMutatorCVarName).getFloatValue();
     if (ImGui::SliderFloat("Game Gravity", &gameGravity, -2000.0f, 2000.0f, "%.3f"))
     {
         this->plugin->gameWrapper->Execute([this, gameGravity](GameWrapper *gw) {
-            this->plugin->cvarManager->getCvar(CVars::GameGravity).setValue(gameGravity);
+            this->plugin->cvarManager->getCvar(GameGravityMutatorCVarName).setValue(gameGravity);
         });
     }
     if (ImGui::Button("Default"))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->plugin->cvarManager->getCvar(CVars::GameGravity).setValue(-650.0f);
+            this->plugin->cvarManager->getCvar(GameGravityMutatorCVarName).setValue(-650.0f);
         });
     }
     ImGui::SameLine();
     if (ImGui::Button("Zero"))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->plugin->cvarManager->getCvar(CVars::GameGravity).setValue(-0.001f);
+            this->plugin->cvarManager->getCvar(GameGravityMutatorCVarName).setValue(-0.001f);
         });
     }
     ImGui::SameLine();
     if (ImGui::Button("Inverse"))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->plugin->cvarManager->getCvar(CVars::GameGravity).setValue(650.0f);
+            this->plugin->cvarManager->getCvar(GameGravityMutatorCVarName).setValue(650.0f);
         });
     }
     ImGui::PopID();
@@ -263,31 +272,31 @@ void GeneralToolsComponent::renderGameSpeedMutator()
     ImGui::PushID("speed");
     ImGui::Text("Game Speed");
     ImGui::Spacing();
-    float gameSpeed = this->plugin->cvarManager->getCvar("speedrun_mutators_game_speed").getFloatValue();
+    float gameSpeed = this->plugin->cvarManager->getCvar(GameSpeedMutatorCVarName).getFloatValue();
     if (ImGui::SliderFloat("Game Speed", &gameSpeed, 0.05f, 5.0f, "%.3f"))
     {
         this->plugin->gameWrapper->Execute([this, gameSpeed](GameWrapper *gw) {
-            this->plugin->cvarManager->getCvar("speedrun_mutators_game_speed").setValue(gameSpeed);
+            this->plugin->cvarManager->getCvar(GameSpeedMutatorCVarName).setValue(gameSpeed);
         });
     }
     if (ImGui::Button("Default"))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->plugin->cvarManager->getCvar("speedrun_mutators_game_speed").setValue(1.0f);
+            this->plugin->cvarManager->getCvar(GameSpeedMutatorCVarName).setValue(1.0f);
         });
     }
     ImGui::SameLine();
     if (ImGui::Button("Slow-mo"))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->plugin->cvarManager->getCvar("speedrun_mutators_game_speed").setValue(0.67f);
+            this->plugin->cvarManager->getCvar(GameSpeedMutatorCVarName).setValue(0.67f);
         });
     }
     ImGui::SameLine();
     if (ImGui::Button("Fast-mo"))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->plugin->cvarManager->getCvar("speedrun_mutators_game_speed").setValue(1.5f);
+            this->plugin->cvarManager->getCvar(GameSpeedMutatorCVarName).setValue(1.5f);
         });
     }
     ImGui::PopID();

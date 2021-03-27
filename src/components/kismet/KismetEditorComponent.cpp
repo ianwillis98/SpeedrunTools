@@ -16,9 +16,8 @@ void KismetEditorComponent::onLoad()
 
 void KismetEditorComponent::render()
 {
-    ImGui::Text("Kismet Sequence Variable Editor");
-    ImGui::Spacing();
-
+    ImGuiExtensions::BigSpacing();
+    
     ImGuiExtensions::PushDisabledStyleIf(this->shouldAutoReloadKismetVars);
     if (ImGui::Button("Refresh"))
     {

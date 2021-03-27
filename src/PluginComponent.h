@@ -15,7 +15,7 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 #include "utils/ImGuiExtensions.h"
-#include "utils/CVars.h"
+#include "utils/CVarFunctions.h"
 
 class PluginComponent
 {
