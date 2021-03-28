@@ -1,6 +1,18 @@
-#include "LiveSplitRemoteComponent.h"
+#include "LiveSplitComponent.h"
 
-LiveSplitRemoteComponent::LiveSplitRemoteComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
+const std::string LiveSplitComponent::ConnectCVarName = "speedrun_livesplit_connect";
+const std::string LiveSplitComponent::DisconnectCVarName = "speedrun_livesplit_disconnect";
+const std::string LiveSplitComponent::StartOrSplitCVarName = "speedrun_livesplit_startorsplit";
+const std::string LiveSplitComponent::StartCVarName = "speedrun_livesplit_start";
+const std::string LiveSplitComponent::PauseCVarName = "speedrun_livesplit_pause";
+const std::string LiveSplitComponent::ResumeCVarName = "speedrun_livesplit_resume";
+const std::string LiveSplitComponent::ResetCVarName = "speedrun_livesplit_reset";
+const std::string LiveSplitComponent::SplitCVarName = "speedrun_livesplit_split";
+const std::string LiveSplitComponent::SkipSplitCVarName = "speedrun_livesplit_skipsplit";
+const std::string LiveSplitComponent::UndoSplitCVarName = "speedrun_livesplit_undosplit";
+
+
+LiveSplitComponent::LiveSplitComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : PluginComponentBase(plugin),
           liveSplitClient(LiveSplitClient::getInstance()),
           feedbackMessage("Waiting for a connection to the LiveSplit server...")
@@ -8,42 +20,45 @@ LiveSplitRemoteComponent::LiveSplitRemoteComponent(BakkesMod::Plugin::BakkesModP
 
 }
 
-void LiveSplitRemoteComponent::onLoad()
+void LiveSplitComponent::onLoad()
 {
-    this->plugin->cvarManager->registerNotifier("speedrun_livesplit_connect", [this](const std::vector<std::string> &commands) {
+    this->plugin->cvarManager->registerNotifier(ConnectCVarName, [this](const std::vector<std::string> &commands) {
         this->connectAsync();
     }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
-    this->plugin->cvarManager->registerNotifier("speedrun_livesplit_disconnect", [this](const std::vector<std::string> &commands) {
+    this->plugin->cvarManager->registerNotifier(DisconnectCVarName, [this](const std::vector<std::string> &commands) {
         this->disconnect();
     }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
-    this->plugin->cvarManager->registerNotifier("speedrun_livesplit_startorsplit", [this](const std::vector<std::string> &commands) {
+    this->plugin->cvarManager->registerNotifier(StartOrSplitCVarName, [this](const std::vector<std::string> &commands) {
         this->startOrSplit();
     }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
-    this->plugin->cvarManager->registerNotifier("speedrun_livesplit_start", [this](const std::vector<std::string> &commands) {
+    this->plugin->cvarManager->registerNotifier(StartCVarName, [this](const std::vector<std::string> &commands) {
         this->start();
     }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
-    this->plugin->cvarManager->registerNotifier("speedrun_livesplit_pause", [this](const std::vector<std::string> &commands) {
+    this->plugin->cvarManager->registerNotifier(PauseCVarName, [this](const std::vector<std::string> &commands) {
         this->pause();
     }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
-    this->plugin->cvarManager->registerNotifier("speedrun_livesplit_resume", [this](const std::vector<std::string> &commands) {
+    this->plugin->cvarManager->registerNotifier(ResumeCVarName, [this](const std::vector<std::string> &commands) {
         this->resume();
     }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
-    this->plugin->cvarManager->registerNotifier("speedrun_livesplit_reset", [this](const std::vector<std::string> &commands) {
+    this->plugin->cvarManager->registerNotifier(ResetCVarName, [this](const std::vector<std::string> &commands) {
         this->reset();
     }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
-    this->plugin->cvarManager->registerNotifier("speedrun_livesplit_split", [this](const std::vector<std::string> &commands) {
+    this->plugin->cvarManager->registerNotifier(SplitCVarName, [this](const std::vector<std::string> &commands) {
         this->split();
     }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
-    this->plugin->cvarManager->registerNotifier("speedrun_livesplit_skipsplit", [this](const std::vector<std::string> &commands) {
+    this->plugin->cvarManager->registerNotifier(SkipSplitCVarName, [this](const std::vector<std::string> &commands) {
         this->skipSplit();
     }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
-    this->plugin->cvarManager->registerNotifier("speedrun_livesplit_undosplit", [this](const std::vector<std::string> &commands) {
+    this->plugin->cvarManager->registerNotifier(UndoSplitCVarName, [this](const std::vector<std::string> &commands) {
         this->undoSplit();
     }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
 }
 
-void LiveSplitRemoteComponent::render()
+void LiveSplitComponent::render()
 {
+    ImGui::PushID(this);
+    ImGuiExtensions::BigSpacing();
+
     ImGui::Text("LiveSplit Remote Controller");
     ImGui::BulletText("Connection Status: ");
     ImGui::SameLine();
@@ -146,9 +161,10 @@ void LiveSplitRemoteComponent::render()
             });
         }
     }
+    ImGui::PopID();
 }
 
-void LiveSplitRemoteComponent::connectAsync()
+void LiveSplitComponent::connectAsync()
 {
     this->feedbackMessage = "Attempting to establish a connection with the LiveSplit Server...";
     this->log(this->feedbackMessage);
@@ -160,7 +176,7 @@ void LiveSplitRemoteComponent::connectAsync()
     });
 }
 
-void LiveSplitRemoteComponent::disconnect()
+void LiveSplitComponent::disconnect()
 {
     this->liveSplitClient.disconnect([this](const int &errorCode, const std::string &errorMessage) {
         this->feedbackMessage = (errorCode == 0) ? "Disconnected from the LiveSplit Server." :
@@ -169,7 +185,7 @@ void LiveSplitRemoteComponent::disconnect()
     });
 }
 
-void LiveSplitRemoteComponent::startOrSplit()
+void LiveSplitComponent::startOrSplit()
 {
     this->liveSplitClient.startOrSplit([this](const int &errorCode, const std::string &errorMessage) {
         this->feedbackMessage = (errorCode == 0) ? "'startOrSplit' message was successfully sent." :
@@ -178,7 +194,7 @@ void LiveSplitRemoteComponent::startOrSplit()
     });
 }
 
-void LiveSplitRemoteComponent::start()
+void LiveSplitComponent::start()
 {
     this->liveSplitClient.start([this](const int &errorCode, const std::string &errorMessage) {
         this->feedbackMessage = (errorCode == 0) ? "'start' message was successfully sent." :
@@ -187,7 +203,7 @@ void LiveSplitRemoteComponent::start()
     });
 }
 
-void LiveSplitRemoteComponent::pause()
+void LiveSplitComponent::pause()
 {
     this->liveSplitClient.pause([this](const int &errorCode, const std::string &errorMessage) {
         this->feedbackMessage = (errorCode == 0) ? "'pause' message was successfully sent." :
@@ -196,7 +212,7 @@ void LiveSplitRemoteComponent::pause()
     });
 }
 
-void LiveSplitRemoteComponent::resume()
+void LiveSplitComponent::resume()
 {
 
     this->liveSplitClient.resume([this](const int &errorCode, const std::string &errorMessage) {
@@ -206,7 +222,7 @@ void LiveSplitRemoteComponent::resume()
     });
 }
 
-void LiveSplitRemoteComponent::reset()
+void LiveSplitComponent::reset()
 {
     this->liveSplitClient.reset([this](const int &errorCode, const std::string &errorMessage) {
         this->feedbackMessage = (errorCode == 0) ? "'reset' message was successfully sent." :
@@ -215,7 +231,7 @@ void LiveSplitRemoteComponent::reset()
     });
 }
 
-void LiveSplitRemoteComponent::split()
+void LiveSplitComponent::split()
 {
     this->liveSplitClient.split([this](const int &errorCode, const std::string &errorMessage) {
         this->feedbackMessage = (errorCode == 0) ? "'split' message was successfully sent." :
@@ -224,7 +240,7 @@ void LiveSplitRemoteComponent::split()
     });
 }
 
-void LiveSplitRemoteComponent::skipSplit()
+void LiveSplitComponent::skipSplit()
 {
     this->liveSplitClient.skipSplit([this](const int &errorCode, const std::string &errorMessage) {
         this->feedbackMessage = (errorCode == 0) ? "'skipSplit' message was successfully sent." :
@@ -233,7 +249,7 @@ void LiveSplitRemoteComponent::skipSplit()
     });
 }
 
-void LiveSplitRemoteComponent::undoSplit()
+void LiveSplitComponent::undoSplit()
 {
 
     this->liveSplitClient.undoSplit([this](const int &errorCode, const std::string &errorMessage) {
@@ -243,15 +259,15 @@ void LiveSplitRemoteComponent::undoSplit()
     });
 }
 
-void LiveSplitRemoteComponent::log(const std::string &message)
+void LiveSplitComponent::log(const std::string &message)
 {
     this->plugin->cvarManager->log("LiveSplit Client: " + message);
     this->plugin->gameWrapper->Execute([this, message](GameWrapper *gw) {
-        //this->plugin->gameWrapper->LogToChatbox("LiveSplit Client: " + message, "SPEEDRUNTOOLS");
+        this->plugin->gameWrapper->LogToChatbox("LiveSplit Client: " + message, "SPEEDRUNTOOLS");
     });
 }
 
-std::string LiveSplitRemoteComponent::getConnectionStatusAsString()
+std::string LiveSplitComponent::getConnectionStatusAsString()
 {
     switch (this->liveSplitClient.getConnectionState())
     {

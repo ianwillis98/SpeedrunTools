@@ -1,6 +1,8 @@
 #include "SpeedrunTools.h"
 #include "components/generaltools/GeneralToolsComponent.h"
+#include "components/livesplit/LiveSplitComponent.h"
 #include "components/kismet/KismetEditorComponent.h"
+#include "components/savestates/SaveStateComponent.h"
 
 BAKKESMOD_PLUGIN(SpeedrunTools, SpeedrunTools::PLUGIN_TITLE, SpeedrunTools::PLUGIN_VERSION, PLUGINTYPE_CUSTOM_TRAINING)
 
@@ -12,8 +14,10 @@ SpeedrunTools::SpeedrunTools()
         : BaseBakkesModPlugin(SpeedrunTools::PLUGIN_TITLE, SpeedrunTools::PLUGIN_MENU_NAME),
           tabs()
 {
-    this->tabs["General Tools"] = std::make_unique<GeneralToolsComponent>(this);
-    this->tabs["Kismet"] = std::make_unique<KismetEditorComponent>(this);
+    this->tabs.emplace_back("General Tools", std::make_unique<GeneralToolsComponent>(this));
+    this->tabs.emplace_back("Save State", std::make_unique<SaveStateComponent>(this));
+    this->tabs.emplace_back("LiveSplit", std::make_unique<LiveSplitComponent>(this));
+    this->tabs.emplace_back("Kismet", std::make_unique<KismetEditorComponent>(this));
 }
 
 void SpeedrunTools::onLoad()

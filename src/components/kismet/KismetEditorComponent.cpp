@@ -16,6 +16,7 @@ void KismetEditorComponent::onLoad()
 
 void KismetEditorComponent::render()
 {
+    ImGui::PushID(this);
     ImGuiExtensions::BigSpacing();
     
     ImGuiExtensions::PushDisabledStyleIf(this->shouldAutoReloadKismetVars);
@@ -64,6 +65,7 @@ void KismetEditorComponent::render()
 
     ImGui::Columns(1);
     ImGui::Separator();
+    ImGui::PopID();
 }
 
 void KismetEditorComponent::onEvent(const std::string &eventName, bool post, void *params)

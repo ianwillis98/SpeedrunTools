@@ -5,6 +5,10 @@
 
 class SaveStateComponent : public PluginComponentBase
 {
+public:
+    static const std::string SaveStateCVarName;
+    static const std::string LoadStateCVarName;
+
 private:
     bool isGameStateSaved;
     GameState gameSaveState;

@@ -24,17 +24,19 @@ void GeneralToolsComponent::onLoad()
 
 void GeneralToolsComponent::render()
 {
+    ImGui::PushID(this);
     ImGuiExtensions::BigSpacing();
     this->renderCurrentGameState();
-    ImGuiExtensions::BigSeparator();
-    this->renderBoostMutator();
-    ImGuiExtensions::BigSeparator();
-    this->renderAirRollMutator();
     ImGuiExtensions::BigSeparator();
     this->renderGameGravityMutator();
     ImGuiExtensions::BigSeparator();
     this->renderGameSpeedMutator();
     ImGuiExtensions::BigSpacing();
+    this->renderBoostMutator();
+    ImGuiExtensions::BigSeparator();
+    this->renderAirRollMutator();
+    ImGuiExtensions::BigSeparator();
+    ImGui::PopID();
 }
 
 void GeneralToolsComponent::onEvent(const std::string &eventName, bool post, void *params)
@@ -170,7 +172,7 @@ void GeneralToolsComponent::renderCurrentGameState()
 
 void GeneralToolsComponent::renderBoostMutator()
 {
-    ImGui::PushID(this);
+    ImGui::PushID("boost");
     ImGui::Text("Boost Mutator");
     ImGui::Spacing();
     if (ImGui::RadioButton("Off", this->boostMutator == BoostMutator::None))
@@ -198,7 +200,7 @@ void GeneralToolsComponent::renderBoostMutator()
 
 void GeneralToolsComponent::renderAirRollMutator()
 {
-    ImGui::PushID(this);
+    ImGui::PushID("airroll");
     ImGui::Text("Air Roll Mutator");
     ImGui::Spacing();
     if (ImGui::RadioButton("Off", this->airRollMutator == AirRollMutator::None))
@@ -210,7 +212,6 @@ void GeneralToolsComponent::renderAirRollMutator()
     ImGui::SameLine();
     if (ImGui::RadioButton("Disable Air Roll", this->airRollMutator == AirRollMutator::DisableAirRoll))
     {
-        this->plugin->cvarManager->log("its heree ta;dslkjfa");
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
             this->plugin->cvarManager->getCvar(AirRollMutatorCVarName).setValue(static_cast<int>(AirRollMutator::DisableAirRoll));
         });

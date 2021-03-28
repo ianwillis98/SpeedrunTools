@@ -1,5 +1,8 @@
 #include "SaveStateComponent.h"
 
+const std::string SaveStateComponent::SaveStateCVarName = "speedrun_savestate_save";
+const std::string SaveStateComponent::LoadStateCVarName = "speedrun_savestate_load";
+
 SaveStateComponent::SaveStateComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : PluginComponentBase(plugin),
           isGameStateSaved(false),
@@ -10,16 +13,19 @@ SaveStateComponent::SaveStateComponent(BakkesMod::Plugin::BakkesModPlugin *plugi
 
 void SaveStateComponent::onLoad()
 {
-    this->plugin->cvarManager->registerNotifier("speedrun_savestates_save", [this](const std::vector<std::string> &commands) {
+    this->plugin->cvarManager->registerNotifier(SaveStateCVarName, [this](const std::vector<std::string> &commands) {
         this->saveCurrentGameState();
     }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
-    this->plugin->cvarManager->registerNotifier("speedrun_savestates_load", [this](const std::vector<std::string> &commands) {
+    this->plugin->cvarManager->registerNotifier(LoadStateCVarName, [this](const std::vector<std::string> &commands) {
         this->loadPreviousGameState();
     }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
 }
 
 void SaveStateComponent::render()
 {
+    ImGui::PushID(this);
+    ImGuiExtensions::BigSpacing();
+
     bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
     ImGuiExtensions::PushDisabledStyleIf(!isInFreeplay);
     if (ImGui::Button("Save State"))
@@ -41,6 +47,7 @@ void SaveStateComponent::render()
     this->gameSaveState.render();
     ImGuiExtensions::PopDisabledStyleIf(isInFreeplay && !this->isGameStateSaved);
     ImGuiExtensions::PopDisabledStyleIf(!isInFreeplay);
+    ImGui::PopID();
 }
 
 void SaveStateComponent::onEvent(const std::string &eventName, bool post, void *params)

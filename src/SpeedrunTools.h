@@ -6,7 +6,7 @@
 class SpeedrunTools : public BaseBakkesModPlugin
 {
 private:
-    std::map<std::string, std::unique_ptr<PluginComponent>> tabs;
+    std::vector<std::pair<std::string, std::unique_ptr<PluginComponent>>> tabs;
 
 public:
     static const char *PLUGIN_VERSION;
