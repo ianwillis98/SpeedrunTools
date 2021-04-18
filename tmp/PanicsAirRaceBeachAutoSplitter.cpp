@@ -67,13 +67,13 @@ void PanicsAirRaceBeachAutoSplitter::onEventReceived(const std::string &eventNam
 
 std::string PanicsAirRaceBeachAutoSplitter::startDescription()
 {
-    return "The timer will start after entering the first ring.";
+    return "The timer will startTimer after entering the first ring.";
 }
 
 std::string PanicsAirRaceBeachAutoSplitter::splitDescription()
 {
     std::stringstream ss;
-    ss << "The timer will split after each of 13 segments:" << std::endl;
+    ss << "The timer will splitTimer after each of 13 segments:" << std::endl;
     ss << "\t1. Entering the sixth ring" << std::endl;
     ss << "\t2. Checkpoint 1" << std::endl;
     ss << "\t3. Checkpoint 2" << std::endl;
@@ -92,7 +92,7 @@ std::string PanicsAirRaceBeachAutoSplitter::splitDescription()
 
 std::string PanicsAirRaceBeachAutoSplitter::resetDescription()
 {
-    return "The timer will reset when the player resets to the beginning of the map or leaves the match.";
+    return "The timer will resetTimer when the player resets to the beginning of the map or leaves the match.";
 }
 
 std::string PanicsAirRaceBeachAutoSplitter::getDebug()

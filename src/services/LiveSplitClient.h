@@ -35,7 +35,7 @@ public:
     bool isConnecting();
     bool isNotConnected();
 
-    void connectAsync(const std::string &host, const std::string &port, const ErrorCallback &callback);
+    void connect(const std::string &host, const std::string &port, const ErrorCallback &callback);
     void disconnect(const ErrorCallback &callback);
 
     void startOrSplit(const ErrorCallback &callback);

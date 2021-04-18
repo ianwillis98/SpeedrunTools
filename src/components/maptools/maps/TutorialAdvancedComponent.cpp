@@ -1,11 +1,11 @@
-#include "TutorialAdvancedMapTools.h"
+#include "TutorialAdvancedComponent.h"
 
-TutorialAdvancedMapTools::TutorialAdvancedMapTools(BakkesMod::Plugin::BakkesModPlugin *plugin) : MapToolsBase(plugin)
+TutorialAdvancedComponent::TutorialAdvancedComponent(BakkesMod::Plugin::BakkesModPlugin *plugin) : PluginComponentBase(plugin)
 {
 
 }
 
-void TutorialAdvancedMapTools::onLoad()
+void TutorialAdvancedComponent::onLoad()
 {
     this->plugin->cvarManager->registerNotifier("speedrun_tutorial_advanced_practice_seg4", [this](const std::vector<std::string> &commands) {
         this->practiceSeg4();
@@ -15,24 +15,28 @@ void TutorialAdvancedMapTools::onLoad()
     }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
 }
 
-void TutorialAdvancedMapTools::render()
+void TutorialAdvancedComponent::render()
 {
     ImGui::Text("Tutorial Advanced Map Tools");
     ImGuiExtensions::BigSpacing();
 
     if (ImGui::Button("Practice Segment 4"))
     {
-        this->practiceSeg4();
+        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
+            this->practiceSeg4();
+        });
     }
     ImGui::Spacing();
 
     if (ImGui::Button("Practice Segment 5"))
     {
-        this->practiceSeg5();
+        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
+            this->practiceSeg5();
+        });
     }
 }
 
-void TutorialAdvancedMapTools::practiceSeg4()
+void TutorialAdvancedComponent::practiceSeg4()
 {
     ServerWrapper serverWrapper = this->plugin->gameWrapper->GetGameEventAsServer();
     if (serverWrapper.IsNull()) return;
@@ -60,7 +64,7 @@ void TutorialAdvancedMapTools::practiceSeg4()
     serverWrapper.SpawnBall(Vector(-2048.0f, -64.0f, 416.0f), true, false).Stop();
 }
 
-void TutorialAdvancedMapTools::practiceSeg5()
+void TutorialAdvancedComponent::practiceSeg5()
 {
     ServerWrapper serverWrapper = this->plugin->gameWrapper->GetGameEventAsServer();
     if (serverWrapper.IsNull()) return;

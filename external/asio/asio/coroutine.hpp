@@ -205,7 +205,7 @@ class coroutine_ref;
  * {
  *   do
  *   {
- *     socket_.reset(new tcp::socket(my_context_));
+ *     socket_.resetTimer(new tcp::socket(my_context_));
  *     yield acceptor->async_accept(*socket_, *this);
  *     fork server(*this)();
  *   } while (is_parent());

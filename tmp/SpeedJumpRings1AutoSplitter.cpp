@@ -54,17 +54,17 @@ void SpeedJumpRings1AutoSplitter::onEventReceived(const std::string &eventName, 
 
 std::string SpeedJumpRings1AutoSplitter::startDescription()
 {
-    return "The timer will start after passing the first ring.";
+    return "The timer will startTimer after passing the first ring.";
 }
 
 std::string SpeedJumpRings1AutoSplitter::splitDescription()
 {
-    return "The timer will split after every 10 rings passed and after passing the final ring (162 rings in total).";
+    return "The timer will splitTimer after every 10 rings passed and after passing the final ring (162 rings in total).";
 }
 
 std::string SpeedJumpRings1AutoSplitter::resetDescription()
 {
-    return "The timer will reset when the player presses the 'Reset Shot' binding or leaves the map.";
+    return "The timer will resetTimer when the player presses the 'Reset Shot' binding or leaves the map.";
 }
 
 std::string SpeedJumpRings1AutoSplitter::getDebug()

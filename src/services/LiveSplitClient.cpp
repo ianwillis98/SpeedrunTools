@@ -11,7 +11,7 @@ LiveSplitClient::LiveSplitClient() : io_context(), socket(io_context), resolver(
 
 }
 
-void LiveSplitClient::connectAsync(const std::string &host, const std::string &port, const ErrorCallback &callback)
+void LiveSplitClient::connect(const std::string &host, const std::string &port, const ErrorCallback &callback)
 {
     if (this->connectionState == ConnectionState::Connecting) return;
 

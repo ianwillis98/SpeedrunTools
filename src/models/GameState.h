@@ -1,6 +1,8 @@
 #pragma once
 
+#include <string>
 #include <bakkesmod/wrappers/GameEvent/ServerWrapper.h>
+
 #include "CarState.h"
 #include "BallState.h"
 

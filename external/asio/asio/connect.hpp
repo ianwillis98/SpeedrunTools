@@ -141,7 +141,7 @@ typename Protocol::endpoint connect(basic_socket<Protocol, Executor>& s,
  * @param s The socket to be connected. If the socket is already open, it will
  * be closed.
  *
- * @param begin An iterator pointing to the start of a sequence of endpoints.
+ * @param begin An iterator pointing to the startTimer of a sequence of endpoints.
  *
  * @returns On success, an iterator denoting the successfully connected
  * endpoint. Otherwise, the end iterator.
@@ -169,7 +169,7 @@ Iterator connect(basic_socket<Protocol, Executor>& s, Iterator begin,
  * @param s The socket to be connected. If the socket is already open, it will
  * be closed.
  *
- * @param begin An iterator pointing to the start of a sequence of endpoints.
+ * @param begin An iterator pointing to the startTimer of a sequence of endpoints.
  *
  * @param ec Set to indicate what error occurred, if any. If the sequence is
  * empty, set to asio::error::not_found. Otherwise, contains the error
@@ -198,7 +198,7 @@ Iterator connect(basic_socket<Protocol, Executor>& s,
  * @param s The socket to be connected. If the socket is already open, it will
  * be closed.
  *
- * @param begin An iterator pointing to the start of a sequence of endpoints.
+ * @param begin An iterator pointing to the startTimer of a sequence of endpoints.
  *
  * @param end An iterator pointing to the end of a sequence of endpoints.
  *
@@ -229,7 +229,7 @@ Iterator connect(basic_socket<Protocol, Executor>& s,
  * @param s The socket to be connected. If the socket is already open, it will
  * be closed.
  *
- * @param begin An iterator pointing to the start of a sequence of endpoints.
+ * @param begin An iterator pointing to the startTimer of a sequence of endpoints.
  *
  * @param end An iterator pointing to the end of a sequence of endpoints.
  *
@@ -394,7 +394,7 @@ typename Protocol::endpoint connect(basic_socket<Protocol, Executor>& s,
  * @param s The socket to be connected. If the socket is already open, it will
  * be closed.
  *
- * @param begin An iterator pointing to the start of a sequence of endpoints.
+ * @param begin An iterator pointing to the startTimer of a sequence of endpoints.
  *
  * @param connect_condition A function object that is called prior to each
  * connection attempt. The signature of the function object must be:
@@ -435,7 +435,7 @@ Iterator connect(basic_socket<Protocol, Executor>& s,
  * @param s The socket to be connected. If the socket is already open, it will
  * be closed.
  *
- * @param begin An iterator pointing to the start of a sequence of endpoints.
+ * @param begin An iterator pointing to the startTimer of a sequence of endpoints.
  *
  * @param connect_condition A function object that is called prior to each
  * connection attempt. The signature of the function object must be:
@@ -476,7 +476,7 @@ Iterator connect(basic_socket<Protocol, Executor>& s, Iterator begin,
  * @param s The socket to be connected. If the socket is already open, it will
  * be closed.
  *
- * @param begin An iterator pointing to the start of a sequence of endpoints.
+ * @param begin An iterator pointing to the startTimer of a sequence of endpoints.
  *
  * @param end An iterator pointing to the end of a sequence of endpoints.
  *
@@ -535,7 +535,7 @@ Iterator connect(basic_socket<Protocol, Executor>& s, Iterator begin,
  * @param s The socket to be connected. If the socket is already open, it will
  * be closed.
  *
- * @param begin An iterator pointing to the start of a sequence of endpoints.
+ * @param begin An iterator pointing to the startTimer of a sequence of endpoints.
  *
  * @param end An iterator pointing to the end of a sequence of endpoints.
  *
@@ -690,7 +690,7 @@ async_connect(basic_socket<Protocol, Executor>& s,
  * @param s The socket to be connected. If the socket is already open, it will
  * be closed.
  *
- * @param begin An iterator pointing to the start of a sequence of endpoints.
+ * @param begin An iterator pointing to the startTimer of a sequence of endpoints.
  *
  * @param handler The handler to be called when the connect operation
  * completes. Copies will be made of the handler as required. The function
@@ -737,7 +737,7 @@ async_connect(basic_socket<Protocol, Executor>& s, Iterator begin,
  * @param s The socket to be connected. If the socket is already open, it will
  * be closed.
  *
- * @param begin An iterator pointing to the start of a sequence of endpoints.
+ * @param begin An iterator pointing to the startTimer of a sequence of endpoints.
  *
  * @param end An iterator pointing to the end of a sequence of endpoints.
  *
@@ -906,7 +906,7 @@ async_connect(basic_socket<Protocol, Executor>& s,
  * @param s The socket to be connected. If the socket is already open, it will
  * be closed.
  *
- * @param begin An iterator pointing to the start of a sequence of endpoints.
+ * @param begin An iterator pointing to the startTimer of a sequence of endpoints.
  *
  * @param connect_condition A function object that is called prior to each
  * connection attempt. The signature of the function object must be:
@@ -966,7 +966,7 @@ async_connect(basic_socket<Protocol, Executor>& s, Iterator begin,
  * @param s The socket to be connected. If the socket is already open, it will
  * be closed.
  *
- * @param begin An iterator pointing to the start of a sequence of endpoints.
+ * @param begin An iterator pointing to the startTimer of a sequence of endpoints.
  *
  * @param end An iterator pointing to the end of a sequence of endpoints.
  *

@@ -2,7 +2,6 @@
 
 #include "../PluginComponentBase.h"
 #include "../../services/LiveSplitClient.h"
-#include "autosplitters/AutoSplitter.h"
 
 class LiveSplitComponent : public PluginComponentBase
 {
@@ -29,7 +28,7 @@ public:
     void render() override;
 
 private:
-    void connectAsync();
+    void connect();
     void disconnect();
 
     void startOrSplit();
@@ -44,6 +43,4 @@ private:
     void undoSplit();
 
     void log(const std::string &message);
-
-    std::string getConnectionStatusAsString();
 };

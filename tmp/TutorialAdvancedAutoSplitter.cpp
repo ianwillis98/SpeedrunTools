@@ -80,13 +80,13 @@ void TutorialAdvancedAutoSplitter::onEventReceived(const std::string &eventName,
 
 std::string TutorialAdvancedAutoSplitter::startDescription()
 {
-    return "The timer will start on \"Welcome to Advanced Tutorial Training!\" popup.";
+    return "The timer will startTimer on \"Welcome to Advanced Tutorial Training!\" popup.";
 }
 
 std::string TutorialAdvancedAutoSplitter::splitDescription()
 {
     std::stringstream ss;
-    ss << "The timer will split after each of six segments:" << std::endl;
+    ss << "The timer will splitTimer after each of six segments:" << std::endl;
     ss << "\t1. Side Dodge (Left)" << std::endl;
     ss << "\t2. Side Dodge (Right)" << std::endl;
     ss << "\t3. Dodge and Momentum" << std::endl;
@@ -99,7 +99,7 @@ std::string TutorialAdvancedAutoSplitter::splitDescription()
 std::string TutorialAdvancedAutoSplitter::resetDescription()
 {
     std::stringstream ss;
-    ss << "The timer will reset whenever the map unloads. This occurs when:" << std::endl;
+    ss << "The timer will resetTimer whenever the map unloads. This occurs when:" << std::endl;
     ss << "\t- The player exits to the main menu or chooses a different mode/match to play" << std::endl;
     ss << "\t- The player restarts the training" << std::endl;
     ss << "\t- The training ends and the player is teleported to freeplay" << std::endl;

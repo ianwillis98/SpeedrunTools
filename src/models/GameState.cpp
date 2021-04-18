@@ -1,5 +1,6 @@
 #include <imgui.h>
 #include "GameState.h"
+#include "../utils/ImGuiExtensions.h"
 
 GameState::GameState() = default;
 
@@ -32,9 +33,7 @@ bool GameState::render()
     ImGui::Text("Car (click any value to edit)");
     if (this->carState.render()) hasChanged = true;
 
-    ImGui::Spacing();
-    ImGui::Separator();
-    ImGui::Spacing();
+    ImGuiExtensions::BigSeparator();
 
     ImGui::Text("Ball (click any value to edit)");
     if (this->ballState.render()) hasChanged = true;

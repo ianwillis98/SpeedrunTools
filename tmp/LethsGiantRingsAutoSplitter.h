@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../AutoSplitterBase.h"
+#include "../../../autosplitter/AutoSplitterBase.h"
 
 class LethsGiantRingsAutoSplitter : public AutoSplitterBase
 {

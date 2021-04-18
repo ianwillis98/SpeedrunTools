@@ -3,6 +3,7 @@
 #include "components/livesplit/LiveSplitComponent.h"
 #include "components/kismet/KismetEditorComponent.h"
 #include "components/savestates/SaveStateComponent.h"
+#include "components/maptools/MapToolsComponent.h"
 
 BAKKESMOD_PLUGIN(SpeedrunTools, SpeedrunTools::PLUGIN_TITLE, SpeedrunTools::PLUGIN_VERSION, PLUGINTYPE_CUSTOM_TRAINING)
 
@@ -14,6 +15,7 @@ SpeedrunTools::SpeedrunTools()
         : BaseBakkesModPlugin(SpeedrunTools::PLUGIN_TITLE, SpeedrunTools::PLUGIN_MENU_NAME),
           tabs()
 {
+    this->tabs.emplace_back("Map Tools", std::make_unique<MapToolsComponent>(this));
     this->tabs.emplace_back("General Tools", std::make_unique<GeneralToolsComponent>(this));
     this->tabs.emplace_back("Save State", std::make_unique<SaveStateComponent>(this));
     this->tabs.emplace_back("LiveSplit", std::make_unique<LiveSplitComponent>(this));
@@ -39,12 +41,12 @@ void SpeedrunTools::onUnload()
 
 void SpeedrunTools::renderBody()
 {
-//    static bool showDemoWindow = false;
-//    ImGui::Checkbox("Show Demo Window", &showDemoWindow);
-//    if (showDemoWindow)
-//    {
-//        ImGui::ShowDemoWindow();
-//    }
+    static bool showDemoWindow = false;
+    ImGui::Checkbox("Show Demo Window", &showDemoWindow);
+    if (showDemoWindow)
+    {
+        ImGui::ShowDemoWindow();
+    }
 
     ImGui::Text("%s (version %s)", PLUGIN_TITLE, PLUGIN_VERSION);
     ImGui::Spacing();
@@ -64,11 +66,37 @@ void SpeedrunTools::renderBody()
 }
 void SpeedrunTools::setupEvents()
 {
+    static bool lock = false;
+    static bool jump = false;
+    static float jumpDelay = 0.03f; // in seconds
+
     // tick (params for controller input override)
     this->gameWrapper->HookEventWithCaller<CarWrapper>(
             "Function TAGame.Car_TA.SetVehicleInput",
-            [this](const CarWrapper &cw, void *params, const std::string &eventName) {
+            [this](CarWrapper cw, void *params, const std::string &eventName) {
                 for (auto &tab : this->tabs) tab.second->onEvent(eventName, false, params);
+
+                if (cw.IsOnGround())
+                {
+                    if (!lock && !jump)
+                    {
+                        lock = true;
+                        this->gameWrapper->SetTimeout([this](GameWrapper *gw) {
+                            jump = true;
+                        }, jumpDelay);
+                    }
+                    if (jump)
+                    {
+                        auto *controllerInput = (ControllerInput *) params;
+                        controllerInput->Jump = 1;
+                        this->cvarManager->log("jump");
+                        jump = false;
+
+                        this->gameWrapper->SetTimeout([this](GameWrapper *gw) {
+                            lock = false;
+                        }, 0.1);
+                    }
+                }
             }
     );
     this->setupEventPost("Function TAGame.Car_TA.SetVehicleInput");

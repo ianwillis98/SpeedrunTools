@@ -1,42 +1,55 @@
 #include "MapToolsComponent.h"
-#include "maps/TutorialBasicMapTools.h"
-#include "maps/TutorialAdvancedMapTools.h"
+#include "maps/TutorialBasicComponent.h"
+#include "maps/TutorialAdvancedComponent.h"
+#include "maps/LethsNeonRingsMapToolsComponent.h"
 
 MapToolsComponent::MapToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : PluginComponentBase(plugin),
-          supportedMaps()
+          supportedMaps(),
+          isMapToolLoaded(false),
+          comboIndex(0)
 {
-    this->supportedMaps.emplace_back("Tutorial Basic", std::make_unique<TutorialBasicMapTools>(plugin));
-    this->supportedMaps.emplace_back("Tutorial Advanced", std::make_unique<TutorialAdvancedMapTools>(plugin));
+    this->supportedMaps.emplace_back("Tutorial Basic", std::make_unique<TutorialBasicComponent>(plugin));
+    this->supportedMaps.emplace_back("Tutorial Advanced", std::make_unique<TutorialAdvancedComponent>(plugin));
+    this->supportedMaps.emplace_back("Leths Neon Rings", std::make_unique<LethsNeonRingsMapToolsComponent>(plugin));
 }
 
 void MapToolsComponent::onLoad()
 {
-    for (auto &supportedMap : this->supportedMaps)
-    {
-        supportedMap.mapTools->onLoad();
-    }
+    this->supportedMaps.at(this->comboIndex).second->onLoad();
+    this->isMapToolLoaded = true;
 }
 
 void MapToolsComponent::render()
 {
+    ImGui::PushID(this);
+
+    ImGuiExtensions::BigSpacing();
+
     std::vector<const char *> mapNames;
     for (auto &supportedMap : this->supportedMaps)
     {
-        mapNames.push_back(supportedMap.mapName.c_str());
+        mapNames.push_back(supportedMap.first.c_str());
     }
-    static int comboIndex = 0;
-    ImGui::Combo("map", &comboIndex, mapNames.data(), mapNames.size());
+    int oldIndex = this->comboIndex;
+    if (ImGui::Combo("map", &comboIndex, mapNames.data(), mapNames.size()))
+    {
+        this->isMapToolLoaded = false;
+        this->plugin->gameWrapper->Execute([this, oldIndex](GameWrapper *gw) {
+            this->supportedMaps.at(oldIndex).second->onUnload();
+            this->supportedMaps.at(comboIndex).second->onLoad();
+            this->isMapToolLoaded = true;
+        });
+    }
 
     ImGuiExtensions::BigSeparator();
 
-    this->supportedMaps.at(comboIndex).mapTools->render();
+    if (this->isMapToolLoaded) this->supportedMaps.at(comboIndex).second->render();
+
+    ImGui::PopID();
 }
 
 void MapToolsComponent::onEvent(const std::string &eventName, bool post, void *params)
 {
-    if (eventName == "Function TAGame.Car_TA.SetVehicleInput" && !post)
-    {
-
-    }
+    if (this->isMapToolLoaded) this->supportedMaps.at(comboIndex).second->onEvent(eventName, post, params);
 }

@@ -1,18 +1,18 @@
-#include "AirDribbleHoopsAutoSplitter.h"
+#include "LethsGiantRingsAutoSplitter.h"
 
-AirDribbleHoopsAutoSplitter::AirDribbleHoopsAutoSplitter(BakkesMod::Plugin::BakkesModPlugin *plugin)
+LethsGiantRingsAutoSplitter::LethsGiantRingsAutoSplitter(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : AutoSplitterBase(plugin),
           hasUpdatedOnce(false),
           hasUpdatedTwice(false),
-          currentTimer(false),
-          previousTimer(false),
+          currentTiming(false),
+          previousTiming(false),
           currentLevel(0),
           previousLevel(0)
 {
 
 }
 
-void AirDribbleHoopsAutoSplitter::onEventReceived(const std::string &eventName, bool post, void *params)
+void LethsGiantRingsAutoSplitter::onEventReceived(const std::string &eventName, bool post, void *params)
 {
     if (eventName == "Function TAGame.Car_TA.SetVehicleInput" && post)
     {
@@ -21,11 +21,11 @@ void AirDribbleHoopsAutoSplitter::onEventReceived(const std::string &eventName, 
 
         auto allVars = sequence.GetAllSequenceVariables(false);
 
-        auto timerVar = allVars.find("Timer");
-        if (timerVar == allVars.end()) return;
+        auto timingVar = allVars.find("Timing");
+        if (timingVar == allVars.end()) return;
 
-        this->previousTimer = this->currentTimer;
-        this->currentTimer = timerVar->second.GetBool();
+        this->previousTiming = this->currentTiming;
+        this->currentTiming = timingVar->second.GetBool();
 
         auto levelVar = allVars.find("Level");
         if (levelVar == allVars.end()) return;
@@ -38,7 +38,7 @@ void AirDribbleHoopsAutoSplitter::onEventReceived(const std::string &eventName, 
 
         if (this->hasUpdatedTwice)
         {
-            if (this->currentTimer && !this->previousTimer) this->shouldTimerStart = true;
+            if (this->currentTiming && !this->previousTiming) this->shouldTimerStart = true;
             if (this->currentLevel != this->previousLevel) this->shouldTimerSplit = true;
         }
     }
@@ -49,34 +49,34 @@ void AirDribbleHoopsAutoSplitter::onEventReceived(const std::string &eventName, 
     }
 }
 
-bool AirDribbleHoopsAutoSplitter::supportsReset()
+bool LethsGiantRingsAutoSplitter::supportsReset()
 {
     return false;
 }
 
-std::string AirDribbleHoopsAutoSplitter::startDescription()
+std::string LethsGiantRingsAutoSplitter::startDescription()
 {
-    return "The timer will start at the selection of 'Speedrun Mode'.";
+    return "The timer will startTimer when the map's timer starts.";
 }
 
-std::string AirDribbleHoopsAutoSplitter::splitDescription()
+std::string LethsGiantRingsAutoSplitter::splitDescription()
 {
-    return "The timer will split after the completion of each level.";
+    return "The timer will splitTimer after completing each level.";
 }
 
-std::string AirDribbleHoopsAutoSplitter::resetDescription()
+std::string LethsGiantRingsAutoSplitter::resetDescription()
 {
-    return "This auto splitter does not support auto reset.";
+    return "This auto splitter does not support auto resetTimer.";
 }
 
-std::string AirDribbleHoopsAutoSplitter::getDebug()
+std::string LethsGiantRingsAutoSplitter::getDebug()
 {
     std::stringstream ss;
     ss << "Air Dribble Hoops Auto Splitter (Debug)" << std::endl;
     ss << "hasUpdatedOnce = " << this->hasUpdatedOnce << std::endl;
     ss << "hasUpdatedTwice = " << this->hasUpdatedTwice << std::endl;
-    ss << "currentTimer = " << this->currentTimer << std::endl;
-    ss << "previousTimer = " << this->previousTimer << std::endl;
+    ss << "currentTiming = " << this->currentTiming << std::endl;
+    ss << "previousTiming = " << this->previousTiming << std::endl;
     ss << "currentLevel = " << this->currentLevel << std::endl;
     ss << "previousLevel = " << this->previousLevel << std::endl;
     return ss.str();

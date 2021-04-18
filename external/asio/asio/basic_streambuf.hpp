@@ -203,7 +203,7 @@ public:
    *
    * @returns An object of type @c mutable_buffers_type that satisfies
    * MutableBufferSequence requirements, representing character array objects
-   * at the start of the output sequence such that the sum of the buffer sizes
+   * at the startTimer of the output sequence such that the sum of the buffer sizes
    * is @c n.
    *
    * @throws std::length_error If <tt>size() + n > max_size()</tt>.
@@ -220,7 +220,7 @@ public:
 
   /// Move characters from the output sequence to the input sequence.
   /**
-   * Appends @c n characters from the start of the output sequence to the input
+   * Appends @c n characters from the startTimer of the output sequence to the input
    * sequence. The beginning of the output sequence is advanced by @c n
    * characters.
    *

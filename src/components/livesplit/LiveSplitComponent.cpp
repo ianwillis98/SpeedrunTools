@@ -23,7 +23,7 @@ LiveSplitComponent::LiveSplitComponent(BakkesMod::Plugin::BakkesModPlugin *plugi
 void LiveSplitComponent::onLoad()
 {
     this->plugin->cvarManager->registerNotifier(ConnectCVarName, [this](const std::vector<std::string> &commands) {
-        this->connectAsync();
+        this->connect();
     }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
     this->plugin->cvarManager->registerNotifier(DisconnectCVarName, [this](const std::vector<std::string> &commands) {
         this->disconnect();
@@ -84,7 +84,7 @@ void LiveSplitComponent::render()
     if (ImGui::Button(this->liveSplitClient.isConnected() ? "Reconnect" : "Connect"))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->connectAsync();
+            this->connect();
         });
     }
     ImGuiExtensions::PopDisabledStyleIf(this->liveSplitClient.isConnecting());
@@ -164,11 +164,11 @@ void LiveSplitComponent::render()
     ImGui::PopID();
 }
 
-void LiveSplitComponent::connectAsync()
+void LiveSplitComponent::connect()
 {
     this->feedbackMessage = "Attempting to establish a connection with the LiveSplit Server...";
     this->log(this->feedbackMessage);
-    this->liveSplitClient.connectAsync("localhost", "16834", [this](const int &errorCode, const std::string &errorMessage) {
+    this->liveSplitClient.connect("localhost", "16834", [this](const int &errorCode, const std::string &errorMessage) {
         this->feedbackMessage = (errorCode == 0) ? "Connection established with the LiveSplit Server." :
                                 "Error while connecting to the LiveSplit Server (" + std::to_string(errorCode) + ") \"" + errorMessage + "\"." +
                                 "\nMake sure the LiveSplit Server is running and open on port 16834.";
@@ -197,8 +197,8 @@ void LiveSplitComponent::startOrSplit()
 void LiveSplitComponent::start()
 {
     this->liveSplitClient.start([this](const int &errorCode, const std::string &errorMessage) {
-        this->feedbackMessage = (errorCode == 0) ? "'start' message was successfully sent." :
-                                "Error while sending message 'start' (" + std::to_string(errorCode) + ") \"" + errorMessage + "\".";
+        this->feedbackMessage = (errorCode == 0) ? "'startTimer' message was successfully sent." :
+                                "Error while sending message 'startTimer' (" + std::to_string(errorCode) + ") \"" + errorMessage + "\".";
         this->log(this->feedbackMessage);
     });
 }
@@ -225,8 +225,8 @@ void LiveSplitComponent::resume()
 void LiveSplitComponent::reset()
 {
     this->liveSplitClient.reset([this](const int &errorCode, const std::string &errorMessage) {
-        this->feedbackMessage = (errorCode == 0) ? "'reset' message was successfully sent." :
-                                "Error while sending message 'reset' (" + std::to_string(errorCode) + ") \"" + errorMessage + "\".";
+        this->feedbackMessage = (errorCode == 0) ? "'resetTimer' message was successfully sent." :
+                                "Error while sending message 'resetTimer' (" + std::to_string(errorCode) + ") \"" + errorMessage + "\".";
         this->log(this->feedbackMessage);
     });
 }
@@ -234,8 +234,8 @@ void LiveSplitComponent::reset()
 void LiveSplitComponent::split()
 {
     this->liveSplitClient.split([this](const int &errorCode, const std::string &errorMessage) {
-        this->feedbackMessage = (errorCode == 0) ? "'split' message was successfully sent." :
-                                "Error while sending message 'split' (" + std::to_string(errorCode) + ") \"" + errorMessage + "\".";
+        this->feedbackMessage = (errorCode == 0) ? "'splitTimer' message was successfully sent." :
+                                "Error while sending message 'splitTimer' (" + std::to_string(errorCode) + ") \"" + errorMessage + "\".";
         this->log(this->feedbackMessage);
     });
 }
@@ -265,21 +265,4 @@ void LiveSplitComponent::log(const std::string &message)
     this->plugin->gameWrapper->Execute([this, message](GameWrapper *gw) {
         this->plugin->gameWrapper->LogToChatbox("LiveSplit Client: " + message, "SPEEDRUNTOOLS");
     });
-}
-
-std::string LiveSplitComponent::getConnectionStatusAsString()
-{
-    switch (this->liveSplitClient.getConnectionState())
-    {
-        case ConnectionState::Connected:
-            ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Yellow");
-            return "Connected";
-        case ConnectionState::Connecting:
-            return "Connecting " + std::string(1, "|/-\\"[(int) (ImGui::GetTime() / 0.05f) & 3]);
-        case ConnectionState::NotConnected:
-            return "Not Connected";
-        default:
-            return "Unknown Connection Status";
-
-    }
 }

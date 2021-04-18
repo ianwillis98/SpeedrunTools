@@ -31,7 +31,7 @@ void GeneralToolsComponent::render()
     this->renderGameGravityMutator();
     ImGuiExtensions::BigSeparator();
     this->renderGameSpeedMutator();
-    ImGuiExtensions::BigSpacing();
+    ImGuiExtensions::BigSeparator();
     this->renderBoostMutator();
     ImGuiExtensions::BigSeparator();
     this->renderAirRollMutator();

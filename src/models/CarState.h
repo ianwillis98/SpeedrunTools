@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <bakkesmod/wrappers/wrapperstructs.h>
 #include <bakkesmod/wrappers/GameObject/CarWrapper.h>
 #include <bakkesmod/wrappers/GameObject/CarComponent/BoostWrapper.h>

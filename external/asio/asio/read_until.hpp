@@ -127,7 +127,7 @@ struct is_match_condition
  * After the call to @c erase, the remaining data is left in the buffer @c b as
  * follows:
  * @code { 'd', 'e', ... } @endcode
- * This data may be the start of a new line, to be extracted by a subsequent
+ * This data may be the startTimer of a new line, to be extracted by a subsequent
  * @c read_until operation.
  */
 template <typename SyncReadStream, typename DynamicBuffer_v1>
@@ -229,7 +229,7 @@ std::size_t read_until(SyncReadStream& s,
  * After the call to @c erase, the remaining data is left in the buffer @c b as
  * follows:
  * @code { 'd', 'e', ... } @endcode
- * This data may be the start of a new line, to be extracted by a subsequent
+ * This data may be the startTimer of a new line, to be extracted by a subsequent
  * @c read_until operation.
  */
 template <typename SyncReadStream, typename DynamicBuffer_v1>
@@ -624,7 +624,7 @@ std::size_t read_until(SyncReadStream& s,
  * @code { 'a', 'b', ..., 'c' } @endcode
  * The remaining data is left in the buffer @c b as follows:
  * @code { 'd', 'e', ... } @endcode
- * This data may be the start of a new line, to be extracted by a subsequent
+ * This data may be the startTimer of a new line, to be extracted by a subsequent
  * @c read_until operation.
  */
 template <typename SyncReadStream, typename Allocator>
@@ -711,7 +711,7 @@ std::size_t read_until(SyncReadStream& s,
  * @code { 'a', 'b', ..., 'c', '\r' } @endcode
  * The remaining data is left in the buffer @c b as follows:
  * @code { 'd', 'e', ... } @endcode
- * This data may be the start of a new line, to be extracted by a subsequent
+ * This data may be the startTimer of a new line, to be extracted by a subsequent
  * @c read_until operation.
  */
 template <typename SyncReadStream, typename Allocator>
@@ -1068,7 +1068,7 @@ std::size_t read_until(SyncReadStream& s,
  * After the call to @c erase, the remaining data is left in the buffer @c b as
  * follows:
  * @code { 'd', 'e', ... } @endcode
- * This data may be the start of a new line, to be extracted by a subsequent
+ * This data may be the startTimer of a new line, to be extracted by a subsequent
  * @c read_until operation.
  */
 template <typename SyncReadStream, typename DynamicBuffer_v2>
@@ -1166,7 +1166,7 @@ std::size_t read_until(SyncReadStream& s, DynamicBuffer_v2 buffers,
  * After the call to @c erase, the remaining data is left in the buffer @c b as
  * follows:
  * @code { 'd', 'e', ... } @endcode
- * This data may be the start of a new line, to be extracted by a subsequent
+ * This data may be the startTimer of a new line, to be extracted by a subsequent
  * @c read_until operation.
  */
 template <typename SyncReadStream, typename DynamicBuffer_v2>
@@ -1595,7 +1595,7 @@ std::size_t read_until(SyncReadStream& s, DynamicBuffer_v2 buffers,
  * After the call to @c erase, the remaining data is left in the buffer @c data
  * as follows:
  * @code { 'd', 'e', ... } @endcode
- * This data may be the start of a new line, to be extracted by a subsequent
+ * This data may be the startTimer of a new line, to be extracted by a subsequent
  * @c async_read_until operation.
  */
 template <typename AsyncReadStream, typename DynamicBuffer_v1,
@@ -1694,7 +1694,7 @@ async_read_until(AsyncReadStream& s,
  * After the call to @c erase, the remaining data is left in the string @c data
  * as follows:
  * @code { 'd', 'e', ... } @endcode
- * This data may be the start of a new line, to be extracted by a subsequent
+ * This data may be the startTimer of a new line, to be extracted by a subsequent
  * @c async_read_until operation.
  */
 template <typename AsyncReadStream, typename DynamicBuffer_v1,
@@ -2050,7 +2050,7 @@ async_read_until(AsyncReadStream& s,
  * @code { 'a', 'b', ..., 'c' } @endcode
  * The remaining data is left in the buffer @c b as follows:
  * @code { 'd', 'e', ... } @endcode
- * This data may be the start of a new line, to be extracted by a subsequent
+ * This data may be the startTimer of a new line, to be extracted by a subsequent
  * @c async_read_until operation.
  */
 template <typename AsyncReadStream, typename Allocator,
@@ -2141,7 +2141,7 @@ async_read_until(AsyncReadStream& s,
  * @code { 'a', 'b', ..., 'c', '\r' } @endcode
  * The remaining data is left in the buffer @c b as follows:
  * @code { 'd', 'e', ... } @endcode
- * This data may be the start of a new line, to be extracted by a subsequent
+ * This data may be the startTimer of a new line, to be extracted by a subsequent
  * @c async_read_until operation.
  */
 template <typename AsyncReadStream, typename Allocator,
@@ -2480,7 +2480,7 @@ async_read_until(AsyncReadStream& s,
  * After the call to @c erase, the remaining data is left in the buffer @c data
  * as follows:
  * @code { 'd', 'e', ... } @endcode
- * This data may be the start of a new line, to be extracted by a subsequent
+ * This data may be the startTimer of a new line, to be extracted by a subsequent
  * @c async_read_until operation.
  */
 template <typename AsyncReadStream, typename DynamicBuffer_v2,
@@ -2577,7 +2577,7 @@ async_read_until(AsyncReadStream& s, DynamicBuffer_v2 buffers, char delim,
  * After the call to @c erase, the remaining data is left in the string @c data
  * as follows:
  * @code { 'd', 'e', ... } @endcode
- * This data may be the start of a new line, to be extracted by a subsequent
+ * This data may be the startTimer of a new line, to be extracted by a subsequent
  * @c async_read_until operation.
  */
 template <typename AsyncReadStream, typename DynamicBuffer_v2,
