@@ -19,7 +19,13 @@
 
 class PluginController
 {
-    void onLoad() = 0;
-    void onUnload() = 0;
-    void render() = 0;
+protected:
+    BakkesMod::Plugin::BakkesModPlugin *plugin;
+
+public:
+    explicit PluginController(BakkesMod::Plugin::BakkesModPlugin *plugin);
+
+    virtual void onLoad();
+    virtual void onUnload();
+    virtual void render();
 };

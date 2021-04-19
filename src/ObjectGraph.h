@@ -17,13 +17,22 @@
 #include "utils/ImGuiExtensions.h"
 #include "utils/CVarFunctions.h"
 
-class PluginView
+#include "PluginController.h"
+#include "livesplit/LiveSplitModel.h"
+#include "livesplit/LiveSplitController.h"
+
+class ObjectGraph
 {
-protected:
-    BakkesMod::Plugin::BakkesModPlugin *plugin;
+public:
+    explicit ObjectGraph(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
 public:
-    explicit PluginView(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    std::vector<std::shared_ptr<PluginModel>> models;
+    std::vector<std::pair<std::string, std::shared_ptr<PluginController>>> tabs;
 
-    virtual void render();
+    // models
+    std::shared_ptr<LiveSplitModel> liveSplitModel;
+
+    // controllers
+    std::shared_ptr<LiveSplitController> liveSplitController;
 };

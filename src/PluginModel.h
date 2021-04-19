@@ -19,5 +19,11 @@
 
 class PluginModel
 {
-    void onEvent(const std::string &eventName, bool post, void *params) = 0;
+protected:
+    BakkesMod::Plugin::BakkesModPlugin *plugin;
+
+public:
+    explicit PluginModel(BakkesMod::Plugin::BakkesModPlugin *plugin);
+
+    virtual void onEvent(const std::string &eventName, bool post, void *params);
 };
