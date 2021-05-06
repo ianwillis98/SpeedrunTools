@@ -7,6 +7,7 @@
 
 class RewindBuffer
 {
+private:
     using time_point = std::chrono::time_point<std::chrono::system_clock>;
     using duration = std::chrono::duration<float>;
 

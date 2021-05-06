@@ -1,13 +1,12 @@
 #pragma once
 
 #include "BaseBakkesModPlugin.h"
-#include "PluginController.h"
-#include "ObjectGraph.h"
+#include "PluginComponent.h"
 
 class SpeedrunTools : public BaseBakkesModPlugin
 {
 private:
-    ObjectGraph objects;
+    std::vector<std::pair<std::string, std::unique_ptr<PluginComponent>>> tabs;
 
 public:
     static const char *PLUGIN_VERSION;

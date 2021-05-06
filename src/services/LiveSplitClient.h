@@ -4,51 +4,43 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 
-#include<bakkesmod/plugin/bakkesmodplugin.h>
+#include <bakkesmod/plugin/bakkesmodplugin.h>
 #include "asio.hpp"
-
-enum class ConnectionState
-{
-    NotConnected,
-    Connecting,
-    Connected
-};
-
-using ErrorCallback = std::function<void(int errorCode, std::string errorMessage)>;
 
 class LiveSplitClient
 {
+public:
+    using ResultCallback = std::function<void(bool success, std::string message)>;
+
 private:
     asio::io_context io_context;
     asio::ip::tcp::socket socket;
     asio::ip::tcp::resolver resolver;
 
-    ConnectionState connectionState;
+    bool connected;
+    bool connecting;
 
     LiveSplitClient();
 
 public:
     static LiveSplitClient &getInstance();
 
-    ConnectionState getConnectionState();
-    bool isConnected();
-    bool isConnecting();
-    bool isNotConnected();
+    void connect(const std::string &host, const std::string &port, const ResultCallback &callback);
+    void disconnect(const ResultCallback &callback);
+    bool isConnected() const;
+    bool isConnecting() const;
 
-    void connect(const std::string &host, const std::string &port, const ErrorCallback &callback);
-    void disconnect(const ErrorCallback &callback);
+    void startOrSplit(const ResultCallback &callback);
 
-    void startOrSplit(const ErrorCallback &callback);
+    void start(const ResultCallback &callback);
+    void pause(const ResultCallback &callback);
+    void resume(const ResultCallback &callback);
+    void reset(const ResultCallback &callback);
 
-    void start(const ErrorCallback &callback);
-    void pause(const ErrorCallback &callback);
-    void resume(const ErrorCallback &callback);
-    void reset(const ErrorCallback &callback);
-
-    void split(const ErrorCallback &callback);
-    void skipSplit(const ErrorCallback &callback);
-    void undoSplit(const ErrorCallback &callback);
+    void split(const ResultCallback &callback);
+    void skipSplit(const ResultCallback &callback);
+    void undoSplit(const ResultCallback &callback);
 
 private:
-    void sendAsync(const std::string &message, const ErrorCallback &callback);
+    void sendAsync(const std::string &message, const ResultCallback &callback);
 };

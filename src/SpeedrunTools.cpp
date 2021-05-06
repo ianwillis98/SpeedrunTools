@@ -13,26 +13,21 @@ const char *SpeedrunTools::PLUGIN_MENU_NAME = "speedruntools";
 
 SpeedrunTools::SpeedrunTools()
         : BaseBakkesModPlugin(SpeedrunTools::PLUGIN_TITLE, SpeedrunTools::PLUGIN_MENU_NAME),
-          objects(this)
+          tabs()
 {
 
 }
 
 void SpeedrunTools::onLoad()
 {
+    this->tabs.emplace_back("LiveSplit", std::make_unique<LiveSplitComponent>(this));
+
     this->setupEvents();
-    for (auto &tab : this->objects.tabs)
-    {
-        tab.second->onLoad();
-    }
 }
 
 void SpeedrunTools::onUnload()
 {
-    for (auto &tab : this->objects.tabs)
-    {
-        tab.second->onUnload();
-    }
+    this->tabs.clear();
 }
 
 void SpeedrunTools::renderBody()
@@ -49,7 +44,7 @@ void SpeedrunTools::renderBody()
 
     if (ImGui::BeginTabBar("MainTabBar", ImGuiTabBarFlags_None))
     {
-        for (auto &tab : this->objects.tabs)
+        for (auto &tab : this->tabs)
         {
             if (ImGui::BeginTabItem(tab.first.c_str()))
             {
