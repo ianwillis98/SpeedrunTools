@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../PluginComponentBase.h"
-#include "../../autosplitter/runs/TutorialBasicAutoSplitterComponent.h"
+#include "../autosplitter/runs/TutorialBasicAutoSplitterComponent.h"
 
 class TutorialBasicComponent : public PluginComponentBase
 {

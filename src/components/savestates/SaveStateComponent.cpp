@@ -19,7 +19,9 @@ SaveStateComponent::SaveStateComponent(BakkesMod::Plugin::BakkesModPlugin *plugi
 void SaveStateComponent::render()
 {
     ImGui::PushID(this);
-    ImGuiExtensions::BigSpacing();
+
+    ImGui::Text("Save State");
+    ImGuiExtensions::BigSeparator();
 
     bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
     ImGuiExtensions::PushDisabledStyleIf(!isInFreeplay);

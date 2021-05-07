@@ -12,7 +12,9 @@ KismetEditorComponent::KismetEditorComponent(BakkesMod::Plugin::BakkesModPlugin 
 void KismetEditorComponent::render()
 {
     ImGui::PushID(this);
-    ImGuiExtensions::BigSpacing();
+
+    ImGui::Text("Kismet Editor");
+    ImGuiExtensions::BigSeparator();
 
     ImGuiExtensions::PushDisabledStyleIf(this->shouldAutoReloadKismetVars);
     if (ImGui::Button("Refresh"))

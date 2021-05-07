@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../services/LiveSplitClient.h"
+#include "../../../../services/LiveSplitClient.h"
 #include "../AutoSplitterComponent.h"
 
 class LethsNeonRingsAutoSplitterComponent : public AutoSplitterComponent

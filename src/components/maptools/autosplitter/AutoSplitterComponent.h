@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../PluginComponentBase.h"
-#include "../../services/LiveSplitClient.h"
+#include "../../PluginComponentBase.h"
+#include "../../../services/LiveSplitClient.h"
 
 class AutoSplitterComponent : public PluginComponentBase
 {

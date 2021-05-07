@@ -41,7 +41,7 @@ void LiveSplitComponent::render()
     ImGui::PushID(this);
 
     ImGui::Text("LiveSplit Remote Controller");
-    ImGui::Spacing();
+    ImGuiExtensions::BigSeparator();
 
     this->renderConnectionStatus();
     ImGuiExtensions::BigSpacing();
@@ -72,7 +72,7 @@ void LiveSplitComponent::renderRemoteControls()
 
     if (!this->liveSplitModel.isConnected())
     {
-        ImVec2 connectButtonSize(125.0f, 40.0f);
+        ImVec2 connectButtonSize(100.0f, 30.0f);
         ImGuiExtensions::PushDisabledStyleIf(this->liveSplitModel.isConnecting());
         if (ImGui::Button(this->liveSplitModel.isConnecting() ? "Connecting..." : "Connect", connectButtonSize))
         {
@@ -84,8 +84,8 @@ void LiveSplitComponent::renderRemoteControls()
     }
     if (this->liveSplitModel.isConnected())
     {
-        ImVec2 bigButtonSize(125.0f, 40.0f);
-        ImVec2 smallButtonSize(66.0f, 40.0f);
+        ImVec2 bigButtonSize(100.0f, 30.0f);
+        ImVec2 smallButtonSize(66.0f, 30.0f);
         if (ImGui::Button("Start", bigButtonSize))
         {
             this->plugin->gameWrapper->Execute([&](GameWrapper *gw) {
@@ -138,7 +138,7 @@ void LiveSplitComponent::renderRemoteControls()
         }
         ImGuiExtensions::BigSpacing();
 
-        ImVec2 disconnectButtonSize(125.0f, 20.0f);
+        ImVec2 disconnectButtonSize(100.0f, 20.0f);
         if (ImGui::Button("Disconnect", disconnectButtonSize))
         {
             this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {

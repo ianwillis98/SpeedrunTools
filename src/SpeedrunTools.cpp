@@ -20,6 +20,9 @@ SpeedrunTools::SpeedrunTools()
 
 void SpeedrunTools::onLoad()
 {
+    this->tabs.emplace_back("General", std::make_unique<GeneralToolsComponent>(this));
+    this->tabs.emplace_back("Map Tools", std::make_unique<MapToolsComponent>(this));
+    this->tabs.emplace_back("Save State", std::make_unique<SaveStateComponent>(this));
     this->tabs.emplace_back("LiveSplit", std::make_unique<LiveSplitComponent>(this));
     this->tabs.emplace_back("Kismet", std::make_unique<KismetEditorComponent>(this));
 
@@ -60,6 +63,17 @@ void SpeedrunTools::renderBody()
 }
 void SpeedrunTools::setupEvents()
 {
+    // tick (params for controller input override)
+    this->gameWrapper->HookEventWithCaller<CarWrapper>(
+            "Function TAGame.Car_TA.SetVehicleInput",
+            [this](const CarWrapper &cw, void *params, const std::string &eventName) {
+                for (auto &tab : this->tabs)
+                {
+                    tab.second->onEvent(eventName, false, params);
+                }
+            }
+    );
+
     this->setupEventPost("Function TAGame.Car_TA.SetVehicleInput");
 
     // map start end

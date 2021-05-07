@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../MapToolsComponent.h"
-#include "../../autosplitter/runs/LethsNeonRingsAutoSplitterComponent.h"
+#include "../autosplitter/runs/LethsNeonRingsAutoSplitterComponent.h"
 
 class LethsNeonRingsMapToolsComponent : public PluginComponentBase
 {

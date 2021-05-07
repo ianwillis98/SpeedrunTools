@@ -20,7 +20,9 @@ GeneralToolsComponent::GeneralToolsComponent(BakkesMod::Plugin::BakkesModPlugin 
 void GeneralToolsComponent::render()
 {
     ImGui::PushID(this);
-    ImGuiExtensions::BigSpacing();
+
+    ImGui::Text("General Tools");
+    ImGuiExtensions::BigSeparator();
     this->renderCurrentGameState();
     ImGuiExtensions::BigSeparator();
     this->renderGameGravityMutator();
@@ -30,7 +32,7 @@ void GeneralToolsComponent::render()
     this->renderBoostMutator();
     ImGuiExtensions::BigSeparator();
     this->renderAirRollMutator();
-    ImGuiExtensions::BigSeparator();
+
     ImGui::PopID();
 }
 

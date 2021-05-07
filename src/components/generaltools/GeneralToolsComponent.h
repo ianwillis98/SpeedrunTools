@@ -20,7 +20,7 @@ enum class AirRollMutator
 
 class GeneralToolsComponent : public PluginComponentBase
 {
-public:
+private:
     static const std::string AirRollMutatorCVarName;
     static const std::string BoostMutatorCVarName;
     static const std::string GameGravityMutatorCVarName;
