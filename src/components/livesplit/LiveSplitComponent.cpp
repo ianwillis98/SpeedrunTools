@@ -6,43 +6,53 @@ LiveSplitComponent::LiveSplitComponent(BakkesMod::Plugin::BakkesModPlugin *plugi
 {
     this->plugin->cvarManager->registerNotifier("speedrun_livesplit_connect", [this](const std::vector<std::string> &commands) {
         this->liveSplitModel.connect();
-    }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
+    }, "", PERMISSION_PAUSEMENU_CLOSED);
     this->plugin->cvarManager->registerNotifier("speedrun_livesplit_disconnect", [this](const std::vector<std::string> &commands) {
         this->liveSplitModel.disconnect();
-    }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
+    }, "", PERMISSION_PAUSEMENU_CLOSED);
     this->plugin->cvarManager->registerNotifier("speedrun_livesplit_startorsplit", [this](const std::vector<std::string> &commands) {
         this->liveSplitModel.startOrSplit();
-    }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
+    }, "", PERMISSION_PAUSEMENU_CLOSED);
     this->plugin->cvarManager->registerNotifier("speedrun_livesplit_start", [this](const std::vector<std::string> &commands) {
         this->liveSplitModel.start();
-    }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
+    }, "", PERMISSION_PAUSEMENU_CLOSED);
     this->plugin->cvarManager->registerNotifier("speedrun_livesplit_pause", [this](const std::vector<std::string> &commands) {
         this->liveSplitModel.pause();
-    }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
+    }, "", PERMISSION_PAUSEMENU_CLOSED);
     this->plugin->cvarManager->registerNotifier("speedrun_livesplit_resume", [this](const std::vector<std::string> &commands) {
         this->liveSplitModel.resume();
-    }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
+    }, "", PERMISSION_PAUSEMENU_CLOSED);
     this->plugin->cvarManager->registerNotifier("speedrun_livesplit_reset", [this](const std::vector<std::string> &commands) {
         this->liveSplitModel.reset();
-    }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
+    }, "", PERMISSION_PAUSEMENU_CLOSED);
     this->plugin->cvarManager->registerNotifier("speedrun_livesplit_split", [this](const std::vector<std::string> &commands) {
         this->liveSplitModel.split();
-    }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
+    }, "", PERMISSION_PAUSEMENU_CLOSED);
     this->plugin->cvarManager->registerNotifier("speedrun_livesplit_skipsplit", [this](const std::vector<std::string> &commands) {
         this->liveSplitModel.skipSplit();
-    }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
+    }, "", PERMISSION_PAUSEMENU_CLOSED);
     this->plugin->cvarManager->registerNotifier("speedrun_livesplit_undosplit", [this](const std::vector<std::string> &commands) {
         this->liveSplitModel.undoSplit();
-    }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
+    }, "", PERMISSION_PAUSEMENU_CLOSED);
 }
 
 void LiveSplitComponent::render()
 {
     ImGui::PushID(this);
 
-    ImGuiExtensions::BigSpacing();
     ImGui::Text("LiveSplit Remote Controller");
+    ImGui::Spacing();
 
+    this->renderConnectionStatus();
+    ImGuiExtensions::BigSpacing();
+
+    this->renderRemoteControls();
+
+    ImGui::PopID();
+}
+
+void LiveSplitComponent::renderConnectionStatus()
+{
     ImGui::BulletText("Connection Status: ");
     ImGui::SameLine();
     if (this->liveSplitModel.isConnected())
@@ -53,90 +63,87 @@ void LiveSplitComponent::render()
         ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Not Connected");
 
     ImGui::BulletText("Status Message: %s", this->liveSplitModel.getStatusMessage().c_str());
-    ImGuiExtensions::BigSpacing();
+}
 
+void LiveSplitComponent::renderRemoteControls()
+{
     ImGui::Text("Remote Controls:");
     ImGui::Spacing();
-    ImGuiExtensions::PushDisabledStyleIf(this->liveSplitModel.isConnecting());
-    if (ImGui::Button(this->liveSplitModel.isConnected() ? "Reconnect" : "Connect"))
-    {
-        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->liveSplitModel.connect();
-        });
-    }
-    ImGuiExtensions::PopDisabledStyleIf(this->liveSplitModel.isConnecting());
 
-    if (this->liveSplitModel.isConnected())
+    if (!this->liveSplitModel.isConnected())
     {
-        ImGui::SameLine();
-        if (ImGui::Button("Disconnect"))
+        ImVec2 connectButtonSize(125.0f, 40.0f);
+        ImGuiExtensions::PushDisabledStyleIf(this->liveSplitModel.isConnecting());
+        if (ImGui::Button(this->liveSplitModel.isConnecting() ? "Connecting..." : "Connect", connectButtonSize))
         {
             this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-                this->liveSplitModel.disconnect();
+                this->liveSplitModel.connect();
             });
         }
-
-        ImGui::Spacing();
-
-        if (ImGui::Button("Start or Split"))
-        {
-            this->plugin->gameWrapper->Execute([&](GameWrapper *gw) {
-                this->liveSplitModel.startOrSplit();
-            });
-        }
-
-        ImGui::Spacing();
-
-        if (ImGui::Button("Start"))
+        ImGuiExtensions::PopDisabledStyleIf(this->liveSplitModel.isConnecting());
+    }
+    if (this->liveSplitModel.isConnected())
+    {
+        ImVec2 bigButtonSize(125.0f, 40.0f);
+        ImVec2 smallButtonSize(66.0f, 40.0f);
+        if (ImGui::Button("Start", bigButtonSize))
         {
             this->plugin->gameWrapper->Execute([&](GameWrapper *gw) {
                 this->liveSplitModel.start();
             });
         }
         ImGui::SameLine();
-        if (ImGui::Button("Pause"))
+        if (ImGui::Button("Pause", smallButtonSize))
         {
             this->plugin->gameWrapper->Execute([&](GameWrapper *gw) {
                 this->liveSplitModel.pause();
             });
         }
         ImGui::SameLine();
-        if (ImGui::Button("Resume"))
+        if (ImGui::Button("Resume", smallButtonSize))
         {
             this->plugin->gameWrapper->Execute([&](GameWrapper *gw) {
                 this->liveSplitModel.resume();
             });
         }
-        ImGui::SameLine();
-        if (ImGui::Button("Reset"))
-        {
-            this->plugin->gameWrapper->Execute([&](GameWrapper *gw) {
-                this->liveSplitModel.reset();
-            });
-        }
-
         ImGui::Spacing();
 
-        if (ImGui::Button("Split"))
+        if (ImGui::Button("Split", bigButtonSize))
         {
             this->plugin->gameWrapper->Execute([&](GameWrapper *gw) {
                 this->liveSplitModel.split();
             });
         }
         ImGui::SameLine();
-        if (ImGui::Button("Skip Split"))
+        if (ImGui::Button("Skip Split", smallButtonSize))
         {
             this->plugin->gameWrapper->Execute([&](GameWrapper *gw) {
                 this->liveSplitModel.skipSplit();
             });
         }
         ImGui::SameLine();
-        if (ImGui::Button("Undo Split"))
+        if (ImGui::Button("Undo Split", smallButtonSize))
         {
             this->plugin->gameWrapper->Execute([&](GameWrapper *gw) {
                 this->liveSplitModel.undoSplit();
             });
         }
+        ImGui::Spacing();
+
+        if (ImGui::Button("Reset", bigButtonSize))
+        {
+            this->plugin->gameWrapper->Execute([&](GameWrapper *gw) {
+                this->liveSplitModel.reset();
+            });
+        }
+        ImGuiExtensions::BigSpacing();
+
+        ImVec2 disconnectButtonSize(125.0f, 20.0f);
+        if (ImGui::Button("Disconnect", disconnectButtonSize))
+        {
+            this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
+                this->liveSplitModel.disconnect();
+            });
+        }
     }
-    ImGui::PopID();
 }

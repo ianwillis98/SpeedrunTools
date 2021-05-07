@@ -13,12 +13,6 @@ TutorialBasicAutoSplitterComponent::TutorialBasicAutoSplitterComponent(BakkesMod
 
 }
 
-void TutorialBasicAutoSplitterComponent::onLoad()
-{
-
-}
-
-
 void TutorialBasicAutoSplitterComponent::render()
 {
     if (!this->liveSplitClient.isConnected())

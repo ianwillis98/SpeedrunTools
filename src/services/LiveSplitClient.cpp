@@ -39,8 +39,10 @@ void LiveSplitClient::connect(const std::string &host, const std::string &port, 
                             [this, port, callback](const asio::error_code &ec, const asio::ip::tcp::resolver::iterator &iterator) {
                                 this->connected = (ec.value() == 0);
                                 this->connecting = false;
-                                callback((ec.value() == 0), "Unable to connect to the LiveSplit Server \"" + ec.message() + "\"." +
-                                                            "\nMake sure the LiveSplit Server is running and open on port " + port + ".");
+                                callback((ec.value() == 0),
+                                         (ec.value() == 0) ? "Successfully connected to the LiveSplit Server."
+                                                           : "Unable to connect to the LiveSplit Server: \"" + ec.message() + "\"." +
+                                                             "\nMake sure the LiveSplit Server is running and open on port " + port + ".");
                             });
 
         std::thread th([this] {

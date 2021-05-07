@@ -5,10 +5,6 @@ RewindComponent::RewindComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
           rewindBuffer(6.0f),
           previousSaveTime()
 {
-
-}
-void RewindComponent::onLoad()
-{
     this->plugin->cvarManager->registerCvar("speedrun_savestates_rewindlength", "6.0", "Rewind length")
             .addOnValueChanged([this](const std::string &oldValue, CVarWrapper rewindLengthCVar) {
                 this->rewindBuffer.setRewindLength(rewindLengthCVar.getFloatValue());

@@ -5,16 +5,6 @@ PluginComponentBase::PluginComponentBase(BakkesMod::Plugin::BakkesModPlugin *plu
 
 }
 
-void PluginComponentBase::onLoad()
-{
-
-}
-
-void PluginComponentBase::onUnload()
-{
-
-}
-
 void PluginComponentBase::render()
 {
 

@@ -13,4 +13,8 @@ public:
     explicit LiveSplitComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
     void render() override;
+
+private:
+    void renderConnectionStatus();
+    void renderRemoteControls();
 };

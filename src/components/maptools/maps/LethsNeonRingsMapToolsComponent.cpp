@@ -7,11 +7,6 @@ LethsNeonRingsMapToolsComponent::LethsNeonRingsMapToolsComponent(BakkesMod::Plug
 
 }
 
-void LethsNeonRingsMapToolsComponent::onLoad()
-{
-
-}
-
 void LethsNeonRingsMapToolsComponent::render()
 {
     ImGui::Text("MAP TOOLS");

@@ -8,11 +8,6 @@ SaveStateComponent::SaveStateComponent(BakkesMod::Plugin::BakkesModPlugin *plugi
           isGameStateSaved(false),
           gameSaveState()
 {
-
-}
-
-void SaveStateComponent::onLoad()
-{
     this->plugin->cvarManager->registerNotifier(SaveStateCVarName, [this](const std::vector<std::string> &commands) {
         this->saveCurrentGameState();
     }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);

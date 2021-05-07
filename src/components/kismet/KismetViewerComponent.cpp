@@ -6,11 +6,6 @@ KismetViewerComponent::KismetViewerComponent(BakkesMod::Plugin::BakkesModPlugin 
           selectedRow(-1),
           autoRefresh(false)
 {
-
-}
-
-void KismetViewerComponent::onLoad()
-{
     this->autoRefreshFunc();
 }
 

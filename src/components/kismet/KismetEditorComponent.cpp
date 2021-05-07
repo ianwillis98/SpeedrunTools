@@ -6,11 +6,6 @@ KismetEditorComponent::KismetEditorComponent(BakkesMod::Plugin::BakkesModPlugin 
           shouldAutoReloadKismetVars(false),
           mutex()
 {
-
-}
-
-void KismetEditorComponent::onLoad()
-{
     this->loadKismetVars();
 }
 
@@ -18,7 +13,7 @@ void KismetEditorComponent::render()
 {
     ImGui::PushID(this);
     ImGuiExtensions::BigSpacing();
-    
+
     ImGuiExtensions::PushDisabledStyleIf(this->shouldAutoReloadKismetVars);
     if (ImGui::Button("Refresh"))
     {

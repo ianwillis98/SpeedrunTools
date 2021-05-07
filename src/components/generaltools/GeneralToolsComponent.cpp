@@ -11,11 +11,6 @@ GeneralToolsComponent::GeneralToolsComponent(BakkesMod::Plugin::BakkesModPlugin 
           boostMutator(BoostMutator::None),
           airRollMutator(AirRollMutator::None)
 {
-
-}
-
-void GeneralToolsComponent::onLoad()
-{
     this->createBoostMutatorCVar();
     this->createAirRollMutatorCVar();
     this->createGameGravityMutatorCVar();

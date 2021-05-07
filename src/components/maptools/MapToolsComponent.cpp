@@ -12,11 +12,6 @@ MapToolsComponent::MapToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
     this->supportedMaps.emplace_back("Tutorial Basic", std::make_unique<TutorialBasicComponent>(plugin));
     this->supportedMaps.emplace_back("Tutorial Advanced", std::make_unique<TutorialAdvancedComponent>(plugin));
     this->supportedMaps.emplace_back("Leths Neon Rings", std::make_unique<LethsNeonRingsMapToolsComponent>(plugin));
-}
-
-void MapToolsComponent::onLoad()
-{
-    this->supportedMaps.at(this->comboIndex).second->onLoad();
     this->isMapToolLoaded = true;
 }
 
@@ -36,9 +31,9 @@ void MapToolsComponent::render()
     {
         this->isMapToolLoaded = false;
         this->plugin->gameWrapper->Execute([this, oldIndex](GameWrapper *gw) {
-            this->supportedMaps.at(oldIndex).second->onUnload();
-            this->supportedMaps.at(comboIndex).second->onLoad();
-            this->isMapToolLoaded = true;
+//            this->supportedMaps.at(oldIndex).second->onUnload();
+//            this->supportedMaps.at(comboIndex).second->onLoad();
+//            this->isMapToolLoaded = true;
         });
     }
 

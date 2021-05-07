@@ -2,11 +2,6 @@
 
 TutorialAdvancedComponent::TutorialAdvancedComponent(BakkesMod::Plugin::BakkesModPlugin *plugin) : PluginComponentBase(plugin)
 {
-
-}
-
-void TutorialAdvancedComponent::onLoad()
-{
     this->plugin->cvarManager->registerNotifier("speedrun_tutorial_advanced_practice_seg4", [this](const std::vector<std::string> &commands) {
         this->practiceSeg4();
     }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);

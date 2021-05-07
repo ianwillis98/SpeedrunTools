@@ -11,7 +11,6 @@ private:
 public:
     explicit LethsNeonRingsMapToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
-    void onLoad() override;
     void render() override;
     void onEvent(const std::string &eventName, bool post, void *params) override;
 

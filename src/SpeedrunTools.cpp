@@ -21,6 +21,7 @@ SpeedrunTools::SpeedrunTools()
 void SpeedrunTools::onLoad()
 {
     this->tabs.emplace_back("LiveSplit", std::make_unique<LiveSplitComponent>(this));
+    this->tabs.emplace_back("Kismet", std::make_unique<KismetEditorComponent>(this));
 
     this->setupEvents();
 }
@@ -48,7 +49,9 @@ void SpeedrunTools::renderBody()
         {
             if (ImGui::BeginTabItem(tab.first.c_str()))
             {
+                ImGuiExtensions::BigSpacing();
                 tab.second->render();
+                ImGuiExtensions::BigSpacing();
                 ImGui::EndTabItem();
             }
         }
@@ -80,7 +83,7 @@ void SpeedrunTools::setupEvent(const std::string &eventName)
     this->gameWrapper->HookEvent(
             eventName,
             [this](const std::string &eventName) {
-                for (auto &model : this->objects.models) model->onEvent(eventName, false, nullptr);
+                for (auto &tab : this->tabs) tab.second->onEvent(eventName, false, nullptr);
             }
     );
 }
@@ -90,7 +93,7 @@ void SpeedrunTools::setupEventPost(const std::string &eventName)
     this->gameWrapper->HookEventPost(
             eventName,
             [this](const std::string &eventName) {
-                for (auto &model : this->objects.models) model->onEvent(eventName, true, nullptr);
+                for (auto &tab : this->tabs) tab.second->onEvent(eventName, true, nullptr);
             }
     );
 }

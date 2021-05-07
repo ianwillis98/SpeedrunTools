@@ -7,11 +7,6 @@ TutorialBasicComponent::TutorialBasicComponent(BakkesMod::Plugin::BakkesModPlugi
 
 }
 
-void TutorialBasicComponent::onLoad()
-{
-
-}
-
 void TutorialBasicComponent::render()
 {
     ImGui::Text("Tutorial Basic Map Tools");
