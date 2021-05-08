@@ -48,6 +48,10 @@ public:
     struct Vector getVectorValue() const;
     std::string getStringValue() const;
 
+    void setBoolValue(bool value);
+    void setIntValue(int value);
+    void setFloatValue(float value);
+
     std::string getValueAsString();
     std::string getTypeAsString();
 

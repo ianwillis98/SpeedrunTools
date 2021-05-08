@@ -12,6 +12,14 @@ MapToolsModel::MapToolsModel(BakkesMod::Plugin::BakkesModPlugin *plugin) : plugi
 
 }
 
+void MapToolsModel::resetPlayers()
+{
+    ServerWrapper serverWrapper = this->plugin->gameWrapper->GetGameEventAsServer();
+    if (serverWrapper.IsNull()) return;
+
+    serverWrapper.ResetPlayers();
+}
+
 void MapToolsModel::setCarState(Vector location, Rotator rotation, Vector velocity, Vector angularVelocity, float boostAmount)
 {
     ServerWrapper serverWrapper = this->plugin->gameWrapper->GetGameEventAsServer();
@@ -47,4 +55,22 @@ void MapToolsModel::spawnAndStopBall(Vector location)
     if (serverWrapper.IsNull()) return;
 
     serverWrapper.SpawnBall(location, true, false).Stop();
+}
+
+std::vector<KismetSequenceVariable> MapToolsModel::getKismetVars()
+{
+    std::vector<KismetSequenceVariable> kismetVars;
+
+    auto sequence = this->plugin->gameWrapper->GetMainSequence();
+    if (sequence.memory_address != NULL)
+    {
+        auto vars = sequence.GetAllSequenceVariables(false);
+
+        for (auto &var : vars)
+        {
+            kismetVars.emplace_back(this->plugin, var.second);
+        }
+    }
+
+    return kismetVars;
 }

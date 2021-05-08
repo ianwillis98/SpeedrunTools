@@ -89,6 +89,21 @@ std::string KismetSequenceVariable::getStringValue() const
     return this->stringValue;
 }
 
+void KismetSequenceVariable::setBoolValue(bool value)
+{
+    this->boolValue = value;
+}
+
+void KismetSequenceVariable::setIntValue(int value)
+{
+    this->intValue = value;
+}
+
+void KismetSequenceVariable::setFloatValue(float value)
+{
+    this->floatValue = value;
+}
+
 std::string KismetSequenceVariable::getValueAsString()
 {
     switch (this->type)

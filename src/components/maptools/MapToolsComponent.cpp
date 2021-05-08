@@ -2,6 +2,7 @@
 #include "maps/TutorialBasicComponent.h"
 #include "maps/TutorialAdvancedComponent.h"
 #include "maps/LethsNeonRingsMapToolsComponent.h"
+#include "maps/PanicsAirRaceBeachComponent.h"
 
 MapToolsComponent::MapToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : PluginComponentBase(plugin),
@@ -10,7 +11,8 @@ MapToolsComponent::MapToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
 {
     this->supportedMaps.emplace_back("Tutorial Basic", std::make_unique<TutorialBasicComponent>(plugin));
     this->supportedMaps.emplace_back("Tutorial Advanced", std::make_unique<TutorialAdvancedComponent>(plugin));
-    this->supportedMaps.emplace_back("Leths Neon Rings", std::make_unique<LethsNeonRingsMapToolsComponent>(plugin));
+    this->supportedMaps.emplace_back("Leth's Neon Rings", std::make_unique<LethsNeonRingsMapToolsComponent>(plugin));
+    this->supportedMaps.emplace_back("Panic's Air Race Beach", std::make_unique<PanicsAirRaceBeachComponent>(plugin));
 }
 
 void MapToolsComponent::render()
