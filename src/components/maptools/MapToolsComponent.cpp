@@ -17,7 +17,7 @@ void MapToolsComponent::render()
 {
     ImGui::PushID(this);
 
-    ImGui::Text("Map Tools");
+    ImGui::Text("MAP TOOLS");
     ImGui::Spacing();
 
     std::vector<const char *> mapNames;
@@ -35,5 +35,8 @@ void MapToolsComponent::render()
 
 void MapToolsComponent::onEvent(const std::string &eventName, bool post, void *params)
 {
-    this->supportedMaps.at(comboIndex).second->onEvent(eventName, post, params);
+    for (auto &supportedMap : this->supportedMaps)
+    {
+        supportedMap.second->onEvent(eventName, post, params);
+    }
 }

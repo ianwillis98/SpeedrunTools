@@ -2,16 +2,11 @@
 #include <cmath>
 #include "CarState.h"
 
-CarState::CarState() : position(), rotation(), velocity(), angularVelocity(), boostAmount()
-{
-
-}
-
 CarState::CarState(CarWrapper &car)
 {
     if (car.IsNull()) return;
 
-    this->position = car.GetLocation();
+    this->location = car.GetLocation();
     this->rotation = car.GetRotation();
     this->velocity = car.GetVelocity();
     this->angularVelocity = car.GetAngularVelocity();
@@ -22,12 +17,22 @@ CarState::CarState(CarWrapper &car)
     this->boostAmount = boost.GetCurrentBoostAmount();
 }
 
+CarState::CarState(Vector location, Rotator rotation, Vector velocity, Vector angularVelocity, float boostAmount)
+        : location(location),
+          rotation(rotation),
+          velocity(velocity),
+          angularVelocity(angularVelocity),
+          boostAmount(boostAmount)
+{
+
+}
+
 
 void CarState::applyTo(CarWrapper &car) const
 {
     if (car.IsNull()) return;
 
-    car.SetLocation(this->position);
+    car.SetLocation(this->location);
     car.SetRotation(this->rotation);
     car.SetVelocity(this->velocity);
     car.SetAngularVelocity(this->angularVelocity, false);
@@ -44,10 +49,10 @@ bool CarState::render()
 
     bool hasChanged = false;
 
-    float positionArray[3] = {this->position.X, this->position.Y, this->position.Z};
+    float positionArray[3] = {this->location.X, this->location.Y, this->location.Z};
     if (ImGui::InputFloat3("position (x,y,z)", positionArray, 2, ImGuiInputTextFlags_EnterReturnsTrue))
     {
-        this->position = Vector(positionArray[0], positionArray[1], positionArray[2]);
+        this->location = Vector(positionArray[0], positionArray[1], positionArray[2]);
         hasChanged = true;
     }
 

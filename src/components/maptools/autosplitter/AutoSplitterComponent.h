@@ -2,12 +2,13 @@
 
 #include "../../PluginComponentBase.h"
 #include "../../../services/LiveSplitClient.h"
+#include "../../livesplit/LiveSplitModel.h"
 
 class AutoSplitterComponent : public PluginComponentBase
 {
 protected:
-    LiveSplitClient &liveSplitClient;
-    std::string logPrefix;
+    LiveSplitModel &liveSplitModel;
+    std::string runName;
 
     bool isEnabled;
 
@@ -20,12 +21,16 @@ protected:
     bool supportsAutoReset;
     bool isAutoResetEnabled;
 
-
 public:
-    explicit AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin, std::string logPrefix);
+    explicit AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin, std::string runName);
 
     void render() final;
     void onEvent(const std::string &eventName, bool post, void *params) final;
+
+private:
+    void renderConnectView();
+
+    std::string getDebugTextPrefix();
 
 protected:
     virtual void update(const std::string &eventName, bool post, void *params) = 0;

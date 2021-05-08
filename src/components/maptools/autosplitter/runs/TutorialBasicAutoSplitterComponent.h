@@ -2,31 +2,18 @@
 
 #include "../AutoSplitterComponent.h"
 
-class TutorialBasicAutoSplitterComponent : public PluginComponentBase
+class TutorialBasicAutoSplitterComponent : public AutoSplitterComponent
 {
 private:
-    LiveSplitClient &liveSplitClient;
-
-    bool isEnabled;
-    bool isAutoStartEnabled;
-    bool isAutoSplitEnabled;
-    bool isAutoResetEnabled;
-
     bool isInTutorial;
     int segment;
 
 public:
     explicit TutorialBasicAutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
-    void render() override;
-    void onEvent(const std::string &eventName, bool post, void *params) override;
 
-private:
-    void start();
-    void split();
-    void reset();
+protected:
+    void update(const std::string &eventName, bool post, void *params) override;
 
-    void log(const std::string &message);
-
-    std::string getDebugText() const;
+    std::string getDebugText() override;
 };

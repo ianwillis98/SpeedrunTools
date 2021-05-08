@@ -20,7 +20,7 @@ void SaveStateComponent::render()
 {
     ImGui::PushID(this);
 
-    ImGui::Text("Save State");
+    ImGui::Text("SAVE STATE");
     ImGuiExtensions::BigSeparator();
 
     bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();

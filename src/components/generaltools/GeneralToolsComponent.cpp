@@ -21,7 +21,7 @@ void GeneralToolsComponent::render()
 {
     ImGui::PushID(this);
 
-    ImGui::Text("General Tools");
+    ImGui::Text("GENERAL TOOLS");
     ImGuiExtensions::BigSeparator();
     this->renderCurrentGameState();
     ImGuiExtensions::BigSeparator();

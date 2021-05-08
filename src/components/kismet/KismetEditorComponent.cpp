@@ -13,7 +13,7 @@ void KismetEditorComponent::render()
 {
     ImGui::PushID(this);
 
-    ImGui::Text("Kismet Editor");
+    ImGui::Text("KISMET EDITOR");
     ImGuiExtensions::BigSeparator();
 
     ImGuiExtensions::PushDisabledStyleIf(this->shouldAutoReloadKismetVars);

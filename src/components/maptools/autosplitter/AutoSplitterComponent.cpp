@@ -2,10 +2,10 @@
 
 #include <utility>
 
-AutoSplitterComponent::AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin, std::string logPrefix)
+AutoSplitterComponent::AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin, std::string runName)
         : PluginComponentBase(plugin),
-          liveSplitClient(LiveSplitClient::getInstance()),
-          logPrefix(std::move(logPrefix)),
+          liveSplitModel(LiveSplitModel::getInstance(plugin)),
+          runName(std::move(runName)),
           isEnabled(false),
           supportsAutoStart(true),
           isAutoStartEnabled(true),
@@ -19,13 +19,20 @@ AutoSplitterComponent::AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin 
 
 void AutoSplitterComponent::render()
 {
-    if (!this->liveSplitClient.isConnected())
+    if (!this->liveSplitModel.isConnected())
     {
-        ImGui::Text("Connect to LiveSplit to use the auto splitter...");
+        ImGui::Text("Connect to LiveSplit to use the Auto Splitter...");
+        ImGui::Spacing();
+        this->renderConnectView();
         return;
     }
 
-    ImGui::Checkbox("Enable Auto Splitter For This Map", &this->isEnabled);
+    if (!this->isEnabled)
+        if (ImGui::Button("Enable Auto Splitter For This Map")) this->isEnabled = true;
+
+    if (this->isEnabled)
+        if (ImGui::Button("Disable Auto Splitter For This Map")) this->isEnabled = false;
+
     if (!this->isEnabled) return;
 
     ImGui::Spacing();
@@ -40,10 +47,27 @@ void AutoSplitterComponent::render()
 
     ImGui::Spacing();
 
-    std::string debug = this->getDebugText();
+    std::string debug = this->getDebugTextPrefix() + this->getDebugText();
     ImGui::InputTextMultiline("Debug Output", (char *) debug.c_str(), debug.capacity() + 1, ImVec2(0, ImGui::GetTextLineHeight() * 8),
                               ImGuiInputTextFlags_ReadOnly);
 }
+
+void AutoSplitterComponent::renderConnectView()
+{
+    if (!this->liveSplitModel.isConnected())
+    {
+        ImVec2 connectButtonSize(100.0f, 30.0f);
+        ImGuiExtensions::PushDisabledStyleIf(this->liveSplitModel.isConnecting());
+        if (ImGui::Button(this->liveSplitModel.isConnecting() ? "Connecting..." : "Connect", connectButtonSize))
+        {
+            this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
+                this->liveSplitModel.connect();
+            });
+        }
+        ImGuiExtensions::PopDisabledStyleIf(this->liveSplitModel.isConnecting());
+    }
+}
+
 
 void AutoSplitterComponent::onEvent(const std::string &eventName, bool post, void *params)
 {
@@ -67,45 +91,43 @@ std::string AutoSplitterComponent::getResetDescription()
     return std::string();
 }
 
+std::string AutoSplitterComponent::getDebugTextPrefix()
+{
+    std::stringstream ss;
+    ss << this->runName + " Auto Splitter (Debug)" << std::endl;
+    ss << "isEnabled = " << this->isEnabled << std::endl;
+    ss << "supportsAutoStart = " << this->supportsAutoStart << std::endl;
+    ss << "-------------------------------------" << std::endl;
+    return ss.str();
+}
+
 std::string AutoSplitterComponent::getDebugText()
 {
-    return this->logPrefix + " (Debug)";
+    return this->runName + " (Debug)";
 }
 
 void AutoSplitterComponent::startTimer()
 {
-    if (!this->liveSplitClient.isConnected() || !this->isEnabled || !this->isAutoStartEnabled) return;
+    if (!this->liveSplitModel.isConnected() || !this->isEnabled || !this->isAutoStartEnabled) return;
 
-    this->liveSplitClient.start([this](const int &errorCode, const std::string &errorMessage) {
-        std::string log = (errorCode == 0) ? "starttimer" :
-                          "Error while sending message 'start' (" + std::to_string(errorCode) + ") \"" + errorMessage + "\".";
-        this->log(log);
-    });
+    this->liveSplitModel.start();
 }
 
 void AutoSplitterComponent::splitTimer()
 {
-    if (!this->liveSplitClient.isConnected() || !this->isEnabled || !this->isAutoSplitEnabled) return;
+    if (!this->liveSplitModel.isConnected() || !this->isEnabled || !this->isAutoSplitEnabled) return;
 
-    this->liveSplitClient.split([this](const int &errorCode, const std::string &errorMessage) {
-        std::string log = (errorCode == 0) ? "split" :
-                          "Error while sending message 'split' (" + std::to_string(errorCode) + ") \"" + errorMessage + "\".";
-        this->log(log);
-    });
+    this->liveSplitModel.split();
 }
 
 void AutoSplitterComponent::resetTimer()
 {
-    if (!this->liveSplitClient.isConnected() || !this->isEnabled || !this->isAutoSplitEnabled) return;
+    if (!this->liveSplitModel.isConnected() || !this->isEnabled || !this->isAutoSplitEnabled) return;
 
-    this->liveSplitClient.reset([this](const int &errorCode, const std::string &errorMessage) {
-        std::string log = (errorCode == 0) ? "reset" :
-                          "Error while sending message 'reset' (" + std::to_string(errorCode) + ") \"" + errorMessage + "\".";
-        this->log(log);
-    });
+    this->liveSplitModel.reset();
 }
 
 void AutoSplitterComponent::log(const std::string &message)
 {
-    this->plugin->cvarManager->log(this->logPrefix + ": " + message);
+    this->plugin->cvarManager->log(this->runName + " Auto Splitter: " + message);
 }

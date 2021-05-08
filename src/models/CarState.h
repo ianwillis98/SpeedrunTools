@@ -8,14 +8,18 @@
 class CarState
 {
 public:
-    Vector position;
+    Vector location;
     Rotator rotation;
     Vector velocity;
     Vector angularVelocity;
     float boostAmount;
 
-    CarState();
     explicit CarState(CarWrapper &car);
+    explicit CarState(Vector location = Vector(0.0f, 0.0f, 0.0f),
+                      Rotator rotation = Rotator(0, 0, 0),
+                      Vector velocity = Vector(0.0f, 0.0f, 0.0f),
+                      Vector angularVelocity = Vector(0.0f, 0.0f, 0.0f),
+                      float boostAmount = 0.0f);
 
     void applyTo(CarWrapper &car) const;
     bool render();
