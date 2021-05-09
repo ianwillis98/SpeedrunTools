@@ -5,7 +5,42 @@ PanicsAirRaceBeachComponent::PanicsAirRaceBeachComponent(BakkesMod::Plugin::Bakk
           mapToolsModel(MapToolsModel::getInstance(plugin)),
           panicsAirRaceBeachAutoSplitterComponent(plugin)
 {
-
+    this->plugin->cvarManager->registerNotifier("speedrun_maptools_panicsairracebeach_reset", [this](const std::vector<std::string> &commands) {
+        this->resetMap();
+    }, "", PERMISSION_PAUSEMENU_CLOSED);
+    this->plugin->cvarManager->registerNotifier("speedrun_maptools_panicsairracebeach_checkpoint1", [this](const std::vector<std::string> &commands) {
+        this->teleportToCheckpoint1();
+    }, "", PERMISSION_PAUSEMENU_CLOSED);
+    this->plugin->cvarManager->registerNotifier("speedrun_maptools_panicsairracebeach_checkpoint2", [this](const std::vector<std::string> &commands) {
+        this->teleportToCheckpoint2();
+    }, "", PERMISSION_PAUSEMENU_CLOSED);
+    this->plugin->cvarManager->registerNotifier("speedrun_maptools_panicsairracebeach_checkpoint3", [this](const std::vector<std::string> &commands) {
+        this->teleportToCheckpoint3();
+    }, "", PERMISSION_PAUSEMENU_CLOSED);
+    this->plugin->cvarManager->registerNotifier("speedrun_maptools_panicsairracebeach_checkpoint4", [this](const std::vector<std::string> &commands) {
+        this->teleportToCheckpoint4();
+    }, "", PERMISSION_PAUSEMENU_CLOSED);
+    this->plugin->cvarManager->registerNotifier("speedrun_maptools_panicsairracebeach_checkpoint5", [this](const std::vector<std::string> &commands) {
+        this->teleportToCheckpoint5();
+    }, "", PERMISSION_PAUSEMENU_CLOSED);
+    this->plugin->cvarManager->registerNotifier("speedrun_maptools_panicsairracebeach_checkpoint6", [this](const std::vector<std::string> &commands) {
+        this->teleportToCheckpoint6();
+    }, "", PERMISSION_PAUSEMENU_CLOSED);
+    this->plugin->cvarManager->registerNotifier("speedrun_maptools_panicsairracebeach_checkpoint7", [this](const std::vector<std::string> &commands) {
+        this->teleportToCheckpoint7();
+    }, "", PERMISSION_PAUSEMENU_CLOSED);
+    this->plugin->cvarManager->registerNotifier("speedrun_maptools_panicsairracebeach_checkpoint8", [this](const std::vector<std::string> &commands) {
+        this->teleportToCheckpoint8();
+    }, "", PERMISSION_PAUSEMENU_CLOSED);
+    this->plugin->cvarManager->registerNotifier("speedrun_maptools_panicsairracebeach_checkpoint9", [this](const std::vector<std::string> &commands) {
+        this->teleportToCheckpoint9();
+    }, "", PERMISSION_PAUSEMENU_CLOSED);
+    this->plugin->cvarManager->registerNotifier("speedrun_maptools_panicsairracebeach_checkpoint10", [this](const std::vector<std::string> &commands) {
+        this->teleportToCheckpoint10();
+    }, "", PERMISSION_PAUSEMENU_CLOSED);
+    this->plugin->cvarManager->registerNotifier("speedrun_maptools_panicsairracebeach_checkpoint11", [this](const std::vector<std::string> &commands) {
+        this->teleportToCheckpoint11();
+    }, "", PERMISSION_PAUSEMENU_CLOSED);
 }
 void PanicsAirRaceBeachComponent::render()
 {
