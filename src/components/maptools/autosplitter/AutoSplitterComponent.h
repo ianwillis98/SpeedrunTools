@@ -12,7 +12,6 @@ class AutoSplitterComponent : public PluginComponentBase
 {
 protected:
     LiveSplitModel &liveSplitModel;
-    std::string runName;
 
     bool isEnabled;
 
@@ -26,26 +25,23 @@ protected:
     bool isAutoResetEnabled;
 
 public:
-    explicit AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin, std::string runName);
+    explicit AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
     void render() final;
     void onEvent(const std::string &eventName, bool post, void *params) final;
 
 private:
     void renderConnectView();
-
-    std::string getDebugTextPrefix();
+    std::string getDebugTextPrefix() const;
 
 protected:
+    void startTimer();
+    void splitTimer();
+    void resetTimer();
+
     virtual void update(const std::string &eventName, bool post, void *params) = 0;
     virtual std::string getStartDescription();
     virtual std::string getSplitDescription();
     virtual std::string getResetDescription();
     virtual std::string getDebugText();
-
-    void startTimer();
-    void splitTimer();
-    void resetTimer();
-
-    void log(const std::string &message);
 };

@@ -1,7 +1,7 @@
 #include "LethsNeonRingsAutoSplitterComponent.h"
 
 LethsNeonRingsAutoSplitterComponent::LethsNeonRingsAutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
-        : AutoSplitterComponent(plugin, "Leth's Neon Rings Auto Splitter"),
+        : AutoSplitterComponent(plugin),
           hasUpdatedOnce(false),
           hasUpdatedTwice(false),
           currentLevel(0),

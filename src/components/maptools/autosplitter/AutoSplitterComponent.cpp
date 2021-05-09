@@ -1,11 +1,8 @@
 #include "AutoSplitterComponent.h"
 
-#include <utility>
-
-AutoSplitterComponent::AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin, std::string runName)
+AutoSplitterComponent::AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : PluginComponentBase(plugin),
           liveSplitModel(LiveSplitModel::getInstance(plugin)),
-          runName(std::move(runName)),
           isEnabled(false),
           supportsAutoStart(true),
           isAutoStartEnabled(true),
@@ -19,6 +16,8 @@ AutoSplitterComponent::AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin 
 
 void AutoSplitterComponent::render()
 {
+    ImGui::PushID(this);
+
     if (!this->liveSplitModel.isConnected())
     {
         ImGui::Text("Connect to LiveSplit to use the Auto Splitter...");
@@ -37,19 +36,47 @@ void AutoSplitterComponent::render()
 
     ImGui::Spacing();
 
-    ImGui::Text("Settings");
-
+    ImGuiExtensions::PushDisabledStyleIf(!this->supportsAutoStart);
+    ImGui::Checkbox("Auto Start", &this->isAutoStartEnabled);
+    ImGuiExtensions::PopDisabledStyleIf(!this->supportsAutoStart);
+    if (!this->getStartDescription().empty())
+    {
+        ImGui::SameLine();
+        ImGuiExtensions::PushDisabledStyleIf(!this->isAutoStartEnabled);
+        ImGui::BulletText("%s", this->getStartDescription().c_str());
+        ImGuiExtensions::PopDisabledStyleIf(!this->isAutoStartEnabled);
+    }
     ImGui::Spacing();
 
-    if (this->supportsAutoStart) ImGui::Checkbox("Auto Start", &this->isAutoStartEnabled);
-    if (this->supportsAutoSplit) ImGui::Checkbox("Auto Split", &this->isAutoSplitEnabled);
-    if (this->supportsAutoReset) ImGui::Checkbox("Auto Reset", &this->isAutoResetEnabled);
+    ImGuiExtensions::PushDisabledStyleIf(!this->supportsAutoSplit);
+    ImGui::Checkbox("Auto Split", &this->isAutoSplitEnabled);
+    ImGuiExtensions::PopDisabledStyleIf(!this->supportsAutoSplit);
+    if (!this->getSplitDescription().empty())
+    {
+        ImGui::SameLine();
+        ImGuiExtensions::PushDisabledStyleIf(!this->isAutoSplitEnabled);
+        ImGui::BulletText("%s", this->getSplitDescription().c_str());
+        ImGuiExtensions::PopDisabledStyleIf(!this->isAutoSplitEnabled);
+    }
+    ImGui::Spacing();
 
+    ImGuiExtensions::PushDisabledStyleIf(!this->supportsAutoReset);
+    ImGui::Checkbox("Auto Reset", &this->isAutoResetEnabled);
+    ImGuiExtensions::PopDisabledStyleIf(!this->supportsAutoReset);
+    if (!this->getResetDescription().empty())
+    {
+        ImGui::SameLine();
+        ImGuiExtensions::PushDisabledStyleIf(!this->isAutoResetEnabled);
+        ImGui::BulletText("%s", this->getResetDescription().c_str());
+        ImGuiExtensions::PopDisabledStyleIf(!this->isAutoResetEnabled);
+    }
     ImGui::Spacing();
 
     std::string debug = this->getDebugTextPrefix() + this->getDebugText();
     ImGui::InputTextMultiline("Debug Output", (char *) debug.c_str(), debug.capacity() + 1, ImVec2(0, ImGui::GetTextLineHeight() * 8),
                               ImGuiInputTextFlags_ReadOnly);
+
+    ImGui::PopID();
 }
 
 void AutoSplitterComponent::renderConnectView()
@@ -76,34 +103,19 @@ void AutoSplitterComponent::onEvent(const std::string &eventName, bool post, voi
     this->update(eventName, post, params);
 }
 
-std::string AutoSplitterComponent::getStartDescription()
-{
-    return std::string();
-}
-
-std::string AutoSplitterComponent::getSplitDescription()
-{
-    return std::string();
-}
-
-std::string AutoSplitterComponent::getResetDescription()
-{
-    return std::string();
-}
-
-std::string AutoSplitterComponent::getDebugTextPrefix()
+std::string AutoSplitterComponent::getDebugTextPrefix() const
 {
     std::stringstream ss;
-    ss << this->runName + " Auto Splitter (Debug)" << std::endl;
+    ss << "Auto Splitter (Debug)" << std::endl;
     ss << "isEnabled = " << this->isEnabled << std::endl;
     ss << "supportsAutoStart = " << this->supportsAutoStart << std::endl;
+    ss << "isAutoStartEnabled = " << this->isAutoStartEnabled << std::endl;
+    ss << "supportsAutoSplit = " << this->supportsAutoSplit << std::endl;
+    ss << "isAutoSplitEnabled = " << this->isAutoSplitEnabled << std::endl;
+    ss << "supportsAutoReset = " << this->supportsAutoReset << std::endl;
+    ss << "isAutoResetEnabled = " << this->isAutoResetEnabled << std::endl;
     ss << "-------------------------------------" << std::endl;
     return ss.str();
-}
-
-std::string AutoSplitterComponent::getDebugText()
-{
-    return this->runName + " (Debug)";
 }
 
 void AutoSplitterComponent::startTimer()
@@ -127,7 +139,23 @@ void AutoSplitterComponent::resetTimer()
     this->liveSplitModel.reset();
 }
 
-void AutoSplitterComponent::log(const std::string &message)
+std::string AutoSplitterComponent::getStartDescription()
 {
-    this->plugin->cvarManager->log(this->runName + " Auto Splitter: " + message);
+    return std::string();
 }
+
+std::string AutoSplitterComponent::getSplitDescription()
+{
+    return std::string();
+}
+
+std::string AutoSplitterComponent::getResetDescription()
+{
+    return std::string();
+}
+
+std::string AutoSplitterComponent::getDebugText()
+{
+    return std::string();
+}
+

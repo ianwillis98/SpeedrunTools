@@ -1,7 +1,7 @@
 #include "PanicsAirRaceBeachAutoSplitterComponent.h"
 
 PanicsAirRaceBeachAutoSplitterComponent::PanicsAirRaceBeachAutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
-        : AutoSplitterComponent(plugin, "Panic's Air Race Beach"),
+        : AutoSplitterComponent(plugin),
           hasUpdatedOnce(false),
           hasUpdatedTwice(false),
           currentRings(0),
@@ -65,9 +65,40 @@ void PanicsAirRaceBeachAutoSplitterComponent::update(const std::string &eventNam
     }
 }
 
+std::string PanicsAirRaceBeachAutoSplitterComponent::getStartDescription()
+{
+    return "The timer will start when you enter the first ring.";
+}
+
+std::string PanicsAirRaceBeachAutoSplitterComponent::getSplitDescription()
+{
+    std::stringstream ss;
+    ss << "The timer will split after each of 13 segments:" << std::endl;
+    ss << "\t1. Entering the sixth ring" << std::endl;
+    ss << "\t2. Checkpoint 1" << std::endl;
+    ss << "\t3. Checkpoint 2" << std::endl;
+    ss << "\t4. Checkpoint 3" << std::endl;
+    ss << "\t5. Checkpoint 4" << std::endl;
+    ss << "\t6. Checkpoint 5" << std::endl;
+    ss << "\t7. Checkpoint 6" << std::endl;
+    ss << "\t8. Checkpoint 7" << std::endl;
+    ss << "\t9. Checkpoint 8" << std::endl;
+    ss << "\t10. Checkpoint 9" << std::endl;
+    ss << "\t11. Checkpoint 10" << std::endl;
+    ss << "\t12. Checkpoint 11" << std::endl;
+    ss << "\t13. Crossing the finish line" << std::endl;
+    return ss.str();
+}
+
+std::string PanicsAirRaceBeachAutoSplitterComponent::getResetDescription()
+{
+    return "The timer will reset when you reset to the beginning of the map or leave the match.";
+}
+
 std::string PanicsAirRaceBeachAutoSplitterComponent::getDebugText()
 {
     std::stringstream ss;
+    ss << "Panic's Air Race Beach Auto Splitter (Debug)" << std::endl;
     ss << "hasUpdatedOnce = " << this->hasUpdatedOnce << std::endl;
     ss << "hasUpdatedTwice = " << this->hasUpdatedTwice << std::endl;
     ss << "currentRings = " << this->currentRings << std::endl;

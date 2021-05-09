@@ -1,7 +1,7 @@
 #include "TutorialBasicAutoSplitterComponent.h"
 
 TutorialBasicAutoSplitterComponent::TutorialBasicAutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
-        : AutoSplitterComponent(plugin, "Tutorial Basic"),
+        : AutoSplitterComponent(plugin),
           isInTutorial(false),
           segment(0)
 {
