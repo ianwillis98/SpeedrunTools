@@ -35,23 +35,29 @@ PanicsAirRaceBeachComponent::PanicsAirRaceBeachComponent(BakkesMod::Plugin::Bakk
     this->plugin->cvarManager->registerNotifier("speedrun_maptools_panicsairracebeach_checkpoint9", [this](const std::vector<std::string> &commands) {
         this->teleportToCheckpoint9();
     }, "", PERMISSION_PAUSEMENU_CLOSED);
-    this->plugin->cvarManager->registerNotifier("speedrun_maptools_panicsairracebeach_checkpoint10", [this](const std::vector<std::string> &commands) {
-        this->teleportToCheckpoint10();
-    }, "", PERMISSION_PAUSEMENU_CLOSED);
-    this->plugin->cvarManager->registerNotifier("speedrun_maptools_panicsairracebeach_checkpoint11", [this](const std::vector<std::string> &commands) {
-        this->teleportToCheckpoint11();
-    }, "", PERMISSION_PAUSEMENU_CLOSED);
+    this->plugin->cvarManager->registerNotifier("speedrun_maptools_panicsairracebeach_checkpoint10",
+                                                [this](const std::vector<std::string> &commands) {
+                                                    this->teleportToCheckpoint10();
+                                                }, "", PERMISSION_PAUSEMENU_CLOSED);
+    this->plugin->cvarManager->registerNotifier("speedrun_maptools_panicsairracebeach_checkpoint11",
+                                                [this](const std::vector<std::string> &commands) {
+                                                    this->teleportToCheckpoint11();
+                                                }, "", PERMISSION_PAUSEMENU_CLOSED);
 }
 void PanicsAirRaceBeachComponent::render()
 {
-    ImGui::Text("PANIC'S AIR RACE BEACH MAP TOOLS");
-    ImGui::Spacing();
-    this->renderPracticeSegments();
+    if (ImGui::TreeNodeEx("Checkpoints", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        this->renderPracticeSegments();
+        ImGui::TreePop();
+    }
     ImGuiExtensions::BigSeparator();
-
-    ImGui::Text("PANIC'S AIR RACE BEACH AUTO SPLITTER");
-    ImGui::Spacing();
-    this->panicsAirRaceBeachAutoSplitterComponent.render();
+    if (ImGui::TreeNodeEx("Auto Splitter", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        this->panicsAirRaceBeachAutoSplitterComponent.render();
+        ImGui::TreePop();
+    }
+    ImGuiExtensions::BigSeparator();
 }
 
 void PanicsAirRaceBeachComponent::onEvent(const std::string &eventName, bool post, void *params)
@@ -61,83 +67,33 @@ void PanicsAirRaceBeachComponent::onEvent(const std::string &eventName, bool pos
 
 void PanicsAirRaceBeachComponent::renderPracticeSegments()
 {
-    if (ImGui::Button("Reset Map"))
+    ImGui::BeginChild("Checkpoints", ImVec2(300, 200), true);
+    ImGui::Columns(2);
+    if (ImGui::Button("Reset Map", ImVec2(-FLT_MIN, 0.0f)))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
             this->resetMap();
         });
     }
-    if (ImGui::Button("Teleport to Checkpoint 1"))
+    ImGui::NextColumn();
+    for (int i = 1; i <= 11; i++)
     {
-        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->teleportToCheckpoint1();
-        });
+        char buf[32];
+        sprintf(buf, "Checkpoint %02d", i);
+        ImGui::Button(buf, ImVec2(-FLT_MIN, 0.0f));
+        ImGui::NextColumn();
     }
-    if (ImGui::Button("Teleport to Checkpoint 2"))
-    {
-        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->teleportToCheckpoint2();
-        });
-    }
-    if (ImGui::Button("Teleport to Checkpoint 3"))
-    {
-        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->teleportToCheckpoint3();
-        });
-    }
-    if (ImGui::Button("Teleport to Checkpoint 4"))
-    {
-        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->teleportToCheckpoint4();
-        });
-    }
-    if (ImGui::Button("Teleport to Checkpoint 5"))
-    {
-        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->teleportToCheckpoint5();
-        });
-    }
-    if (ImGui::Button("Teleport to Checkpoint 6"))
-    {
-        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->teleportToCheckpoint6();
-        });
-    }
-    if (ImGui::Button("Teleport to Checkpoint 7"))
-    {
-        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->teleportToCheckpoint7();
-        });
-    }
-    if (ImGui::Button("Teleport to Checkpoint 8"))
-    {
-        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->teleportToCheckpoint8();
-        });
-    }
-    if (ImGui::Button("Teleport to Checkpoint 9"))
-    {
-        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->teleportToCheckpoint9();
-        });
-    }
-    if (ImGui::Button("Teleport to Checkpoint 10"))
-    {
-        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->teleportToCheckpoint10();
-        });
-    }
-    if (ImGui::Button("Teleport to Checkpoint 11"))
-    {
-        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->teleportToCheckpoint11();
-        });
-    }
+    ImGui::EndChild();
 }
 
 void PanicsAirRaceBeachComponent::resetMap()
 {
     this->mapToolsModel.resetPlayers();
+}
+
+void PanicsAirRaceBeachComponent::teleportToCheckpoint(int checkpoint)
+{
+
 }
 
 void PanicsAirRaceBeachComponent::teleportToCheckpoint1()

@@ -12,6 +12,12 @@ PanicsAirRaceBeachAutoSplitterComponent::PanicsAirRaceBeachAutoSplitterComponent
 
 }
 
+void PanicsAirRaceBeachAutoSplitterComponent::onEnable()
+{
+    this->hasUpdatedOnce = false;
+    this->hasUpdatedTwice = false;
+}
+
 void PanicsAirRaceBeachAutoSplitterComponent::update(const std::string &eventName, bool post, void *params)
 {
     if (eventName == "Function TAGame.Car_TA.SetVehicleInput" && post)
@@ -34,7 +40,7 @@ void PanicsAirRaceBeachAutoSplitterComponent::update(const std::string &eventNam
         this->currentCheckpoint = checkpoint->second.GetInt();
 
         if (this->hasUpdatedOnce && !this->hasUpdatedTwice) this->hasUpdatedTwice = true;
-        if (!this->hasUpdatedOnce) this->hasUpdatedOnce = true;
+        else if (!this->hasUpdatedOnce) this->hasUpdatedOnce = true;
 
         if (this->hasUpdatedTwice)
         {

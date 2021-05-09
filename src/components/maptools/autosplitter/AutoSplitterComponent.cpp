@@ -27,7 +27,11 @@ void AutoSplitterComponent::render()
     }
 
     if (!this->isEnabled)
-        if (ImGui::Button("Enable Auto Splitter For This Map")) this->isEnabled = true;
+        if (ImGui::Button("Enable Auto Splitter For This Map"))
+        {
+            this->isEnabled = true;
+            this->onEnable();
+        }
 
     if (this->isEnabled)
         if (ImGui::Button("Disable Auto Splitter For This Map")) this->isEnabled = false;
@@ -36,38 +40,29 @@ void AutoSplitterComponent::render()
 
     ImGui::Spacing();
 
-    ImGuiExtensions::PushDisabledStyleIf(!this->supportsAutoStart);
-    ImGui::Checkbox("Auto Start", &this->isAutoStartEnabled);
-    ImGuiExtensions::PopDisabledStyleIf(!this->supportsAutoStart);
+    if (this->supportsAutoStart) ImGui::Checkbox("Auto Start", &this->isAutoStartEnabled);
     if (!this->getStartDescription().empty())
     {
-        ImGui::SameLine();
         ImGuiExtensions::PushDisabledStyleIf(!this->isAutoStartEnabled);
-        ImGui::BulletText("%s", this->getStartDescription().c_str());
+        ImGui::Text("%s", this->getStartDescription().c_str());
         ImGuiExtensions::PopDisabledStyleIf(!this->isAutoStartEnabled);
     }
     ImGui::Spacing();
 
-    ImGuiExtensions::PushDisabledStyleIf(!this->supportsAutoSplit);
-    ImGui::Checkbox("Auto Split", &this->isAutoSplitEnabled);
-    ImGuiExtensions::PopDisabledStyleIf(!this->supportsAutoSplit);
+    if (this->supportsAutoSplit) ImGui::Checkbox("Auto Split", &this->isAutoSplitEnabled);
     if (!this->getSplitDescription().empty())
     {
-        ImGui::SameLine();
         ImGuiExtensions::PushDisabledStyleIf(!this->isAutoSplitEnabled);
-        ImGui::BulletText("%s", this->getSplitDescription().c_str());
+        ImGui::Text("%s", this->getSplitDescription().c_str());
         ImGuiExtensions::PopDisabledStyleIf(!this->isAutoSplitEnabled);
     }
     ImGui::Spacing();
 
-    ImGuiExtensions::PushDisabledStyleIf(!this->supportsAutoReset);
-    ImGui::Checkbox("Auto Reset", &this->isAutoResetEnabled);
-    ImGuiExtensions::PopDisabledStyleIf(!this->supportsAutoReset);
+    if (this->supportsAutoReset) ImGui::Checkbox("Auto Reset", &this->isAutoResetEnabled);
     if (!this->getResetDescription().empty())
     {
-        ImGui::SameLine();
         ImGuiExtensions::PushDisabledStyleIf(!this->isAutoResetEnabled);
-        ImGui::BulletText("%s", this->getResetDescription().c_str());
+        ImGui::Text("%s", this->getResetDescription().c_str());
         ImGuiExtensions::PopDisabledStyleIf(!this->isAutoResetEnabled);
     }
     ImGui::Spacing();
@@ -95,6 +90,10 @@ void AutoSplitterComponent::renderConnectView()
     }
 }
 
+void AutoSplitterComponent::onEnable()
+{
+
+}
 
 void AutoSplitterComponent::onEvent(const std::string &eventName, bool post, void *params)
 {
@@ -158,4 +157,3 @@ std::string AutoSplitterComponent::getDebugText()
 {
     return std::string();
 }
-

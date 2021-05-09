@@ -30,12 +30,8 @@ bool GameState::render()
 {
     bool hasChanged = false;
 
-    ImGui::Text("Car (click any value to edit)");
     if (this->carState.render()) hasChanged = true;
-
     ImGuiExtensions::BigSeparator();
-
-    ImGui::Text("Ball (click any value to edit)");
     if (this->ballState.render()) hasChanged = true;
 
     return hasChanged;

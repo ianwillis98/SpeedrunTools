@@ -18,8 +18,8 @@ public:
     explicit PanicsAirRaceBeachAutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
 protected:
+    void onEnable() override;
     void update(const std::string &eventName, bool post, void *params) override;
-
     std::string getStartDescription() override;
     std::string getSplitDescription() override;
     std::string getResetDescription() override;

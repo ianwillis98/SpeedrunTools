@@ -20,6 +20,7 @@ private:
     void renderPracticeSegments();
 
     void resetMap();
+    void teleportToCheckpoint(int checkpoint);
     void teleportToCheckpoint1();
     void teleportToCheckpoint2();
     void teleportToCheckpoint3();

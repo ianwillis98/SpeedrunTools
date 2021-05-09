@@ -39,6 +39,7 @@ protected:
     void splitTimer();
     void resetTimer();
 
+    virtual void onEnable();
     virtual void update(const std::string &eventName, bool post, void *params) = 0;
     virtual std::string getStartDescription();
     virtual std::string getSplitDescription();
