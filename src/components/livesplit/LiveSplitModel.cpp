@@ -9,6 +9,7 @@ LiveSplitModel &LiveSplitModel::getInstance(BakkesMod::Plugin::BakkesModPlugin *
 LiveSplitModel::LiveSplitModel(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : client(LiveSplitClient::getInstance()),
           plugin(plugin),
+          statusMessage("Waiting for a connection to the LiveSplit Server."),
           callback([this](bool success, const std::string &message) {
               this->handleResultCallback(success, message);
           })

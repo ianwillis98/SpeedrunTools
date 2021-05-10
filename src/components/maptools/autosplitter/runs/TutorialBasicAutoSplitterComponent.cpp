@@ -67,6 +67,7 @@ void TutorialBasicAutoSplitterComponent::update(const std::string &eventName, bo
 std::string TutorialBasicAutoSplitterComponent::getDebugText()
 {
     std::stringstream ss;
+    ss << "Tutorial Basic Auto Splitter (Debug)" << std::endl;
     ss << "isInTutorial = " << this->isInTutorial << std::endl;
     ss << "segment = " << this->segment << std::endl;
     return ss.str();

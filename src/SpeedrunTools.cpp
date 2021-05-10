@@ -20,11 +20,11 @@ SpeedrunTools::SpeedrunTools()
 
 void SpeedrunTools::onLoad()
 {
-    this->tabs.emplace_back("General", std::make_unique<GeneralToolsComponent>(this));
+    this->tabs.emplace_back("General Tools", std::make_unique<GeneralToolsComponent>(this));
     this->tabs.emplace_back("Map Tools", std::make_unique<MapToolsComponent>(this));
-    this->tabs.emplace_back("Save State", std::make_unique<SaveStateComponent>(this));
-    this->tabs.emplace_back("LiveSplit", std::make_unique<LiveSplitComponent>(this));
-    this->tabs.emplace_back("Kismet", std::make_unique<KismetEditorComponent>(this));
+    this->tabs.emplace_back("Save States", std::make_unique<SaveStateComponent>(this));
+    this->tabs.emplace_back("LiveSplit Controls", std::make_unique<LiveSplitComponent>(this));
+    this->tabs.emplace_back("Kismet Editor", std::make_unique<KismetEditorComponent>(this));
 
     this->setupEvents();
 }

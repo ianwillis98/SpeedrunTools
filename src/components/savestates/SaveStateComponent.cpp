@@ -20,9 +20,6 @@ void SaveStateComponent::render()
 {
     ImGui::PushID(this);
 
-    ImGui::Text("SAVE STATE");
-    ImGuiExtensions::BigSeparator();
-
     bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
     ImGuiExtensions::PushDisabledStyleIf(!isInFreeplay);
     if (ImGui::Button("Save State"))
@@ -39,7 +36,7 @@ void SaveStateComponent::render()
             this->loadPreviousGameState();
         });
     }
-    ImGui::Spacing();
+    ImGuiExtensions::BigSeparator();
 
     this->gameSaveState.render();
     ImGuiExtensions::PopDisabledStyleIf(isInFreeplay && !this->isGameStateSaved);

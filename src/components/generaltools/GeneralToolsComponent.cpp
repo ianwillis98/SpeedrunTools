@@ -21,8 +21,8 @@ void GeneralToolsComponent::render()
 {
     ImGui::PushID(this);
 
-    ImGui::Text("GENERAL TOOLS");
-    ImGuiExtensions::BigSeparator();
+//    ImGui::Text("General Tools");
+//    ImGuiExtensions::BigSeparator();
 
     this->renderCurrentGameState();
     this->renderGameGravityMutator();
@@ -245,21 +245,22 @@ void GeneralToolsComponent::renderGameGravityMutator()
                 this->plugin->cvarManager->getCvar(GameGravityMutatorCVarName).setValue(gameGravity);
             });
         }
-        if (ImGui::Button("Default"))
+        ImVec2 buttonSize(66, 0);
+        if (ImGui::Button("Default", buttonSize))
         {
             this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
                 this->plugin->cvarManager->getCvar(GameGravityMutatorCVarName).setValue(-650.0f);
             });
         }
         ImGui::SameLine();
-        if (ImGui::Button("Zero"))
+        if (ImGui::Button("Zero", buttonSize))
         {
             this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
                 this->plugin->cvarManager->getCvar(GameGravityMutatorCVarName).setValue(-0.001f);
             });
         }
         ImGui::SameLine();
-        if (ImGui::Button("Inverse"))
+        if (ImGui::Button("Inverse", buttonSize))
         {
             this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
                 this->plugin->cvarManager->getCvar(GameGravityMutatorCVarName).setValue(650.0f);
@@ -283,21 +284,22 @@ void GeneralToolsComponent::renderGameSpeedMutator()
                 this->plugin->cvarManager->getCvar(GameSpeedMutatorCVarName).setValue(gameSpeed);
             });
         }
-        if (ImGui::Button("Default"))
+        ImVec2 buttonSize(66, 0);
+        if (ImGui::Button("Default", buttonSize))
         {
             this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
                 this->plugin->cvarManager->getCvar(GameSpeedMutatorCVarName).setValue(1.0f);
             });
         }
         ImGui::SameLine();
-        if (ImGui::Button("Slow-mo"))
+        if (ImGui::Button("Slow-mo", buttonSize))
         {
             this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
                 this->plugin->cvarManager->getCvar(GameSpeedMutatorCVarName).setValue(0.67f);
             });
         }
         ImGui::SameLine();
-        if (ImGui::Button("Fast-mo"))
+        if (ImGui::Button("Fast-mo", buttonSize))
         {
             this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
                 this->plugin->cvarManager->getCvar(GameSpeedMutatorCVarName).setValue(1.5f);

@@ -16,58 +16,68 @@ AutoSplitterComponent::AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin 
 
 void AutoSplitterComponent::render()
 {
-    if (!this->liveSplitModel.isConnected())
+    ImGui::PushID(this);
+
+    if (this->liveSplitModel.isConnected())
+    {
+        if (this->isEnabled)
+        {
+            if (ImGui::Button("Disable Auto Splitter For This Map"))
+                this->isEnabled = false;
+        }
+        else
+        {
+            if (ImGui::Button("Enable Auto Splitter For This Map"))
+            {
+                this->isEnabled = true;
+                this->onEnable();
+            }
+        }
+
+        if (this->isEnabled)
+        {
+            ImGui::Spacing();
+
+            if (this->supportsAutoStart) ImGui::Checkbox("Auto Start", &this->isAutoStartEnabled);
+            if (!this->getStartDescription().empty())
+            {
+                ImGuiExtensions::PushDisabledStyleIf(!this->isAutoStartEnabled);
+                ImGui::Text("%s", this->getStartDescription().c_str());
+                ImGuiExtensions::PopDisabledStyleIf(!this->isAutoStartEnabled);
+            }
+            ImGui::Spacing();
+
+            if (this->supportsAutoSplit) ImGui::Checkbox("Auto Split", &this->isAutoSplitEnabled);
+            if (!this->getSplitDescription().empty())
+            {
+                ImGuiExtensions::PushDisabledStyleIf(!this->isAutoSplitEnabled);
+                ImGui::Text("%s", this->getSplitDescription().c_str());
+                ImGuiExtensions::PopDisabledStyleIf(!this->isAutoSplitEnabled);
+            }
+            ImGui::Spacing();
+
+            if (this->supportsAutoReset) ImGui::Checkbox("Auto Reset", &this->isAutoResetEnabled);
+            if (!this->getResetDescription().empty())
+            {
+                ImGuiExtensions::PushDisabledStyleIf(!this->isAutoResetEnabled);
+                ImGui::Text("%s", this->getResetDescription().c_str());
+                ImGuiExtensions::PopDisabledStyleIf(!this->isAutoResetEnabled);
+            }
+            ImGui::Spacing();
+
+            std::string debug = this->getDebugTextPrefix() + this->getDebugText();
+            ImGui::InputTextMultiline("Debug Output", (char *) debug.c_str(), debug.capacity() + 1, ImVec2(0, ImGui::GetTextLineHeight() * 8),
+                                      ImGuiInputTextFlags_ReadOnly);
+        }
+    }
+    else
     {
         ImGui::Text("Connect to LiveSplit to use the Auto Splitter...");
         ImGui::Spacing();
         this->renderConnectView();
-        return;
     }
 
-    if (!this->isEnabled)
-        if (ImGui::Button("Enable Auto Splitter For This Map"))
-        {
-            this->isEnabled = true;
-            this->onEnable();
-        }
-
-    if (this->isEnabled)
-        if (ImGui::Button("Disable Auto Splitter For This Map")) this->isEnabled = false;
-
-    if (!this->isEnabled) return;
-
-    ImGui::Spacing();
-
-    if (this->supportsAutoStart) ImGui::Checkbox("Auto Start", &this->isAutoStartEnabled);
-    if (!this->getStartDescription().empty())
-    {
-        ImGuiExtensions::PushDisabledStyleIf(!this->isAutoStartEnabled);
-        ImGui::Text("%s", this->getStartDescription().c_str());
-        ImGuiExtensions::PopDisabledStyleIf(!this->isAutoStartEnabled);
-    }
-    ImGui::Spacing();
-
-    if (this->supportsAutoSplit) ImGui::Checkbox("Auto Split", &this->isAutoSplitEnabled);
-    if (!this->getSplitDescription().empty())
-    {
-        ImGuiExtensions::PushDisabledStyleIf(!this->isAutoSplitEnabled);
-        ImGui::Text("%s", this->getSplitDescription().c_str());
-        ImGuiExtensions::PopDisabledStyleIf(!this->isAutoSplitEnabled);
-    }
-    ImGui::Spacing();
-
-    if (this->supportsAutoReset) ImGui::Checkbox("Auto Reset", &this->isAutoResetEnabled);
-    if (!this->getResetDescription().empty())
-    {
-        ImGuiExtensions::PushDisabledStyleIf(!this->isAutoResetEnabled);
-        ImGui::Text("%s", this->getResetDescription().c_str());
-        ImGuiExtensions::PopDisabledStyleIf(!this->isAutoResetEnabled);
-    }
-    ImGui::Spacing();
-
-    std::string debug = this->getDebugTextPrefix() + this->getDebugText();
-    ImGui::InputTextMultiline("Debug Output", (char *) debug.c_str(), debug.capacity() + 1, ImVec2(0, ImGui::GetTextLineHeight() * 8),
-                              ImGuiInputTextFlags_ReadOnly);
+    ImGui::PopID();
 }
 
 void AutoSplitterComponent::renderConnectView()

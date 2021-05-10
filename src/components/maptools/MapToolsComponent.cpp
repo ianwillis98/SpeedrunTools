@@ -19,7 +19,7 @@ void MapToolsComponent::render()
 {
     ImGui::PushID(this);
 
-    ImGui::Text("MAP TOOLS");
+    ImGui::Text("Choose a map:");
     ImGui::Spacing();
 
     std::vector<const char *> mapNames;

@@ -40,9 +40,6 @@ void LiveSplitComponent::render()
 {
     ImGui::PushID(this);
 
-    ImGui::Text("LIVESPLIT REMOTE CONTROLLER");
-    ImGuiExtensions::BigSeparator();
-
     this->renderConnectionStatus();
     ImGuiExtensions::BigSpacing();
 

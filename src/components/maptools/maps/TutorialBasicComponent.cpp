@@ -11,14 +11,18 @@ TutorialBasicComponent::TutorialBasicComponent(BakkesMod::Plugin::BakkesModPlugi
 
 void TutorialBasicComponent::render()
 {
-    ImGui::Text("TUTORIAL BASIC MAP TOOLS");
-    ImGui::Spacing();
-    this->renderPracticeSegments();
+    if (ImGui::TreeNodeEx("Segments", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        this->renderPracticeSegments();
+        ImGui::TreePop();
+    }
     ImGuiExtensions::BigSeparator();
-
-    ImGui::Text("TUTORIAL BASIC AUTO SPLITTER");
-    ImGui::Spacing();
-    tutorialBasicAutoSplitterComponent.render();
+    if (ImGui::TreeNodeEx("Auto Splitter", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        tutorialBasicAutoSplitterComponent.render();
+        ImGui::TreePop();
+    }
+    ImGuiExtensions::BigSeparator();
 }
 
 void TutorialBasicComponent::onEvent(const std::string &eventName, bool post, void *params)
