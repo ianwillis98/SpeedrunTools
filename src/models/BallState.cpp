@@ -1,6 +1,7 @@
 #include <imgui.h>
 #include <cmath>
 #include "BallState.h"
+#include "../utils/ImGuiExtensions.h"
 
 BallState::BallState() : position(), rotation(), velocity(), angularVelocity()
 {
@@ -63,6 +64,7 @@ bool BallState::render()
 
         ImGui::TreePop();
     }
+    ImGuiExtensions::BigSeparator();
 
     ImGui::PopID();
 

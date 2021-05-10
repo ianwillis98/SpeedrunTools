@@ -25,15 +25,10 @@ void GeneralToolsComponent::render()
     ImGuiExtensions::BigSeparator();
 
     this->renderCurrentGameState();
-    ImGuiExtensions::BigSeparator();
     this->renderGameGravityMutator();
-    ImGuiExtensions::BigSeparator();
     this->renderGameSpeedMutator();
-    ImGuiExtensions::BigSeparator();
     this->renderBoostMutator();
-    ImGuiExtensions::BigSeparator();
     this->renderAirRollMutator();
-    ImGuiExtensions::BigSeparator();
 
     ImGui::PopID();
 }
@@ -196,6 +191,7 @@ void GeneralToolsComponent::renderBoostMutator()
         }
         ImGui::TreePop();
     }
+    ImGuiExtensions::BigSeparator();
     ImGui::PopID();
 }
 
@@ -233,6 +229,7 @@ void GeneralToolsComponent::renderAirRollMutator()
         }
         ImGui::TreePop();
     }
+    ImGuiExtensions::BigSeparator();
     ImGui::PopID();
 }
 
@@ -270,6 +267,7 @@ void GeneralToolsComponent::renderGameGravityMutator()
         }
         ImGui::TreePop();
     }
+    ImGuiExtensions::BigSeparator();
     ImGui::PopID();
 }
 
@@ -307,5 +305,6 @@ void GeneralToolsComponent::renderGameSpeedMutator()
         }
         ImGui::TreePop();
     }
+    ImGuiExtensions::BigSeparator();
     ImGui::PopID();
 }

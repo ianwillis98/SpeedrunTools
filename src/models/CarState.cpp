@@ -1,6 +1,7 @@
 #include <imgui.h>
 #include <cmath>
 #include "CarState.h"
+#include "../utils/ImGuiExtensions.h"
 
 CarState::CarState(CarWrapper &car)
 {
@@ -87,6 +88,7 @@ bool CarState::render()
 
         ImGui::TreePop();
     }
+    ImGuiExtensions::BigSeparator();
 
     ImGui::PopID();
 

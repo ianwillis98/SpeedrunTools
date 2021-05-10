@@ -31,7 +31,6 @@ bool GameState::render()
     bool hasChanged = false;
 
     if (this->carState.render()) hasChanged = true;
-    ImGuiExtensions::BigSeparator();
     if (this->ballState.render()) hasChanged = true;
 
     return hasChanged;
