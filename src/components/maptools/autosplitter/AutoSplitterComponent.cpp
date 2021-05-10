@@ -16,8 +16,6 @@ AutoSplitterComponent::AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin 
 
 void AutoSplitterComponent::render()
 {
-    ImGui::PushID(this);
-
     if (!this->liveSplitModel.isConnected())
     {
         ImGui::Text("Connect to LiveSplit to use the Auto Splitter...");
@@ -70,8 +68,6 @@ void AutoSplitterComponent::render()
     std::string debug = this->getDebugTextPrefix() + this->getDebugText();
     ImGui::InputTextMultiline("Debug Output", (char *) debug.c_str(), debug.capacity() + 1, ImVec2(0, ImGui::GetTextLineHeight() * 8),
                               ImGuiInputTextFlags_ReadOnly);
-
-    ImGui::PopID();
 }
 
 void AutoSplitterComponent::renderConnectView()
