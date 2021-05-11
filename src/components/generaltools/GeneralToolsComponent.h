@@ -40,14 +40,14 @@ public:
 private:
     void setBoostAmount(float amount);
 
-    void createBoostMutatorCVar();
-    void createAirRollMutatorCVar();
     void createGameGravityMutatorCVar();
     void createGameSpeedMutatorCVar();
+    void createBoostMutatorCVar();
+    void createAirRollMutatorCVar();
 
     void renderCurrentGameState();
-    void renderBoostMutator();
-    void renderAirRollMutator();
     void renderGameGravityMutator();
     void renderGameSpeedMutator();
+    void renderBoostMutator();
+    void renderAirRollMutator();
 };
