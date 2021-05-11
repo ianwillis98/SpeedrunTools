@@ -1,9 +1,9 @@
-#include "SaveStateComponent.h"
+#include "SaveStatesComponent.h"
 
-const std::string SaveStateComponent::SaveStateCVarName = "speedrun_savestate_save";
-const std::string SaveStateComponent::LoadStateCVarName = "speedrun_savestate_load";
+const std::string SaveStatesComponent::SaveStateCVarName = "speedrun_savestate_save";
+const std::string SaveStatesComponent::LoadStateCVarName = "speedrun_savestate_load";
 
-SaveStateComponent::SaveStateComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
+SaveStatesComponent::SaveStatesComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : PluginComponentBase(plugin),
           isGameStateSaved(false),
           gameSaveState()
@@ -16,10 +16,8 @@ SaveStateComponent::SaveStateComponent(BakkesMod::Plugin::BakkesModPlugin *plugi
     }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
 }
 
-void SaveStateComponent::render()
+void SaveStatesComponent::render()
 {
-    ImGui::PushID(this);
-
     bool isInFreeplay = this->plugin->gameWrapper->IsInFreeplay();
     ImGuiExtensions::PushDisabledStyleIf(!isInFreeplay);
     if (ImGui::Button("Save State"))
@@ -41,15 +39,16 @@ void SaveStateComponent::render()
     this->gameSaveState.render();
     ImGuiExtensions::PopDisabledStyleIf(isInFreeplay && !this->isGameStateSaved);
     ImGuiExtensions::PopDisabledStyleIf(!isInFreeplay);
-    ImGui::PopID();
+
+    ImGui::Text("The ability to add multiple save states will come in a future update.");
 }
 
-void SaveStateComponent::onEvent(const std::string &eventName, bool post, void *params)
+void SaveStatesComponent::onEvent(const std::string &eventName, bool post, void *params)
 {
 
 }
 
-void SaveStateComponent::saveCurrentGameState()
+void SaveStatesComponent::saveCurrentGameState()
 {
     if (!this->plugin->gameWrapper->IsInFreeplay()) return;
 
@@ -60,7 +59,7 @@ void SaveStateComponent::saveCurrentGameState()
     this->isGameStateSaved = true;
 }
 
-void SaveStateComponent::loadPreviousGameState()
+void SaveStatesComponent::loadPreviousGameState()
 {
     if (!this->isGameStateSaved) return;
     if (!this->plugin->gameWrapper->IsInFreeplay()) return;

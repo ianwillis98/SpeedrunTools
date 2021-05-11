@@ -3,7 +3,7 @@
 #include "../PluginComponentBase.h"
 #include "../../models/GameState.h"
 
-class SaveStateComponent : public PluginComponentBase
+class SaveStatesComponent : public PluginComponentBase
 {
 public:
     static const std::string SaveStateCVarName;
@@ -14,7 +14,7 @@ private:
     GameState gameSaveState;
 
 public:
-    explicit SaveStateComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit SaveStatesComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
     void render() override;
     void onEvent(const std::string &eventName, bool post, void *params) override;

@@ -19,11 +19,7 @@ public:
 private:
     void renderPracticeSegments();
 
-    void practiceSegment1();
-    void practiceSegment2();
-    void practiceSegment3();
-    void practiceSegment4();
-    void practiceSegment5();
-    void practiceSegment6();
+    void loadBasicTutorial();
+    void practiceSegment(int segment);
 };
 

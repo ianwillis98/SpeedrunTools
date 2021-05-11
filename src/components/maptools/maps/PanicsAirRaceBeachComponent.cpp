@@ -39,7 +39,7 @@ void PanicsAirRaceBeachComponent::onEvent(const std::string &eventName, bool pos
 
 void PanicsAirRaceBeachComponent::renderPracticeSegments()
 {
-    ImGui::BeginChild("Checkpoints", ImVec2(300, 200), true);
+    ImGui::BeginChild("Checkpoints", ImVec2(300, 150), true);
     ImGui::Columns(2);
     if (ImGui::Button("Reset Map", ImVec2(-FLT_MIN, 0.0f)))
     {
@@ -60,6 +60,7 @@ void PanicsAirRaceBeachComponent::renderPracticeSegments()
         }
         ImGui::NextColumn();
     }
+    ImGui::Columns(1);
     ImGui::EndChild();
 }
 

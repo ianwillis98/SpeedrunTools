@@ -1,86 +1,84 @@
 #include "TutorialAdvancedComponent.h"
 
-TutorialAdvancedComponent::TutorialAdvancedComponent(BakkesMod::Plugin::BakkesModPlugin *plugin) : PluginComponentBase(plugin)
+TutorialAdvancedComponent::TutorialAdvancedComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
+        : PluginComponentBase(plugin),
+          mapToolsModel(MapToolsModel::getInstance(plugin))
 {
-    this->plugin->cvarManager->registerNotifier("speedrun_tutorial_advanced_practice_seg4", [this](const std::vector<std::string> &commands) {
-        this->practiceSeg4();
-    }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
-    this->plugin->cvarManager->registerNotifier("speedrun_tutorial_advanced_practice_seg5", [this](const std::vector<std::string> &commands) {
-        this->practiceSeg5();
-    }, "", PERMISSION_PAUSEMENU_CLOSED | PERMISSION_FREEPLAY);
+    for (int i = 4; i <= 5; i++)
+    {
+        std::string notifier = "speedrun_maptools_tutorialadvanced_seg" + std::to_string(i);
+        this->plugin->cvarManager->registerNotifier(notifier, [this, i](const std::vector<std::string> &commands) {
+            this->practiceSegment(i);
+        }, "", PERMISSION_PAUSEMENU_CLOSED);
+    }
 }
 
 void TutorialAdvancedComponent::render()
 {
-    ImGui::Text("Tutorial Advanced Map Tools");
-    ImGuiExtensions::BigSpacing();
-
-    if (ImGui::Button("Practice Segment 4"))
-    {
+    if (ImGui::Button("Load Advanced Tutorial"))
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->practiceSeg4();
+            this->loadAdvancedTutorial();
         });
-    }
-    ImGui::Spacing();
-
-    if (ImGui::Button("Practice Segment 5"))
+    ImGuiExtensions::BigSeparator();
+    if (ImGui::TreeNodeEx("Practice Segments (must be in freeplay to work)", ImGuiTreeNodeFlags_DefaultOpen))
     {
-        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->practiceSeg5();
-        });
+        this->renderPracticeSegments();
+        ImGui::TreePop();
     }
+    ImGuiExtensions::BigSeparator();
+    if (ImGui::TreeNodeEx("Auto Splitter", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        //tutorialBasicAutoSplitterComponent.render();
+        ImGui::TreePop();
+    }
+    ImGuiExtensions::BigSeparator();
 }
 
-void TutorialAdvancedComponent::practiceSeg4()
+void TutorialAdvancedComponent::renderPracticeSegments()
 {
-    ServerWrapper serverWrapper = this->plugin->gameWrapper->GetGameEventAsServer();
-    if (serverWrapper.IsNull()) return;
-
-    this->plugin->gameWrapper->GetLocalCar().SetLocation(Vector(0.0f, -4859.0f, 17.01f));
-    this->plugin->gameWrapper->GetLocalCar().SetRotation(Rotator(-100, 16384, 0));
-    this->plugin->gameWrapper->GetLocalCar().SetVelocity(Vector(0.0f, 0.0f, 0.0f));
-    this->plugin->gameWrapper->GetLocalCar().SetAngularVelocity(Vector(0.0f, 0.0f, 0.0f), false);
-
-    std::vector<BallWrapper> ballsVector;
-    auto ballsArrayWrapper = serverWrapper.GetGameBalls();
-    for (const auto &ball : ballsArrayWrapper)
+    ImGui::BeginChild("Checkpoints", ImVec2(300, 60), true);
+    ImGui::Columns(2);
+    for (int i = 4; i <= 5; i++)
     {
-        ballsVector.push_back(ball);
+        char buf[32];
+        sprintf(buf, "Segment %02d", i);
+        if (ImGui::Button(buf, ImVec2(-FLT_MIN, 0.0f)))
+        {
+            this->plugin->gameWrapper->Execute([this, i](GameWrapper *gw) {
+                this->practiceSegment(i);
+            });
+        }
+        ImGui::NextColumn();
     }
-    for (auto ball : ballsVector)
-    {
-        ball.DoDestroy();
-    }
-
-    serverWrapper.SpawnBall(Vector(2048.0f, 960.0f, 416.0f), true, false).Stop();
-    serverWrapper.SpawnBall(Vector(1024.0f, 3008.0f, 512.0f), true, false).Stop();
-    serverWrapper.SpawnBall(Vector(0.0f, -1600.0f, 416.0f), true, false).Stop();
-    serverWrapper.SpawnBall(Vector(-1024.0f, 1472.0f, 512.0f), true, false).Stop();
-    serverWrapper.SpawnBall(Vector(-2048.0f, -64.0f, 416.0f), true, false).Stop();
+    ImGui::Columns(1);
+    ImGui::EndChild();
 }
 
-void TutorialAdvancedComponent::practiceSeg5()
+void TutorialAdvancedComponent::loadAdvancedTutorial()
 {
-    ServerWrapper serverWrapper = this->plugin->gameWrapper->GetGameEventAsServer();
-    if (serverWrapper.IsNull()) return;
+    this->plugin->gameWrapper->ExecuteUnrealCommand("start Park_P?Game=TAGame.GameInfo_Tutorial_TA?TutorialAdvanced");
+}
 
-    this->plugin->gameWrapper->GetLocalCar().SetLocation(Vector(0.0f, -4859.0f, 17.01f));
-    this->plugin->gameWrapper->GetLocalCar().SetRotation(Rotator(-100, 16384, 0));
-    this->plugin->gameWrapper->GetLocalCar().SetVelocity(Vector(0.0f, 0.0f, 0.0f));
-    this->plugin->gameWrapper->GetLocalCar().SetAngularVelocity(Vector(0.0f, 0.0f, 0.0f), false);
-
-    std::vector<BallWrapper> ballsVector;
-    auto ballsArrayWrapper = serverWrapper.GetGameBalls();
-    for (const auto &ball : ballsArrayWrapper)
+void TutorialAdvancedComponent::practiceSegment(int segment)
+{
+    if (segment == 4)
     {
-        ballsVector.push_back(ball);
+        this->mapToolsModel.setCarState(Vector(0.0f, -4859.0f, 17.01f), Rotator(-100, 16384, 0),
+                                        Vector(0.0f, 0.0f, 0.0f), Vector(0.0f, 0.0f, 0.0f), 0.0f);
+        this->mapToolsModel.removeAllBalls();
+        this->mapToolsModel.spawnAndStopBall(Vector(2048.0f, 960.0f, 416.0f));
+        this->mapToolsModel.spawnAndStopBall(Vector(1024.0f, 3008.0f, 512.0f));
+        this->mapToolsModel.spawnAndStopBall(Vector(0.0f, -1600.0f, 416.0f));
+        this->mapToolsModel.spawnAndStopBall(Vector(-1024.0f, 1472.0f, 512.0f));
+        this->mapToolsModel.spawnAndStopBall(Vector(-2048.0f, -64.0f, 416.0f));
     }
-    for (auto ball : ballsVector)
+    else if (segment == 5)
     {
-        ball.DoDestroy();
+        this->mapToolsModel.setCarState(Vector(0.0f, -4859.0f, 17.01f), Rotator(-100, 16384, 0),
+                                        Vector(0.0f, 0.0f, 0.0f), Vector(0.0f, 0.0f, 0.0f), 1.0f);
+        this->mapToolsModel.removeAllBalls();
+        this->mapToolsModel.spawnAndStopBall(Vector(2559.98999f, -3167.98999f, 864.0f));
+        this->mapToolsModel.spawnAndStopBall(Vector(1919.98999f, 2720.01001f, 736.0f));
+        this->mapToolsModel.spawnAndStopBall(Vector(-2432.01001f, 2720.01001f, 608.0f));
     }
-
-    serverWrapper.SpawnBall(Vector(2559.98999f, -3167.98999f, 864.0f), true, false).Stop();
-    serverWrapper.SpawnBall(Vector(1919.98999f, 2720.01001f, 736.0f), true, false).Stop();
-    serverWrapper.SpawnBall(Vector(-2432.01001f, 2720.01001f, 608.0f), true, false).Stop();
 }

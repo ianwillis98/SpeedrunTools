@@ -17,8 +17,6 @@ MapToolsComponent::MapToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
 
 void MapToolsComponent::render()
 {
-    ImGui::PushID(this);
-
     ImGui::Text("Choose a map:");
     ImGui::Spacing();
 
@@ -31,8 +29,6 @@ void MapToolsComponent::render()
     ImGuiExtensions::BigSeparator();
 
     this->supportedMaps.at(comboIndex).second->render();
-
-    ImGui::PopID();
 }
 
 void MapToolsComponent::onEvent(const std::string &eventName, bool post, void *params)
