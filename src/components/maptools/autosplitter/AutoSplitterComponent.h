@@ -1,11 +1,9 @@
 #pragma once
 
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
+#include <bakkesmod/wrappers/kismet/SequenceWrapper.h>
+#include <bakkesmod/wrappers/kismet/SequenceVariableWrapper.h>
 
 #include "../../PluginComponentBase.h"
-#include "../../../services/LiveSplitClient.h"
 #include "../../livesplit/LiveSplitModel.h"
 
 class AutoSplitterComponent : public PluginComponentBase

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.17)
 project(SpeedrunTools)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 get_filename_component(BAKKESMOD_PATH "[HKEY_CURRENT_USER\\Software\\BakkesMod\\AppPath;BakkesModPath]" ABSOLUTE)
 #message("BAKKESMOD_PATH = ${BAKKESMOD_PATH}")
@@ -11,6 +11,8 @@ add_subdirectory(external/asio)
 
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "src/*.h" "src/*.cpp")
 add_library(SpeedrunTools SHARED ${SOURCE_FILES})
+
+target_precompile_headers(SpeedrunTools PUBLIC src/pch.h)
 
 target_include_directories(
         SpeedrunTools PRIVATE

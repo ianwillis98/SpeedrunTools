@@ -1,7 +1,3 @@
-#include <imgui.h>
-#include <imgui_internal.h>
-#include "ImGuiExtensions.h"
-
 void ImGuiExtensions::PushDisabledStyle()
 {
     ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);

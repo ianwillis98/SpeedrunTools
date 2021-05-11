@@ -99,45 +99,45 @@ bool LiveSplitClient::isConnecting() const
 
 void LiveSplitClient::startOrSplit(const ResultCallback &callback)
 {
-    this->sendAsync("startorsplit", callback);
+    this->send("startorsplit", callback);
 }
 
 void LiveSplitClient::start(const ResultCallback &callback)
 {
-    this->sendAsync("starttimer", callback);
+    this->send("starttimer", callback);
 }
 
 void LiveSplitClient::pause(const ResultCallback &callback)
 {
-    this->sendAsync("pause", callback);
+    this->send("pause", callback);
 }
 
 void LiveSplitClient::resume(const ResultCallback &callback)
 {
-    this->sendAsync("resume", callback);
+    this->send("resume", callback);
 }
 
 void LiveSplitClient::reset(const ResultCallback &callback)
 {
-    this->sendAsync("reset", callback);
+    this->send("reset", callback);
 }
 
 void LiveSplitClient::split(const ResultCallback &callback)
 {
-    this->sendAsync("split", callback);
+    this->send("split", callback);
 }
 
 void LiveSplitClient::skipSplit(const ResultCallback &callback)
 {
-    this->sendAsync("skipsplit", callback);
+    this->send("skipsplit", callback);
 }
 
 void LiveSplitClient::undoSplit(const ResultCallback &callback)
 {
-    this->sendAsync("unsplit", callback);
+    this->send("unsplit", callback);
 }
 
-void LiveSplitClient::sendAsync(const std::string &message, const ResultCallback &callback)
+void LiveSplitClient::send(const std::string &message, const ResultCallback &callback)
 {
     if (this->isConnecting())
     {

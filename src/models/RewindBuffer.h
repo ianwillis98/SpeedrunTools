@@ -1,6 +1,5 @@
 #pragma once
 
-#include <bakkesmod/plugin/bakkesmodplugin.h>
 #include <deque>
 #include <chrono>
 #include "GameState.h"

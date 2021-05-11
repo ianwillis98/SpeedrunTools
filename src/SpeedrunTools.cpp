@@ -74,13 +74,14 @@ void SpeedrunTools::setupEvents()
             }
     );
 
+    // tick
     this->setupEventPost("Function TAGame.Car_TA.SetVehicleInput");
 
     // map start end
     this->setupEventPost("Function TAGame.GameEvent_Soccar_TA.InitGame");
     this->setupEventPost("Function TAGame.GameEvent_Soccar_TA.Destroyed");
 
-    // player resets
+    // player resets using reset shot binding
     this->setupEventPost("Function TAGame.GameEvent_TA.PlayerResetTraining");
 
     // tutorial only

@@ -4,7 +4,6 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 
-#include <bakkesmod/plugin/bakkesmodplugin.h>
 #include "asio.hpp"
 
 class LiveSplitClient
@@ -42,5 +41,5 @@ public:
     void undoSplit(const ResultCallback &callback);
 
 private:
-    void sendAsync(const std::string &message, const ResultCallback &callback);
+    void send(const std::string &message, const ResultCallback &callback);
 };

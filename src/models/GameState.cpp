@@ -1,6 +1,4 @@
-#include <imgui.h>
 #include "GameState.h"
-#include "../utils/ImGuiExtensions.h"
 
 GameState::GameState() = default;
 

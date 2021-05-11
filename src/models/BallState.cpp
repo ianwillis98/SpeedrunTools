@@ -1,7 +1,4 @@
-#include <imgui.h>
-#include <cmath>
 #include "BallState.h"
-#include "../utils/ImGuiExtensions.h"
 
 BallState::BallState() : position(), rotation(), velocity(), angularVelocity()
 {

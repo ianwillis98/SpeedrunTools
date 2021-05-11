@@ -1,13 +1,6 @@
 #pragma once
 
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-
-#include <bakkesmod/plugin/bakkesmodplugin.h>
 #include <bakkesmod/plugin/pluginwindow.h>
-#include <imgui.h>
-#include <imgui_internal.h>
 
 class BaseBakkesModPlugin : public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::Plugin::PluginWindow
 {

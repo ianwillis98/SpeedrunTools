@@ -1,8 +1,8 @@
 #pragma once
 
+#include "LiveSplitModel.h"
 #include "../PluginComponentBase.h"
 #include "../../services/LiveSplitClient.h"
-#include "LiveSplitModel.h"
 
 class LiveSplitComponent : public PluginComponentBase
 {

@@ -1,5 +1,4 @@
 #include "TutorialBasicComponent.h"
-#include "../../../models/CarState.h"
 
 TutorialBasicComponent::TutorialBasicComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : PluginComponentBase(plugin),

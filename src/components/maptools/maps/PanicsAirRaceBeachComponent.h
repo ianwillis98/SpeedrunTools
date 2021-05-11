@@ -21,17 +21,6 @@ private:
 
     void resetMap();
     void teleportToCheckpoint(int checkpoint);
-    void teleportToCheckpoint1();
-    void teleportToCheckpoint2();
-    void teleportToCheckpoint3();
-    void teleportToCheckpoint4();
-    void teleportToCheckpoint5();
-    void teleportToCheckpoint6();
-    void teleportToCheckpoint7();
-    void teleportToCheckpoint8();
-    void teleportToCheckpoint9();
-    void teleportToCheckpoint10();
-    void teleportToCheckpoint11();
 
     void setCheckpointAndCount(int checkpoint, int count);
 };
