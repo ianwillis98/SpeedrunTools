@@ -16,10 +16,14 @@ TutorialBasicComponent::TutorialBasicComponent(BakkesMod::Plugin::BakkesModPlugi
 
 void TutorialBasicComponent::render()
 {
-    if (ImGui::Button("Load Basic Tutorial"))
-        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->loadBasicTutorial();
-        });
+    if (ImGui::TreeNodeEx("Tutorial Basic", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        if (ImGui::Button("Load Basic Tutorial"))
+            this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
+                this->loadBasicTutorial();
+            });
+        ImGui::TreePop();
+    }
     ImGuiExtensions::BigSeparator();
     if (ImGui::TreeNodeEx("Practice Segments (must be in freeplay to work)", ImGuiTreeNodeFlags_DefaultOpen))
     {
@@ -33,11 +37,6 @@ void TutorialBasicComponent::render()
         ImGui::TreePop();
     }
     ImGuiExtensions::BigSeparator();
-}
-
-void TutorialBasicComponent::onEvent(const std::string &eventName, bool post, void *params)
-{
-    tutorialBasicAutoSplitterComponent.onEvent(eventName, post, params);
 }
 
 void TutorialBasicComponent::renderPracticeSegments()
@@ -58,6 +57,11 @@ void TutorialBasicComponent::renderPracticeSegments()
     }
     ImGui::Columns(1);
     ImGui::EndChild();
+}
+
+void TutorialBasicComponent::onEvent(const std::string &eventName, bool post, void *params)
+{
+    this->tutorialBasicAutoSplitterComponent.onEvent(eventName, post, params);
 }
 
 void TutorialBasicComponent::loadBasicTutorial()

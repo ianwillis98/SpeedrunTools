@@ -2,7 +2,8 @@
 
 TutorialAdvancedComponent::TutorialAdvancedComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : PluginComponentBase(plugin),
-          mapToolsModel(MapToolsModel::getInstance(plugin))
+          mapToolsModel(MapToolsModel::getInstance(plugin)),
+          tutorialAdvancedAutoSplitterComponent(plugin)
 {
     for (int i = 4; i <= 5; i++)
     {
@@ -15,10 +16,14 @@ TutorialAdvancedComponent::TutorialAdvancedComponent(BakkesMod::Plugin::BakkesMo
 
 void TutorialAdvancedComponent::render()
 {
-    if (ImGui::Button("Load Advanced Tutorial"))
-        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->loadAdvancedTutorial();
-        });
+    if (ImGui::TreeNodeEx("Tutorial Advanced", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        if (ImGui::Button("Load Advanced Tutorial"))
+            this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
+                this->loadAdvancedTutorial();
+            });
+        ImGui::TreePop();
+    }
     ImGuiExtensions::BigSeparator();
     if (ImGui::TreeNodeEx("Practice Segments (must be in freeplay to work)", ImGuiTreeNodeFlags_DefaultOpen))
     {
@@ -28,7 +33,7 @@ void TutorialAdvancedComponent::render()
     ImGuiExtensions::BigSeparator();
     if (ImGui::TreeNodeEx("Auto Splitter", ImGuiTreeNodeFlags_DefaultOpen))
     {
-        //tutorialBasicAutoSplitterComponent.render();
+        tutorialAdvancedAutoSplitterComponent.render();
         ImGui::TreePop();
     }
     ImGuiExtensions::BigSeparator();
@@ -36,7 +41,7 @@ void TutorialAdvancedComponent::render()
 
 void TutorialAdvancedComponent::renderPracticeSegments()
 {
-    ImGui::BeginChild("Checkpoints", ImVec2(300, 60), true);
+    ImGui::BeginChild("Checkpoints", ImVec2(300, 100), true);
     ImGui::Columns(2);
     for (int i = 4; i <= 5; i++)
     {
@@ -52,6 +57,11 @@ void TutorialAdvancedComponent::renderPracticeSegments()
     }
     ImGui::Columns(1);
     ImGui::EndChild();
+}
+
+void TutorialAdvancedComponent::onEvent(const std::string &eventName, bool post, void *params)
+{
+    this->tutorialAdvancedAutoSplitterComponent.onEvent(eventName, post, params);
 }
 
 void TutorialAdvancedComponent::loadAdvancedTutorial()
