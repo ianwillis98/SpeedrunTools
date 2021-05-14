@@ -4,12 +4,13 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 
-#include <string>
-#include <vector>
 #include <functional>
-#include <memory>
 #include <map>
+#include <memory>
 #include <sstream>
+#include <string>
+#include <utility>
+#include <vector>
 #include <bakkesmod/plugin/bakkesmodplugin.h>
 #include <imgui.h>
 #include <imgui_internal.h>

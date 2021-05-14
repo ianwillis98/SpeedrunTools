@@ -3,7 +3,7 @@
 #include "components/livesplit/LiveSplitComponent.h"
 #include "components/kismet/KismetEditorComponent.h"
 #include "components/savestates/SaveStatesComponent.h"
-#include "components/maptools/MapToolsComponent.h"
+#include "components/maptools/MapToolsSelectorComponent.h"
 
 BAKKESMOD_PLUGIN(SpeedrunTools, SpeedrunTools::PLUGIN_TITLE, SpeedrunTools::PLUGIN_VERSION, PLUGINTYPE_CUSTOM_TRAINING)
 
@@ -21,7 +21,7 @@ SpeedrunTools::SpeedrunTools()
 void SpeedrunTools::onLoad()
 {
     this->tabs.emplace_back("General Tools", std::make_unique<GeneralToolsComponent>(this));
-    this->tabs.emplace_back("Map Tools", std::make_unique<MapToolsComponent>(this));
+    this->tabs.emplace_back("Map Tools", std::make_unique<MapToolsSelectorComponent>(this));
     this->tabs.emplace_back("Save States", std::make_unique<SaveStatesComponent>(this));
     this->tabs.emplace_back("LiveSplit Controls", std::make_unique<LiveSplitComponent>(this));
     this->tabs.emplace_back("Kismet Editor", std::make_unique<KismetEditorComponent>(this));

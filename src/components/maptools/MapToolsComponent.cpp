@@ -1,40 +1,101 @@
 #include "MapToolsComponent.h"
-#include "maps/TutorialBasicComponent.h"
-#include "maps/TutorialAdvancedComponent.h"
-#include "maps/LethsNeonRingsMapToolsComponent.h"
-#include "maps/PanicsAirRaceBeachComponent.h"
 
-MapToolsComponent::MapToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
+#include <utility>
+
+MapToolsComponent::MapToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin, std::shared_ptr<AutoSplitterComponent> component,
+                                     std::string mapName, std::string cVarName, int numCheckpoints)
         : PluginComponentBase(plugin),
-          supportedMaps(),
-          comboIndex(0)
+          mapToolsModel(MapToolsModel::getInstance(plugin)),
+          autoSplitterComponent(std::move(std::move(component))),
+          mapName(std::move(mapName)),
+          cVarName(std::move(cVarName)),
+          numCheckpoints(numCheckpoints)
 {
-    this->supportedMaps.emplace_back("Tutorial Basic", std::make_unique<TutorialBasicComponent>(plugin));
-    this->supportedMaps.emplace_back("Tutorial Advanced", std::make_unique<TutorialAdvancedComponent>(plugin));
-    this->supportedMaps.emplace_back("Leth's Neon Rings", std::make_unique<LethsNeonRingsMapToolsComponent>(plugin));
-    this->supportedMaps.emplace_back("Panic's Air Race Beach", std::make_unique<PanicsAirRaceBeachComponent>(plugin));
+    this->createResetNotifier();
+    this->createCheckpointNotifiers();
 }
 
 void MapToolsComponent::render()
 {
-    ImGui::Text("Choose a map:");
-    ImGui::Spacing();
-
-    std::vector<const char *> mapNames;
-    for (auto &supportedMap : this->supportedMaps)
+    if (ImGui::TreeNodeEx(this->mapName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
     {
-        mapNames.push_back(supportedMap.first.c_str());
+        this->renderGeneralMapTools();
+        ImGui::TreePop();
     }
-    ImGui::Combo("map", &comboIndex, mapNames.data(), mapNames.size());
     ImGuiExtensions::BigSeparator();
+    if (ImGui::TreeNodeEx("Checkpoints", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        this->renderCheckpoints();
+        ImGui::TreePop();
+    }
+    ImGuiExtensions::BigSeparator();
+    if (ImGui::TreeNodeEx("Auto Splitter", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        this->renderAutoSplitter();
+        ImGui::TreePop();
+    }
+    ImGuiExtensions::BigSeparator();
+}
 
-    this->supportedMaps.at(comboIndex).second->render();
+void MapToolsComponent::renderGeneralMapTools()
+{
+    if (ImGui::Button("Reset Map"))
+    {
+        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
+            this->resetMap();
+        });
+    }
+}
+
+void MapToolsComponent::renderCheckpoints()
+{
+    ImGui::BeginChild("Checkpoints", ImVec2(300, 100), true);
+    ImGui::Columns(2);
+    for (int i = 1; i <= this->numCheckpoints; i++)
+    {
+        char buf[32];
+        sprintf(buf, "Checkpoint %02d", i);
+        if (ImGui::Button(buf, ImVec2(-FLT_MIN, 0.0f)))
+        {
+            this->plugin->gameWrapper->Execute([this, i](GameWrapper *gw) {
+                this->checkpoint(i);
+            });
+        }
+        ImGui::NextColumn();
+    }
+    ImGui::Columns(1);
+    ImGui::EndChild();
+}
+
+void MapToolsComponent::renderAutoSplitter()
+{
+    this->autoSplitterComponent->render();
 }
 
 void MapToolsComponent::onEvent(const std::string &eventName, bool post, void *params)
 {
-    for (auto &supportedMap : this->supportedMaps)
+    this->autoSplitterComponent->onEvent(eventName, post, params);
+}
+
+void MapToolsComponent::createResetNotifier()
+{
+    this->plugin->cvarManager->registerNotifier("speedrun_maptools_" + this->cVarName + "_reset", [this](const std::vector<std::string> &commands) {
+        this->resetMap();
+    }, "", PERMISSION_PAUSEMENU_CLOSED);
+}
+
+void MapToolsComponent::createCheckpointNotifiers()
+{
+    for (int i = 1; i <= this->numCheckpoints; i++)
     {
-        supportedMap.second->onEvent(eventName, post, params);
+        std::string notifier = "speedrun_maptools_" + this->cVarName + "_reset" + std::to_string(i);
+        this->plugin->cvarManager->registerNotifier(notifier, [this, i](const std::vector<std::string> &commands) {
+            this->checkpoint(i);
+        }, "", PERMISSION_PAUSEMENU_CLOSED);
     }
+}
+
+std::string MapToolsComponent::getMapName()
+{
+    return this->mapName;
 }

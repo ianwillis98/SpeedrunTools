@@ -1,75 +1,20 @@
-#include "PanicsAirRaceBeachComponent.h"
+#include "PanicsAirRaceBeachMapToolsComponent.h"
+#include "../autosplitter/runs/PanicsAirRaceBeachAutoSplitterComponent.h"
 
-PanicsAirRaceBeachComponent::PanicsAirRaceBeachComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
-        : PluginComponentBase(plugin),
-          mapToolsModel(MapToolsModel::getInstance(plugin)),
-          panicsAirRaceBeachAutoSplitterComponent(plugin)
+PanicsAirRaceBeachMapToolsComponent::PanicsAirRaceBeachMapToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
+        : MapToolsComponent(plugin, std::make_shared<PanicsAirRaceBeachAutoSplitterComponent>(plugin),
+                            "Panic's Air Race Beach", "panicsbeach", 11)
 {
-    this->plugin->cvarManager->registerNotifier("speedrun_maptools_panicsbeach_reset", [this](const std::vector<std::string> &commands) {
-        this->resetMap();
-    }, "", PERMISSION_PAUSEMENU_CLOSED);
-    for (int i = 1; i <= 11; i++)
-    {
-        std::string notifier = "speedrun_maptools_panicsbeach_cp" + std::to_string(i);
-        this->plugin->cvarManager->registerNotifier(notifier, [this, i](const std::vector<std::string> &commands) {
-            this->teleportToCheckpoint(i);
-        }, "", PERMISSION_PAUSEMENU_CLOSED);
-    }
-}
-void PanicsAirRaceBeachComponent::render()
-{
-    if (ImGui::TreeNodeEx("Checkpoints", ImGuiTreeNodeFlags_DefaultOpen))
-    {
-        this->renderPracticeSegments();
-        ImGui::TreePop();
-    }
-    ImGuiExtensions::BigSeparator();
-    if (ImGui::TreeNodeEx("Auto Splitter", ImGuiTreeNodeFlags_DefaultOpen))
-    {
-        this->panicsAirRaceBeachAutoSplitterComponent.render();
-        ImGui::TreePop();
-    }
-    ImGuiExtensions::BigSeparator();
+
 }
 
-void PanicsAirRaceBeachComponent::onEvent(const std::string &eventName, bool post, void *params)
-{
-    this->panicsAirRaceBeachAutoSplitterComponent.onEvent(eventName, post, params);
-}
 
-void PanicsAirRaceBeachComponent::renderPracticeSegments()
-{
-    ImGui::BeginChild("Checkpoints", ImVec2(300, 150), true);
-    ImGui::Columns(2);
-    if (ImGui::Button("Reset Map", ImVec2(-FLT_MIN, 0.0f)))
-    {
-        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->resetMap();
-        });
-    }
-    ImGui::NextColumn();
-    for (int i = 1; i <= 11; i++)
-    {
-        char buf[32];
-        sprintf(buf, "Checkpoint %02d", i);
-        if (ImGui::Button(buf, ImVec2(-FLT_MIN, 0.0f)))
-        {
-            this->plugin->gameWrapper->Execute([this, i](GameWrapper *gw) {
-                this->teleportToCheckpoint(i);
-            });
-        }
-        ImGui::NextColumn();
-    }
-    ImGui::Columns(1);
-    ImGui::EndChild();
-}
-
-void PanicsAirRaceBeachComponent::resetMap()
+void PanicsAirRaceBeachMapToolsComponent::resetMap()
 {
     this->mapToolsModel.resetPlayers();
 }
 
-void PanicsAirRaceBeachComponent::teleportToCheckpoint(int checkpoint)
+void PanicsAirRaceBeachMapToolsComponent::checkpoint(int checkpoint)
 {
     if (checkpoint == 1)
     {
@@ -139,7 +84,7 @@ void PanicsAirRaceBeachComponent::teleportToCheckpoint(int checkpoint)
     }
 }
 
-void PanicsAirRaceBeachComponent::setCheckpointAndCount(int checkpoint, int count)
+void PanicsAirRaceBeachMapToolsComponent::setCheckpointAndCount(int checkpoint, int count)
 {
     std::vector<KismetSequenceVariable> kismetVars = this->mapToolsModel.getKismetVars();
     for (auto &var : kismetVars)
