@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../MapToolsComponent.h"
+#include "../../MapToolsComponent.h"
 
 class TutorialAdvancedMapToolsComponent : public MapToolsComponent
 {

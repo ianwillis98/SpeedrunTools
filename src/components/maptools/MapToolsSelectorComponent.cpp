@@ -1,8 +1,10 @@
 #include "MapToolsSelectorComponent.h"
-#include "maps/TutorialBasicMapToolsComponent.h"
-#include "maps/TutorialAdvancedMapToolsComponent.h"
+#include "maps/tutorial/TutorialBasicMapToolsComponent.h"
+#include "maps/tutorial/TutorialAdvancedMapToolsComponent.h"
 #include "maps/LethsNeonRingsMapToolsComponent.h"
 #include "maps/PanicsAirRaceBeachMapToolsComponent.h"
+#include "maps/speedjump/SpeedJumpRings1MapToolsComponent.h"
+#include "maps/speedjump/SpeedJumpRings2MapToolsComponent.h"
 
 MapToolsSelectorComponent::MapToolsSelectorComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : PluginComponentBase(plugin),
@@ -13,6 +15,8 @@ MapToolsSelectorComponent::MapToolsSelectorComponent(BakkesMod::Plugin::BakkesMo
     this->maps.push_back(std::make_unique<TutorialAdvancedMapToolsComponent>(plugin));
     this->maps.push_back(std::make_unique<LethsNeonRingsMapToolsComponent>(plugin));
     this->maps.push_back(std::make_unique<PanicsAirRaceBeachMapToolsComponent>(plugin));
+    this->maps.push_back(std::make_unique<SpeedJumpRings1MapToolsComponent>(plugin));
+    this->maps.push_back(std::make_unique<SpeedJumpRings2MapToolsComponent>(plugin));
 }
 
 void MapToolsSelectorComponent::render()

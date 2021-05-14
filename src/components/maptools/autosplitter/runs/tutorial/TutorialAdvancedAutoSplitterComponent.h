@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../AutoSplitterComponent.h"
+#include "../../AutoSplitterComponent.h"
 
 class TutorialAdvancedAutoSplitterComponent : public AutoSplitterComponent
 {
@@ -9,6 +9,7 @@ private:
     int segment;
     int segment4GoalsScored;
     int segment5GoalsScored;
+
 public:
     explicit TutorialAdvancedAutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
 

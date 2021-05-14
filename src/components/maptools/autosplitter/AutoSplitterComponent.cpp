@@ -29,8 +29,10 @@ void AutoSplitterComponent::render()
         {
             if (ImGui::Button("Enable Auto Splitter For This Map"))
             {
-                this->isEnabled = true;
-                this->onEnable();
+                this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
+                    this->isEnabled = true;
+                    this->onEnable();
+                });
             }
         }
 

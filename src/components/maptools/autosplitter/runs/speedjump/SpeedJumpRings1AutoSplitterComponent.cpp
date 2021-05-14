@@ -1,16 +1,23 @@
-#include "SpeedJumpRings1AutoSplitter.h"
+#include "SpeedJumpRings1AutoSplitterComponent.h"
 
-SpeedJumpRings1AutoSplitter::SpeedJumpRings1AutoSplitter(BakkesMod::Plugin::BakkesModPlugin *plugin)
-        : AutoSplitterBase(plugin),
+SpeedJumpRings1AutoSplitterComponent::SpeedJumpRings1AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
+        : AutoSplitterComponent(plugin),
           hasUpdatedOnce(false),
           hasUpdatedTwice(false),
-          currentRings(0),
-          previousRings(0)
+          currentRings(),
+          previousRings()
 {
 
 }
 
-void SpeedJumpRings1AutoSplitter::onEventReceived(const std::string &eventName, bool post, void *params)
+void SpeedJumpRings1AutoSplitterComponent::onEnable()
+{
+    this->hasUpdatedOnce = false;
+    this->hasUpdatedTwice = false;
+    this->resetRingsKismetToZero();
+}
+
+void SpeedJumpRings1AutoSplitterComponent::update(const std::string &eventName, bool post, void *params)
 {
     if (eventName == "Function TAGame.Car_TA.SetVehicleInput" && post)
     {
@@ -30,44 +37,44 @@ void SpeedJumpRings1AutoSplitter::onEventReceived(const std::string &eventName, 
 
         if (this->hasUpdatedTwice)
         {
-            if (this->currentRings != this->previousRings && this->currentRings == 1) this->shouldTimerStart = true;
-            if (this->currentRings != this->previousRings && this->currentRings > 1 & this->currentRings % 10 == 0) this->shouldTimerSplit = true;
+            if (this->currentRings != this->previousRings && this->currentRings == 1) this->startTimer();
+            if (this->currentRings != this->previousRings && this->currentRings > 1 & this->currentRings % 10 == 0) this->splitTimer();
         }
     }
     if (eventName == "Function TAGame.GFxShell_TA.ShowModalObject" && post)
     {
-        if (this->currentRings >= 161) this->shouldTimerSplit = true;
+        if (this->currentRings >= 161) this->splitTimer();
     }
     if (eventName == "Function TAGame.GameEvent_TA.PlayerResetTraining")
     {
         this->resetRingsKismetToZero();
-        this->shouldTimerReset = true;
+        this->resetTimer();
     }
     if (eventName == "Function TAGame.GameEvent_Soccar_TA.Destroyed" && post)
     {
         this->hasUpdatedOnce = false;
         this->hasUpdatedTwice = false;
 
-        if (this->currentRings > 0) this->shouldTimerReset = true;
+        if (this->currentRings > 0) this->resetTimer();
     }
 }
 
-std::string SpeedJumpRings1AutoSplitter::startDescription()
+std::string SpeedJumpRings1AutoSplitterComponent::getStartDescription()
 {
-    return "The timer will startTimer after passing the first ring.";
+    return "The timer will start after passing the first ring.";
 }
 
-std::string SpeedJumpRings1AutoSplitter::splitDescription()
+std::string SpeedJumpRings1AutoSplitterComponent::getSplitDescription()
 {
-    return "The timer will splitTimer after every 10 rings passed and after passing the final ring (162 rings in total).";
+    return "The timer will split after every 10 rings passed and after passing the final ring (162 rings in total).";
 }
 
-std::string SpeedJumpRings1AutoSplitter::resetDescription()
+std::string SpeedJumpRings1AutoSplitterComponent::getResetDescription()
 {
-    return "The timer will resetTimer when the player presses the 'Reset Shot' binding or leaves the map.";
+    return "The timer will reset when the player presses the 'Reset Shot' binding or leaves the map.";
 }
 
-std::string SpeedJumpRings1AutoSplitter::getDebug()
+std::string SpeedJumpRings1AutoSplitterComponent::getDebugText()
 {
     std::stringstream ss;
     ss << "Speed Jump Rings 1 Auto Splitter (Debug)" << std::endl;
@@ -78,7 +85,7 @@ std::string SpeedJumpRings1AutoSplitter::getDebug()
     return ss.str();
 }
 
-void SpeedJumpRings1AutoSplitter::resetRingsKismetToZero()
+void SpeedJumpRings1AutoSplitterComponent::resetRingsKismetToZero()
 {
     auto sequence = this->plugin->gameWrapper->GetMainSequence();
     if (sequence.memory_address == NULL) return;

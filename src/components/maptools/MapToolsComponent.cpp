@@ -23,18 +23,24 @@ void MapToolsComponent::render()
         ImGui::TreePop();
     }
     ImGuiExtensions::BigSeparator();
-    if (ImGui::TreeNodeEx("Checkpoints", ImGuiTreeNodeFlags_DefaultOpen))
+    if (this->numCheckpoints > 0)
     {
-        this->renderCheckpoints();
-        ImGui::TreePop();
+        if (ImGui::TreeNodeEx("Checkpoints", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            this->renderCheckpoints();
+            ImGui::TreePop();
+        }
+        ImGuiExtensions::BigSeparator();
     }
-    ImGuiExtensions::BigSeparator();
-    if (ImGui::TreeNodeEx("Auto Splitter", ImGuiTreeNodeFlags_DefaultOpen))
+    if (this->autoSplitterComponent != nullptr)
     {
-        this->renderAutoSplitter();
-        ImGui::TreePop();
+        if (ImGui::TreeNodeEx("Auto Splitter", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            this->renderAutoSplitter();
+            ImGui::TreePop();
+        }
+        ImGuiExtensions::BigSeparator();
     }
-    ImGuiExtensions::BigSeparator();
 }
 
 void MapToolsComponent::renderGeneralMapTools()
