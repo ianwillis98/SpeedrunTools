@@ -7,7 +7,6 @@
 MapToolsSelectorComponent::MapToolsSelectorComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : PluginComponentBase(plugin),
           maps(),
-          mapNames(),
           selectedMapIndex(0)
 {
     this->maps.push_back(std::make_unique<TutorialBasicMapToolsComponent>(plugin));
