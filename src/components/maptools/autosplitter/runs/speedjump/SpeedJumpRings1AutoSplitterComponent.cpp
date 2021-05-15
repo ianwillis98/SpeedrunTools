@@ -2,8 +2,8 @@
 
 SpeedJumpRings1AutoSplitterComponent::SpeedJumpRings1AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : AutoSplitterComponent(plugin),
-          hasUpdatedOnce(false),
-          hasUpdatedTwice(false),
+          hasUpdatedOnce(),
+          hasUpdatedTwice(),
           currentRings(),
           previousRings()
 {

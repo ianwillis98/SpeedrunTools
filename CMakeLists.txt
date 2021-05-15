@@ -6,8 +6,9 @@ set(CMAKE_CXX_STANDARD 17)
 get_filename_component(BAKKESMOD_PATH "[HKEY_CURRENT_USER\\Software\\BakkesMod\\AppPath;BakkesModPath]" ABSOLUTE)
 #message("BAKKESMOD_PATH = ${BAKKESMOD_PATH}")
 
-add_subdirectory(external/ocornut/imgui)
 add_subdirectory(external/asio)
+add_subdirectory(external/cinderblock)
+add_subdirectory(external/ocornut/imgui)
 
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "src/*.h" "src/*.cpp")
 add_library(SpeedrunTools SHARED ${SOURCE_FILES})
@@ -17,15 +18,17 @@ target_precompile_headers(SpeedrunTools PUBLIC src/pch.h)
 target_include_directories(
         SpeedrunTools PRIVATE
         "${BAKKESMOD_PATH}/bakkesmodsdk/include"
-        "external/ocornut/imgui"
         "external/asio"
+        "external/cinderblock"
+        "external/ocornut/imgui"
 )
 
 target_link_libraries(
         SpeedrunTools PRIVATE
         "${BAKKESMOD_PATH}/bakkesmodsdk/lib/pluginsdk.lib"
-        ImGui
         asio
+        RenderingTools
+        ImGui
 )
 
 target_link_options(SpeedrunTools PUBLIC "/DEBUG")

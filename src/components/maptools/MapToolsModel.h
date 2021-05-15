@@ -12,6 +12,7 @@ private:
 public:
     static MapToolsModel &getInstance(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
+    std::vector<KismetSequenceVariable> getKismetVars();
 
     void resetPlayers();
     void setCarState(Vector location = Vector(0.0f, 0.0f, 0.0f),
@@ -23,5 +24,6 @@ public:
     void removeAllBalls();
     void spawnAndStopBall(Vector location);
 
-    std::vector<KismetSequenceVariable> getKismetVars();
+    void isPlayerInsideCube(Vector corner1, Vector corner2);
+
 };

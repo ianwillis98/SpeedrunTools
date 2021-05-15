@@ -10,6 +10,11 @@ void PluginComponentBase::render()
 
 }
 
+void PluginComponentBase::renderCanvas(CanvasWrapper &canvasWrapper)
+{
+
+}
+
 void PluginComponentBase::onEvent(const std::string &eventName, bool post, void *params)
 {
 

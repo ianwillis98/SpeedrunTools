@@ -2,8 +2,8 @@
 
 SpeedJumpRings2AutoSplitterComponent::SpeedJumpRings2AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : AutoSplitterComponent(plugin),
-          hasUpdatedOnce(false),
-          hasUpdatedTwice(false),
+          hasUpdatedOnce(),
+          hasUpdatedTwice(),
           currentLevel(),
           previousLevel(),
           currentDisplayTimer(),
@@ -16,7 +16,6 @@ void SpeedJumpRings2AutoSplitterComponent::onEnable()
 {
     this->hasUpdatedOnce = false;
     this->hasUpdatedTwice = false;
-    this->resetDisplayTimer();
 }
 
 void SpeedJumpRings2AutoSplitterComponent::update(const std::string &eventName, bool post, void *params)
@@ -45,8 +44,7 @@ void SpeedJumpRings2AutoSplitterComponent::update(const std::string &eventName, 
 
         if (this->hasUpdatedTwice)
         {
-            if (!this->currentDisplayTimer.empty() && this->previousDisplayTimer.empty()) this->startTimer();
-            if (this->currentDisplayTimer.empty() && !this->previousDisplayTimer.empty()) this->resetTimer();
+            if (this->currentDisplayTimer == "00:00" && this->previousDisplayTimer != "00:00") this->startTimer();
         }
     }
     if (eventName == "Function TAGame.GFxShell_TA.ShowModalObject" && post)
@@ -55,12 +53,13 @@ void SpeedJumpRings2AutoSplitterComponent::update(const std::string &eventName, 
     }
     if (eventName == "Function TAGame.GameEvent_TA.PlayerResetTraining")
     {
-        this->resetDisplayTimer();
+        this->resetTimer();
     }
     if (eventName == "Function TAGame.GameEvent_Soccar_TA.Destroyed" && post)
     {
         this->hasUpdatedOnce = false;
         this->hasUpdatedTwice = false;
+        this->resetTimer();
     }
 }
 
@@ -87,18 +86,7 @@ std::string SpeedJumpRings2AutoSplitterComponent::getDebugText()
     ss << "hasUpdatedTwice = " << this->hasUpdatedTwice << std::endl;
     ss << "currentLevel = " << this->currentLevel << std::endl;
     ss << "previousLevel = " << this->previousLevel << std::endl;
+    ss << "currentDisplayTimer = " << this->currentDisplayTimer << std::endl;
+    ss << "previousDisplayTimer = " << this->previousDisplayTimer << std::endl;
     return ss.str();
-}
-
-void SpeedJumpRings2AutoSplitterComponent::resetDisplayTimer()
-{
-    auto sequence = this->plugin->gameWrapper->GetMainSequence();
-    if (sequence.memory_address == NULL) return;
-
-    auto allVars = sequence.GetAllSequenceVariables(false);
-
-    auto displayTimer = allVars.find("displaytimer");
-    if (displayTimer == allVars.end()) return;
-
-    displayTimer->second.SetString("");
 }

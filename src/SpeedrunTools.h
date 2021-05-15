@@ -18,6 +18,7 @@ public:
     void onLoad() override;
     void onUnload() override;
     void renderBody() override;
+    void renderCanvas(CanvasWrapper &canvasWrapper);
 
 private:
     void setupEvents();

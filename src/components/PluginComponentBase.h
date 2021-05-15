@@ -11,5 +11,6 @@ public:
     explicit PluginComponentBase(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
     void render() override;
+    void renderCanvas(CanvasWrapper &canvasWrapper) override;
     void onEvent(const std::string &eventName, bool post, void *params) override;
 };

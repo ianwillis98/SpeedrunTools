@@ -4,6 +4,7 @@
 #include "components/kismet/KismetEditorComponent.h"
 #include "components/savestates/SaveStatesComponent.h"
 #include "components/maptools/MapToolsSelectorComponent.h"
+#include "components/experimental/ExperimentalComponent.h"
 
 BAKKESMOD_PLUGIN(SpeedrunTools, SpeedrunTools::PLUGIN_TITLE, SpeedrunTools::PLUGIN_VERSION, PLUGINTYPE_CUSTOM_TRAINING)
 
@@ -20,11 +21,16 @@ SpeedrunTools::SpeedrunTools()
 
 void SpeedrunTools::onLoad()
 {
+    this->gameWrapper->RegisterDrawable([this](CanvasWrapper canvasWrapper) {
+        this->renderCanvas(canvasWrapper);
+    });
+
     this->tabs.emplace_back("General Tools", std::make_unique<GeneralToolsComponent>(this));
     this->tabs.emplace_back("Map Tools", std::make_unique<MapToolsSelectorComponent>(this));
     this->tabs.emplace_back("Save States", std::make_unique<SaveStatesComponent>(this));
     this->tabs.emplace_back("LiveSplit Controls", std::make_unique<LiveSplitComponent>(this));
     this->tabs.emplace_back("Kismet Editor", std::make_unique<KismetEditorComponent>(this));
+    this->tabs.emplace_back("Experimental", std::make_unique<ExperimentalComponent>(this));
 
     this->setupEvents();
 }
@@ -61,6 +67,15 @@ void SpeedrunTools::renderBody()
         ImGui::EndTabBar();
     }
 }
+
+void SpeedrunTools::renderCanvas(CanvasWrapper &canvasWrapper)
+{
+    for (auto &tab : this->tabs)
+    {
+        tab.second->renderCanvas(canvasWrapper);
+    }
+}
+
 void SpeedrunTools::setupEvents()
 {
     // tick (params for controller input override)
