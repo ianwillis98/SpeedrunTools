@@ -16,7 +16,7 @@ MapToolsSelectorComponent::MapToolsSelectorComponent(BakkesMod::Plugin::BakkesMo
     this->maps.push_back(std::make_unique<LethsNeonRingsMapToolsComponent>(plugin));
     this->maps.push_back(std::make_unique<PanicsAirRaceBeachMapToolsComponent>(plugin));
     this->maps.push_back(std::make_unique<SpeedJumpRings1MapToolsComponent>(plugin));
-    this->maps.push_back(std::make_unique<SpeedJumpRings2MapToolsComponent>(plugin));
+//    this->maps.push_back(std::make_unique<SpeedJumpRings2MapToolsComponent>(plugin));
 }
 
 void MapToolsSelectorComponent::render()
@@ -39,6 +39,14 @@ void MapToolsSelectorComponent::render()
     ImGuiExtensions::BigSeparator();
 
     this->maps.at(selectedMapIndex)->render();
+}
+
+void MapToolsSelectorComponent::renderCanvas(CanvasWrapper &canvasWrapper)
+{
+    for (auto &map : this->maps)
+    {
+        map->renderCanvas(canvasWrapper);
+    }
 }
 
 void MapToolsSelectorComponent::onEvent(const std::string &eventName, bool post, void *params)

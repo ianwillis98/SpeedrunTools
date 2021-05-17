@@ -7,9 +7,32 @@ SpeedJumpRings2AutoSplitterComponent::SpeedJumpRings2AutoSplitterComponent(Bakke
           currentLevel(),
           previousLevel(),
           currentDisplayTimer(),
-          previousDisplayTimer()
+          previousDisplayTimer(),
+          segment(0),
+          hitBoxes()
 {
+    this->hitBoxes.emplace_back(1, Aabb(Vector(-3750, -23800, 7500), Vector(1600, -100, 1350)));
+}
 
+void SpeedJumpRings2AutoSplitterComponent::renderCanvas(CanvasWrapper &canvasWrapper)
+{
+    if (!this->plugin->gameWrapper->IsInFreeplay()) return;
+
+    CarWrapper car = this->plugin->gameWrapper->GetLocalCar();
+    if (car.IsNull()) return;
+
+    CameraWrapper cameraWrapper = this->plugin->gameWrapper->GetCamera();
+    if (cameraWrapper.IsNull()) return;
+
+    Vector location = car.GetLocation();
+
+    for (auto &hitBox : hitBoxes)
+    {
+        if (hitBox.second.intersects(location)) canvasWrapper.SetColor(0, 255, 0, 255);
+        else canvasWrapper.SetColor(255, 0, 0, 255);
+
+        hitBox.second.renderCanvas(canvasWrapper, cameraWrapper);
+    }
 }
 
 void SpeedJumpRings2AutoSplitterComponent::onEnable()
@@ -44,22 +67,56 @@ void SpeedJumpRings2AutoSplitterComponent::update(const std::string &eventName, 
 
         if (this->hasUpdatedTwice)
         {
-            if (this->currentDisplayTimer == "00:00" && this->previousDisplayTimer != "00:00") this->startTimer();
+            this->plugin->cvarManager->log("seg,emt " + std::to_string(this->segment));
+
+            if (this->segment == 0)
+            {
+                if (this->currentDisplayTimer == "00:00" && this->previousDisplayTimer != "00:00")
+                {
+                    this->segment++;
+                    this->startTimer();
+                }
+            }
+            else if (1 <= this->segment && this->segment <= 10)
+            {
+                CarWrapper car = this->plugin->gameWrapper->GetLocalCar();
+                if (car.IsNull()) return;
+
+                Vector location = car.GetLocation();
+
+                for (auto &hitBox : hitBoxes)
+                {
+                    if (hitBox.first == this->segment && hitBox.second.intersects(location))
+                    {
+                        this->segment++;
+                        this->splitTimer();
+                    }
+                }
+            }
         }
     }
     if (eventName == "Function TAGame.GFxShell_TA.ShowModalObject" && post)
     {
-        this->splitTimer();
+        if (this->segment == 11)
+        {
+            this->segment++;
+            this->splitTimer();
+        }
     }
     if (eventName == "Function TAGame.GameEvent_TA.PlayerResetTraining")
     {
+        this->segment = 0;
         this->resetTimer();
     }
     if (eventName == "Function TAGame.GameEvent_Soccar_TA.Destroyed" && post)
     {
         this->hasUpdatedOnce = false;
         this->hasUpdatedTwice = false;
-        this->resetTimer();
+        if (this->segment > 0)
+        {
+            this->segment = 0;
+            this->resetTimer();
+        }
     }
 }
 

@@ -43,6 +43,11 @@ void MapToolsComponent::render()
     }
 }
 
+void MapToolsComponent::renderCanvas(CanvasWrapper &canvasWrapper)
+{
+    this->autoSplitterComponent->renderCanvas(canvasWrapper);
+}
+
 void MapToolsComponent::renderGeneralMapTools()
 {
     if (ImGui::Button("Reset Map"))
