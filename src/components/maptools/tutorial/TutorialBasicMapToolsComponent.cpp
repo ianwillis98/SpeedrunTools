@@ -1,5 +1,5 @@
 #include "TutorialBasicMapToolsComponent.h"
-#include "../../autosplitter/runs/tutorial/TutorialBasicAutoSplitterComponent.h"
+#include "TutorialBasicAutoSplitterComponent.h"
 
 TutorialBasicMapToolsComponent::TutorialBasicMapToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : MapToolsComponent(plugin, std::make_shared<TutorialBasicAutoSplitterComponent>(plugin),

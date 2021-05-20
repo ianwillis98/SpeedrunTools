@@ -6,11 +6,11 @@
 #include "components/maptools/MapToolsSelectorComponent.h"
 #include "components/experimental/ExperimentalComponent.h"
 
-BAKKESMOD_PLUGIN(SpeedrunTools, SpeedrunTools::PLUGIN_TITLE, SpeedrunTools::PLUGIN_VERSION, PLUGINTYPE_CUSTOM_TRAINING)
+BAKKESMOD_PLUGIN(SpeedrunTools, SpeedrunTools::PLUGIN_TITLE.c_str(), SpeedrunTools::PLUGIN_VERSION.c_str(), PLUGINTYPE_CUSTOM_TRAINING)
 
-const char *SpeedrunTools::PLUGIN_VERSION = "3.0";
-const char *SpeedrunTools::PLUGIN_TITLE = "Speedrun Tools";
-const char *SpeedrunTools::PLUGIN_MENU_NAME = "speedruntools";
+const std::string SpeedrunTools::PLUGIN_VERSION = "3.0";
+const std::string SpeedrunTools::PLUGIN_TITLE = "Speedrun Tools";
+const std::string SpeedrunTools::PLUGIN_MENU_NAME = "speedruntools";
 
 SpeedrunTools::SpeedrunTools()
         : BaseBakkesModPlugin(SpeedrunTools::PLUGIN_TITLE, SpeedrunTools::PLUGIN_MENU_NAME),
@@ -21,10 +21,6 @@ SpeedrunTools::SpeedrunTools()
 
 void SpeedrunTools::onLoad()
 {
-    this->gameWrapper->RegisterDrawable([this](CanvasWrapper canvasWrapper) {
-        this->renderCanvas(canvasWrapper);
-    });
-
     this->tabs.emplace_back("General Tools", std::make_unique<GeneralToolsComponent>(this));
     this->tabs.emplace_back("Map Tools", std::make_unique<MapToolsSelectorComponent>(this));
     this->tabs.emplace_back("Save States", std::make_unique<SaveStatesComponent>(this));
@@ -33,6 +29,10 @@ void SpeedrunTools::onLoad()
     this->tabs.emplace_back("Experimental", std::make_unique<ExperimentalComponent>(this));
 
     this->setupEvents();
+
+    this->gameWrapper->RegisterDrawable([this](CanvasWrapper canvasWrapper) {
+        this->renderCanvas(canvasWrapper);
+    });
 }
 
 void SpeedrunTools::onUnload()
@@ -106,16 +106,6 @@ void SpeedrunTools::setupEvents()
 
     // modal popup
     this->setupEventPost("Function TAGame.GFxShell_TA.ShowModalObject");
-}
-
-void SpeedrunTools::setupEvent(const std::string &eventName)
-{
-    this->gameWrapper->HookEvent(
-            eventName,
-            [this](const std::string &eventName) {
-                for (auto &tab : this->tabs) tab.second->onEvent(eventName, false, nullptr);
-            }
-    );
 }
 
 void SpeedrunTools::setupEventPost(const std::string &eventName)

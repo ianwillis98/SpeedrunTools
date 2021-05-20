@@ -1,51 +1,57 @@
 #include "LiveSplitComponent.h"
 
+const std::string LiveSplitComponent::ConnectCVarName = "speedrun_livesplit_connect";
+const std::string LiveSplitComponent::DisconnectCVarName = "speedrun_livesplit_disconnect";
+const std::string LiveSplitComponent::StartOrSplitCVarName = "speedrun_livesplit_startorsplit";
+const std::string LiveSplitComponent::StartCVarName = "speedrun_livesplit_start";
+const std::string LiveSplitComponent::PauseCVarName = "speedrun_livesplit_pause";
+const std::string LiveSplitComponent::ResumeCVarName = "speedrun_livesplit_resume";
+const std::string LiveSplitComponent::ResetCVarName = "speedrun_livesplit_reset";
+const std::string LiveSplitComponent::SplitCVarName = "speedrun_livesplit_split";
+const std::string LiveSplitComponent::SkipSplitCVarName = "speedrun_livesplit_skipsplit";
+const std::string LiveSplitComponent::UndoSplitCVarName = "speedrun_livesplit_undosplit";
+
 LiveSplitComponent::LiveSplitComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : PluginComponentBase(plugin),
           liveSplitModel(LiveSplitModel::getInstance(plugin))
 {
-    this->plugin->cvarManager->registerNotifier("speedrun_livesplit_connect", [this](const std::vector<std::string> &commands) {
+    this->plugin->cvarManager->registerNotifier(ConnectCVarName, [this](const std::vector<std::string> &commands) {
         this->liveSplitModel.connect();
     }, "", PERMISSION_PAUSEMENU_CLOSED);
-    this->plugin->cvarManager->registerNotifier("speedrun_livesplit_disconnect", [this](const std::vector<std::string> &commands) {
+    this->plugin->cvarManager->registerNotifier(DisconnectCVarName, [this](const std::vector<std::string> &commands) {
         this->liveSplitModel.disconnect();
     }, "", PERMISSION_PAUSEMENU_CLOSED);
-    this->plugin->cvarManager->registerNotifier("speedrun_livesplit_startorsplit", [this](const std::vector<std::string> &commands) {
+    this->plugin->cvarManager->registerNotifier(StartOrSplitCVarName, [this](const std::vector<std::string> &commands) {
         this->liveSplitModel.startOrSplit();
     }, "", PERMISSION_PAUSEMENU_CLOSED);
-    this->plugin->cvarManager->registerNotifier("speedrun_livesplit_start", [this](const std::vector<std::string> &commands) {
+    this->plugin->cvarManager->registerNotifier(StartCVarName, [this](const std::vector<std::string> &commands) {
         this->liveSplitModel.start();
     }, "", PERMISSION_PAUSEMENU_CLOSED);
-    this->plugin->cvarManager->registerNotifier("speedrun_livesplit_pause", [this](const std::vector<std::string> &commands) {
+    this->plugin->cvarManager->registerNotifier(PauseCVarName, [this](const std::vector<std::string> &commands) {
         this->liveSplitModel.pause();
     }, "", PERMISSION_PAUSEMENU_CLOSED);
-    this->plugin->cvarManager->registerNotifier("speedrun_livesplit_resume", [this](const std::vector<std::string> &commands) {
+    this->plugin->cvarManager->registerNotifier(ResumeCVarName, [this](const std::vector<std::string> &commands) {
         this->liveSplitModel.resume();
     }, "", PERMISSION_PAUSEMENU_CLOSED);
-    this->plugin->cvarManager->registerNotifier("speedrun_livesplit_reset", [this](const std::vector<std::string> &commands) {
+    this->plugin->cvarManager->registerNotifier(ResetCVarName, [this](const std::vector<std::string> &commands) {
         this->liveSplitModel.reset();
     }, "", PERMISSION_PAUSEMENU_CLOSED);
-    this->plugin->cvarManager->registerNotifier("speedrun_livesplit_split", [this](const std::vector<std::string> &commands) {
+    this->plugin->cvarManager->registerNotifier(SplitCVarName, [this](const std::vector<std::string> &commands) {
         this->liveSplitModel.split();
     }, "", PERMISSION_PAUSEMENU_CLOSED);
-    this->plugin->cvarManager->registerNotifier("speedrun_livesplit_skipsplit", [this](const std::vector<std::string> &commands) {
+    this->plugin->cvarManager->registerNotifier(SkipSplitCVarName, [this](const std::vector<std::string> &commands) {
         this->liveSplitModel.skipSplit();
     }, "", PERMISSION_PAUSEMENU_CLOSED);
-    this->plugin->cvarManager->registerNotifier("speedrun_livesplit_undosplit", [this](const std::vector<std::string> &commands) {
+    this->plugin->cvarManager->registerNotifier(UndoSplitCVarName, [this](const std::vector<std::string> &commands) {
         this->liveSplitModel.undoSplit();
     }, "", PERMISSION_PAUSEMENU_CLOSED);
 }
 
 void LiveSplitComponent::render()
 {
-    ImGui::PushID(this);
-
     this->renderConnectionStatus();
     ImGuiExtensions::BigSpacing();
-
     this->renderRemoteControls();
-
-    ImGui::PopID();
 }
 
 void LiveSplitComponent::renderConnectionStatus()

@@ -3,8 +3,8 @@
 #include <bakkesmod/wrappers/kismet/SequenceWrapper.h>
 #include <bakkesmod/wrappers/kismet/SequenceVariableWrapper.h>
 
-#include "../../PluginComponentBase.h"
-#include "../../livesplit/LiveSplitModel.h"
+#include "../PluginComponentBase.h"
+#include "../livesplit/LiveSplitModel.h"
 
 class AutoSplitterComponent : public PluginComponentBase
 {
@@ -28,15 +28,15 @@ public:
     void render() final;
     void onEvent(const std::string &eventName, bool post, void *params) final;
 
+    void startTimer();
+    void splitTimer();
+    void resetTimer();
+
 private:
     void renderConnectView();
     std::string getDebugTextPrefix() const;
 
 protected:
-    void startTimer();
-    void splitTimer();
-    void resetTimer();
-
     virtual void onEnable();
     virtual void update(const std::string &eventName, bool post, void *params) = 0;
     virtual std::string getStartDescription();

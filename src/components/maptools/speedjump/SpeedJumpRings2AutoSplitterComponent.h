@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../AutoSplitterComponent.h"
-#include "../../../collision/Aabb.h"
+#include "../AutoSplitterComponent.h"
+#include "../../../models/collision/Rect3d.h"
 
 class SpeedJumpRings2AutoSplitterComponent : public AutoSplitterComponent
 {
@@ -16,7 +16,7 @@ private:
     std::string previousDisplayTimer;
 
     int segment;
-    std::vector<std::pair<int, Aabb>> hitBoxes;
+    std::vector<std::pair<int, Rect3d>> hitBoxes;
 
 public:
     explicit SpeedJumpRings2AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);

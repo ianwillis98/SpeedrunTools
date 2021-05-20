@@ -1,29 +1,39 @@
 #include "BaseBakkesModPlugin.h"
 
-BaseBakkesModPlugin::BaseBakkesModPlugin(const char *menuTitle, const char *menuName, ImGuiWindowFlags flags)
+#include <utility>
+
+BaseBakkesModPlugin::BaseBakkesModPlugin(std::string menuTitle, std::string menuName, ImGuiWindowFlags flags)
+        : menuTitle(std::move(menuTitle)),
+          menuName(std::move(menuName)),
+          flags(flags)
 {
-    this->menuTitle = menuTitle;
-    this->menuName = menuName;
     this->isMenuOpen = false;
-    this->flags = flags;
 }
 
 void BaseBakkesModPlugin::Render()
 {
-    if (!ImGui::Begin(this->menuTitle, &this->isMenuOpen, this->flags))
+    if (ImGui::Begin(this->menuTitle.c_str(), &this->isMenuOpen, this->flags))
     {
-        ImGui::End();
-        return;
+        this->renderBody();
+
+        if (!isMenuOpen)
+        {
+            this->cvarManager->executeCommand("togglemenu " + std::string(menuName));
+        }
     }
-
-    this->renderBody();
-
     ImGui::End();
+}
 
-    if (!isMenuOpen)
-    {
-        this->cvarManager->executeCommand("togglemenu " + std::string(menuName));
-    }
+// Called when window is opened
+void BaseBakkesModPlugin::OnOpen()
+{
+    this->isMenuOpen = true;
+}
+
+// Called when window is closed
+void BaseBakkesModPlugin::OnClose()
+{
+    this->isMenuOpen = false;
 }
 
 // Don't call this yourself, BM will call this function with a pointer to the current ImGui context
@@ -42,18 +52,6 @@ bool BaseBakkesModPlugin::ShouldBlockInput()
 bool BaseBakkesModPlugin::IsActiveOverlay()
 {
     return true;
-}
-
-// Called when window is opened
-void BaseBakkesModPlugin::OnOpen()
-{
-    this->isMenuOpen = true;
-}
-
-// Called when window is closed
-void BaseBakkesModPlugin::OnClose()
-{
-    this->isMenuOpen = false;
 }
 
 // Name of the menu that is used to toggle the window.

@@ -5,17 +5,17 @@ PluginComponentBase::PluginComponentBase(BakkesMod::Plugin::BakkesModPlugin *plu
 
 }
 
+void PluginComponentBase::onEvent(const std::string &eventName, bool post, void *params)
+{
+
+}
+
 void PluginComponentBase::render()
 {
 
 }
 
 void PluginComponentBase::renderCanvas(CanvasWrapper &canvasWrapper)
-{
-
-}
-
-void PluginComponentBase::onEvent(const std::string &eventName, bool post, void *params)
 {
 
 }

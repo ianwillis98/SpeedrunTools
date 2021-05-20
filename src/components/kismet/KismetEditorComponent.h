@@ -16,11 +16,12 @@ private:
 public:
     explicit KismetEditorComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
-    void render() override;
     void onEvent(const std::string &eventName, bool post, void *params) override;
+    void render() override;
 
 private:
     std::vector<KismetSequenceVariable> loadKismetVars();
     void updateKismetVars();
+    void clearKismetVars();
     void listCVarsToConsole();
 };

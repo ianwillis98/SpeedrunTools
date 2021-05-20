@@ -1,18 +1,23 @@
 #pragma once
 
-#include "../../AutoSplitterComponent.h"
+#include "../AutoSplitterComponent.h"
 
-class SpeedJumpRings1AutoSplitterComponent : public AutoSplitterComponent
+class SpeedJumpRings3AutoSplitterComponent : public AutoSplitterComponent
 {
 private:
     bool hasUpdatedOnce;
     bool hasUpdatedTwice;
 
-    int currentRings;
-    int previousRings;
+    std::string currentDisplayTimer;
+    std::string previousDisplayTimer;
+
+    int currentLevel;
+    int previousLevel;
+
+    int segment;
 
 public:
-    explicit SpeedJumpRings1AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit SpeedJumpRings3AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
     void onEnable() override;
     void update(const std::string &eventName, bool post, void *params) override;
@@ -21,7 +26,4 @@ public:
     std::string getSplitDescription() override;
     std::string getResetDescription() override;
     std::string getDebugText() override;
-
-private:
-    void resetRingsKismetToZero();
 };

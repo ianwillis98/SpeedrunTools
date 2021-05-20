@@ -8,11 +8,12 @@ private:
     Vector center;
     Vector size;
     Rotator rotation;
-    RT::Rect3d rect;
+    RT::Rect3d rtrect;
 
 public:
-    Rect3d(Vector center, Vector size, Rotator rotation, BakkesMod::Plugin::BakkesModPlugin *plugin);
+    Rect3d(Vector center, Vector size, Rotator rotation);
 
+    void render();
     void renderCanvas(CanvasWrapper &canvasWrapper, CameraWrapper &cameraWrapper);
 
     bool contains(Vector point);

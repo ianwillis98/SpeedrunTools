@@ -1,5 +1,5 @@
 #include "LethsNeonRingsMapToolsComponent.h"
-#include "../autosplitter/runs/LethsNeonRingsAutoSplitterComponent.h"
+#include "LethsNeonRingsAutoSplitterComponent.h"
 
 LethsNeonRingsMapToolsComponent::LethsNeonRingsMapToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : MapToolsComponent(plugin, std::make_shared<LethsNeonRingsAutoSplitterComponent>(plugin),

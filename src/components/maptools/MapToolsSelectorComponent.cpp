@@ -1,10 +1,11 @@
 #include "MapToolsSelectorComponent.h"
-#include "maps/tutorial/TutorialBasicMapToolsComponent.h"
-#include "maps/tutorial/TutorialAdvancedMapToolsComponent.h"
-#include "maps/LethsNeonRingsMapToolsComponent.h"
-#include "maps/PanicsAirRaceBeachMapToolsComponent.h"
-#include "maps/speedjump/SpeedJumpRings1MapToolsComponent.h"
-#include "maps/speedjump/SpeedJumpRings2MapToolsComponent.h"
+#include "tutorial/TutorialBasicMapToolsComponent.h"
+#include "tutorial/TutorialAdvancedMapToolsComponent.h"
+#include "leth/LethsNeonRingsMapToolsComponent.h"
+#include "panic/PanicsAirRaceBeachMapToolsComponent.h"
+#include "speedjump/SpeedJumpRings1MapToolsComponent.h"
+#include "speedjump/SpeedJumpRings2MapToolsComponent.h"
+#include "speedjump/SpeedJumpRings3MapToolsComponent.h"
 
 MapToolsSelectorComponent::MapToolsSelectorComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : PluginComponentBase(plugin),
@@ -16,7 +17,16 @@ MapToolsSelectorComponent::MapToolsSelectorComponent(BakkesMod::Plugin::BakkesMo
     this->maps.push_back(std::make_unique<LethsNeonRingsMapToolsComponent>(plugin));
     this->maps.push_back(std::make_unique<PanicsAirRaceBeachMapToolsComponent>(plugin));
     this->maps.push_back(std::make_unique<SpeedJumpRings1MapToolsComponent>(plugin));
-//    this->maps.push_back(std::make_unique<SpeedJumpRings2MapToolsComponent>(plugin));
+    this->maps.push_back(std::make_unique<SpeedJumpRings2MapToolsComponent>(plugin));
+    this->maps.push_back(std::make_unique<SpeedJumpRings3MapToolsComponent>(plugin));
+}
+
+void MapToolsSelectorComponent::onEvent(const std::string &eventName, bool post, void *params)
+{
+    for (auto &map : this->maps)
+    {
+        map->onEvent(eventName, post, params);
+    }
 }
 
 void MapToolsSelectorComponent::render()
@@ -43,16 +53,11 @@ void MapToolsSelectorComponent::render()
 
 void MapToolsSelectorComponent::renderCanvas(CanvasWrapper &canvasWrapper)
 {
-    for (auto &map : this->maps)
+    for (int i = 0; i < this->maps.size(); i++)
     {
-        map->renderCanvas(canvasWrapper);
-    }
-}
-
-void MapToolsSelectorComponent::onEvent(const std::string &eventName, bool post, void *params)
-{
-    for (auto &map : this->maps)
-    {
-        map->onEvent(eventName, post, params);
+        if (i == this->selectedMapIndex)
+        {
+            this->maps.at(i)->renderCanvas(canvasWrapper);
+        }
     }
 }

@@ -1,5 +1,5 @@
 #include "SpeedJumpRings1MapToolsComponent.h"
-#include "../../autosplitter/runs/speedjump/SpeedJumpRings1AutoSplitterComponent.h"
+#include "SpeedJumpRings1AutoSplitterComponent.h"
 
 SpeedJumpRings1MapToolsComponent::SpeedJumpRings1MapToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : MapToolsComponent(plugin, std::make_shared<SpeedJumpRings1AutoSplitterComponent>(plugin),

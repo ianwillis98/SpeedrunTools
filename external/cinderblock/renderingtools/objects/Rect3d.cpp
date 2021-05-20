@@ -1,16 +1,16 @@
 #include <bakkesmod/plugin/bakkesmodplugin.h>
 #include "Rect3d.h"
 
-RT::Rect3d::Rect3d(Vector center, Vector size, Rotator rotation, float thickness, BakkesMod::Plugin::BakkesModPlugin *plugin)
+RT::Rect3d::Rect3d(Vector center, Vector size, Rotator rotation, float thickness)
 {
-    Quat quat = RotatorToQuat(rotation);
-
+    // helper vectors
     Vector zero(0, 0, 0);
     Vector halfSize = size / 2;
     Vector width = Vector(size.X, 0, 0);
     Vector height = Vector(0, size.Y, 0);
     Vector depth = Vector(0, 0, size.Z);
 
+    // define points centered at (0,0,0)
     Vector point1 = zero - halfSize;
     Vector point2 = point1 + width;
     Vector point3 = point1 + height;
@@ -20,6 +20,8 @@ RT::Rect3d::Rect3d(Vector center, Vector size, Rotator rotation, float thickness
     Vector point7 = point1 + height + depth;
     Vector point8 = point1 + size;
 
+    // rotate points and move them to the correct location
+    Quat quat = RotatorToQuat(rotation);
     point1 = RotateVectorWithQuat(point1, quat) + center;
     point2 = RotateVectorWithQuat(point2, quat) + center;
     point3 = RotateVectorWithQuat(point3, quat) + center;
@@ -29,6 +31,7 @@ RT::Rect3d::Rect3d(Vector center, Vector size, Rotator rotation, float thickness
     point7 = RotateVectorWithQuat(point7, quat) + center;
     point8 = RotateVectorWithQuat(point8, quat) + center;
 
+    // manually create all 12 lines
     this->line1 = RT::Line(point1, point2, thickness);
     this->line2 = RT::Line(point1, point3, thickness);
     this->line3 = RT::Line(point1, point4, thickness);
@@ -61,9 +64,4 @@ void RT::Rect3d::Draw(CanvasWrapper &canvas, RT::Frustum &frustum)
     this->line10.DrawWithinFrustum(canvas, frustum);
     this->line11.DrawWithinFrustum(canvas, frustum);
     this->line12.DrawWithinFrustum(canvas, frustum);
-}
-
-void RT::Rect3d::log(std::string name, BakkesMod::Plugin::BakkesModPlugin *plugin, Vector vector)
-{
-    plugin->cvarManager->log(name + ": x=" + std::to_string(vector.X) + ",y=" + std::to_string(vector.Y) + ",z=" + std::to_string(vector.Z));
 }

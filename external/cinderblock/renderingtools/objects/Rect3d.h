@@ -24,10 +24,8 @@ namespace RT
         RT::Line line12;
 
     public:
-        Rect3d(Vector center, Vector size, Rotator rotation, float thickness, BakkesMod::Plugin::BakkesModPlugin *plugin);
+        Rect3d(Vector center, Vector size, Rotator rotation, float thickness = 1);
 
         void Draw(CanvasWrapper &canvas, Frustum &frustum);
-
-        void log(std::string name, BakkesMod::Plugin::BakkesModPlugin *plugin, Vector vector);
     };
 }

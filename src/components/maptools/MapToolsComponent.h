@@ -2,7 +2,7 @@
 
 #include "../PluginComponentBase.h"
 #include "MapToolsModel.h"
-#include "autosplitter/AutoSplitterComponent.h"
+#include "AutoSplitterComponent.h"
 
 class MapToolsComponent : public PluginComponentBase
 {

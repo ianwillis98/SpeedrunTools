@@ -1,5 +1,5 @@
 #include "PanicsAirRaceBeachMapToolsComponent.h"
-#include "../autosplitter/runs/PanicsAirRaceBeachAutoSplitterComponent.h"
+#include "PanicsAirRaceBeachAutoSplitterComponent.h"
 
 PanicsAirRaceBeachMapToolsComponent::PanicsAirRaceBeachMapToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : MapToolsComponent(plugin, std::make_shared<PanicsAirRaceBeachAutoSplitterComponent>(plugin),

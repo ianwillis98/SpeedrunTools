@@ -17,29 +17,18 @@ GeneralToolsComponent::GeneralToolsComponent(BakkesMod::Plugin::BakkesModPlugin 
     this->createAirRollMutatorCVar();
 }
 
-void GeneralToolsComponent::render()
-{
-    this->renderCurrentGameState();
-    this->renderGameGravityMutator();
-    this->renderGameSpeedMutator();
-    this->renderBoostMutator();
-    this->renderAirRollMutator();
-}
 
 void GeneralToolsComponent::onEvent(const std::string &eventName, bool post, void *params)
 {
-    if (eventName == "Function TAGame.Car_TA.SetVehicleInput" && !post)
+    if (eventName == "Function TAGame.Car_TA.SetVehicleInput" && !post && params != nullptr)
     {
         if (!this->plugin->gameWrapper->IsInFreeplay()) return;
 
         ServerWrapper serverWrapper = this->plugin->gameWrapper->GetGameEventAsServer();
-        if (serverWrapper.IsNull()) return;
-
-        this->currentGameState = GameState(serverWrapper);
-    }
-    if (eventName == "Function TAGame.Car_TA.SetVehicleInput" && !post)
-    {
-        if (!this->plugin->gameWrapper->IsInFreeplay()) return;
+        if (!serverWrapper.IsNull())
+        {
+            this->currentGameState = GameState(serverWrapper);
+        }
 
         switch (this->boostMutator)
         {
@@ -53,10 +42,6 @@ void GeneralToolsComponent::onEvent(const std::string &eventName, bool post, voi
                 this->setBoostAmount(100.0f);
                 break;
         }
-    }
-    if (eventName == "Function TAGame.Car_TA.SetVehicleInput" && !post && params != nullptr)
-    {
-        if (!this->plugin->gameWrapper->IsInFreeplay()) return;
 
         auto *controllerInput = (ControllerInput *) params;
         switch (this->airRollMutator)
@@ -75,17 +60,6 @@ void GeneralToolsComponent::onEvent(const std::string &eventName, bool post, voi
                 break;
         }
     }
-}
-
-void GeneralToolsComponent::setBoostAmount(float amount)
-{
-    CarWrapper car = this->plugin->gameWrapper->GetLocalCar();
-    if (car.IsNull()) return;
-
-    BoostWrapper boost = car.GetBoostComponent();
-    if (boost.IsNull()) return;
-
-    boost.SetBoostAmount(amount);
 }
 
 void GeneralToolsComponent::createGameGravityMutatorCVar()
@@ -141,6 +115,26 @@ void GeneralToolsComponent::createAirRollMutatorCVar()
                         this->airRollMutator = AirRollMutator::None;
                 }
             });
+}
+
+void GeneralToolsComponent::setBoostAmount(float amount)
+{
+    CarWrapper car = this->plugin->gameWrapper->GetLocalCar();
+    if (car.IsNull()) return;
+
+    BoostWrapper boost = car.GetBoostComponent();
+    if (boost.IsNull()) return;
+
+    boost.SetBoostAmount(amount);
+}
+
+void GeneralToolsComponent::render()
+{
+    this->renderCurrentGameState();
+    this->renderGameGravityMutator();
+    this->renderGameSpeedMutator();
+    this->renderBoostMutator();
+    this->renderAirRollMutator();
 }
 
 void GeneralToolsComponent::renderCurrentGameState()

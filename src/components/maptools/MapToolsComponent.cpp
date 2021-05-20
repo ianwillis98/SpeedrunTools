@@ -54,6 +54,7 @@ void MapToolsComponent::renderGeneralMapTools()
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
             this->resetMap();
+            this->autoSplitterComponent->resetTimer();
         });
     }
 }

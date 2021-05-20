@@ -8,10 +8,29 @@ KismetEditorComponent::KismetEditorComponent(BakkesMod::Plugin::BakkesModPlugin 
           shouldAutoReloadKismetVars(false),
           mutex()
 {
-    this->updateKismetVars();
     this->plugin->cvarManager->registerNotifier(ListAllCVarsNotifier, [this](const std::vector<std::string> &commands) {
         this->listCVarsToConsole();
     }, "", PERMISSION_ALL);
+
+    this->updateKismetVars();
+}
+
+void KismetEditorComponent::onEvent(const std::string &eventName, bool post, void *params)
+{
+    if (eventName == "Function TAGame.Car_TA.SetVehicleInput" && post)
+    {
+        if (this->shouldAutoReloadKismetVars) this->updateKismetVars();
+    }
+    if (eventName == "Function TAGame.GameEvent_Soccar_TA.InitGame" && post)
+    {
+        this->plugin->gameWrapper->SetTimeout([this](GameWrapper *gw) {
+            this->updateKismetVars();
+        }, 1.0f);
+    }
+    if (eventName == "Function TAGame.GameEvent_Soccar_TA.Destroyed" && post)
+    {
+        this->clearKismetVars();
+    }
 }
 
 void KismetEditorComponent::render()
@@ -38,12 +57,16 @@ void KismetEditorComponent::render()
     {
         ImGui::Columns(3, "Kismet Variables");
         ImGui::Separator();
+
         ImGui::Text("Name");
         ImGui::NextColumn();
+
         ImGui::Text("Value");
         ImGui::NextColumn();
+
         ImGui::Text("Type");
         ImGui::NextColumn();
+
         ImGui::Separator();
 
         for (auto &var : this->kismetVars)
@@ -69,29 +92,6 @@ void KismetEditorComponent::render()
         ImGui::Separator();
     }
     mutex.unlock();
-}
-
-void KismetEditorComponent::onEvent(const std::string &eventName, bool post, void *params)
-{
-    if (eventName == "Function TAGame.Car_TA.SetVehicleInput" && post)
-    {
-        if (this->shouldAutoReloadKismetVars)
-        {
-            this->updateKismetVars();
-        }
-    }
-    if (eventName == "Function TAGame.GameEvent_Soccar_TA.InitGame" && post)
-    {
-        this->plugin->gameWrapper->SetTimeout([this](GameWrapper *gw) {
-            this->updateKismetVars();
-        }, 1.0f);
-    }
-    if (eventName == "Function TAGame.GameEvent_Soccar_TA.Destroyed" && post)
-    {
-        mutex.lock();
-        this->kismetVars.clear();
-        mutex.unlock();
-    }
 }
 
 std::vector<KismetSequenceVariable> KismetEditorComponent::loadKismetVars()
@@ -120,6 +120,13 @@ void KismetEditorComponent::updateKismetVars()
     mutex.unlock();
 }
 
+void KismetEditorComponent::clearKismetVars()
+{
+    mutex.lock();
+    this->kismetVars.clear();
+    mutex.unlock();
+}
+
 void KismetEditorComponent::listCVarsToConsole()
 {
     std::vector<KismetSequenceVariable> kismetVars = this->loadKismetVars();
@@ -128,5 +135,5 @@ void KismetEditorComponent::listCVarsToConsole()
     {
         this->plugin->cvarManager->log(var.getName() + ": " + var.getValueAsString());
     }
-    this->plugin->cvarManager->log("Listing complete.");
+    this->plugin->cvarManager->log("All kismet variables have been listed.");
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../PluginComponentBase.h"
-#include "../maptools/collision/Rect3d.h"
+#include "../../models/collision/Rect3d.h"
 
 class ExperimentalComponent : public PluginComponentBase
 {
