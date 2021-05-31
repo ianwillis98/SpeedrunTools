@@ -12,24 +12,6 @@ MapToolsModel::MapToolsModel(BakkesMod::Plugin::BakkesModPlugin *plugin) : plugi
 
 }
 
-std::vector<KismetSequenceVariable> MapToolsModel::getKismetVars()
-{
-    std::vector<KismetSequenceVariable> kismetVars;
-
-    auto sequence = this->plugin->gameWrapper->GetMainSequence();
-    if (sequence.memory_address != NULL)
-    {
-        auto vars = sequence.GetAllSequenceVariables(false);
-
-        for (auto &var : vars)
-        {
-            kismetVars.emplace_back(this->plugin, var.second);
-        }
-    }
-
-    return kismetVars;
-}
-
 void MapToolsModel::resetPlayers()
 {
     ServerWrapper serverWrapper = this->plugin->gameWrapper->GetGameEventAsServer();
@@ -73,9 +55,4 @@ void MapToolsModel::spawnAndStopBall(Vector location)
     if (serverWrapper.IsNull()) return;
 
     serverWrapper.SpawnBall(location, true, false).Stop();
-}
-
-void MapToolsModel::isPlayerInsideCube(Vector corner1, Vector corner2)
-{
-
 }

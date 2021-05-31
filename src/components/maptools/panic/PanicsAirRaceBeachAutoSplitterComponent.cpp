@@ -2,114 +2,80 @@
 
 PanicsAirRaceBeachAutoSplitterComponent::PanicsAirRaceBeachAutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : AutoSplitterComponent(plugin),
-          hasUpdatedOnce(false),
-          hasUpdatedTwice(false),
-          currentRings(0),
-          previousRings(0),
-          currentCheckpoint(0),
-          previousCheckpoint(0)
+          rings(),
+          checkpoint()
 {
 
 }
 
 void PanicsAirRaceBeachAutoSplitterComponent::onEnable()
 {
-    this->hasUpdatedOnce = false;
-    this->hasUpdatedTwice = false;
+    this->rings = this->kismetModel.getIntValue("Player1Count");
+    this->checkpoint = this->kismetModel.getIntValue("Player1CPCount");
 }
 
 void PanicsAirRaceBeachAutoSplitterComponent::update(const std::string &eventName, bool post, void *params)
 {
     if (eventName == "Function TAGame.Car_TA.SetVehicleInput" && post)
     {
-        auto sequence = this->plugin->gameWrapper->GetMainSequence();
-        if (sequence.memory_address == NULL) return;
+        int previousRings = this->rings;
+        this->rings = this->kismetModel.getIntValue("Player1Count");
 
-        auto allVars = sequence.GetAllSequenceVariables(false);
+        int previousCheckpoint = this->checkpoint;
+        this->checkpoint = this->kismetModel.getIntValue("Player1CPCount");
 
-        auto rings = allVars.find("Player1Count");
-        if (rings == allVars.end()) return;
-
-        this->previousRings = this->currentRings;
-        this->currentRings = rings->second.GetInt();
-
-        auto checkpoint = allVars.find("Player1CPCount");
-        if (checkpoint == allVars.end()) return;
-
-        this->previousCheckpoint = this->currentCheckpoint;
-        this->currentCheckpoint = checkpoint->second.GetInt();
-
-        if (this->hasUpdatedOnce && !this->hasUpdatedTwice) this->hasUpdatedTwice = true;
-        else if (!this->hasUpdatedOnce) this->hasUpdatedOnce = true;
-
-        if (this->hasUpdatedTwice)
+        if (this->segment == 0)
         {
-            if (this->previousRings == 0 && this->currentRings == 1)
+            if (this->rings == 1 && previousRings == 0)
             {
-                this->startTimer();
+                this->start();
             }
-            if (this->previousRings == 5 && this->currentRings == 6)
+        }
+        else if (this->segment == 1)
+        {
+            if (this->rings == 6 && previousRings == 5)
             {
-                this->splitTimer();
+                this->split();
             }
-            if (this->previousCheckpoint != this->currentCheckpoint && this->currentCheckpoint > 0)
+        }
+        else if (2 <= this->segment && this->segment <= 13)
+        {
+            if (this->checkpoint == (previousCheckpoint + 1) && this->checkpoint == (this->segment - 1))
             {
-                this->splitTimer();
-            }
-            if (this->previousRings != 0 && this->currentRings == 0)
-            {
-                this->resetTimer();
+                this->split();
             }
         }
     }
+    if (eventName == "Function TAGame.GameEvent_TA.PlayerResetTraining" && post)
+    {
+        this->reset();
+    }
     if (eventName == "Function TAGame.GameEvent_Soccar_TA.Destroyed" && post)
     {
-        this->hasUpdatedOnce = false;
-        this->hasUpdatedTwice = false;
-
-        if (this->currentRings > 0) this->resetTimer();
+        this->reset();
     }
 }
 
 std::string PanicsAirRaceBeachAutoSplitterComponent::getStartDescription()
 {
-    return "The timer will start when you enter the first ring.";
+    return "The timer will start when you cross the first ring.";
 }
 
 std::string PanicsAirRaceBeachAutoSplitterComponent::getSplitDescription()
 {
-    std::stringstream ss;
-    ss << "The timer will split after each of 13 segments:" << std::endl;
-    ss << "\t1. Entering the sixth ring" << std::endl;
-    ss << "\t2. Checkpoint 1" << std::endl;
-    ss << "\t3. Checkpoint 2" << std::endl;
-    ss << "\t4. Checkpoint 3" << std::endl;
-    ss << "\t5. Checkpoint 4" << std::endl;
-    ss << "\t6. Checkpoint 5" << std::endl;
-    ss << "\t7. Checkpoint 6" << std::endl;
-    ss << "\t8. Checkpoint 7" << std::endl;
-    ss << "\t9. Checkpoint 8" << std::endl;
-    ss << "\t10. Checkpoint 9" << std::endl;
-    ss << "\t11. Checkpoint 10" << std::endl;
-    ss << "\t12. Checkpoint 11" << std::endl;
-    ss << "\t13. Crossing the finish line" << std::endl;
-    return ss.str();
+    return "The timer will split after crossing the 6th ring, crossing each checkpoint, and crossing the finish line (13 splits in total).";
 }
 
 std::string PanicsAirRaceBeachAutoSplitterComponent::getResetDescription()
 {
-    return "The timer will reset when you reset to the beginning of the map or leave the match.";
+    return "The timer will reset when press the \"reset shot\" binding or leave the match.";
 }
 
 std::string PanicsAirRaceBeachAutoSplitterComponent::getDebugText()
 {
     std::stringstream ss;
     ss << "Panic's Air Race Beach Auto Splitter (Debug)" << std::endl;
-    ss << "hasUpdatedOnce = " << this->hasUpdatedOnce << std::endl;
-    ss << "hasUpdatedTwice = " << this->hasUpdatedTwice << std::endl;
-    ss << "currentRings = " << this->currentRings << std::endl;
-    ss << "previousRings = " << this->previousRings << std::endl;
-    ss << "currentCheckpoint = " << this->currentCheckpoint << std::endl;
-    ss << "previousCheckpoint = " << this->previousCheckpoint << std::endl;
+    ss << "rings = " << this->rings << std::endl;
+    ss << "checkpoint = " << this->checkpoint << std::endl;
     return ss.str();
 }

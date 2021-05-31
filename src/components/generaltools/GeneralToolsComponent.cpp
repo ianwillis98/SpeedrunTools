@@ -17,51 +17,6 @@ GeneralToolsComponent::GeneralToolsComponent(BakkesMod::Plugin::BakkesModPlugin 
     this->createAirRollMutatorCVar();
 }
 
-
-void GeneralToolsComponent::onEvent(const std::string &eventName, bool post, void *params)
-{
-    if (eventName == "Function TAGame.Car_TA.SetVehicleInput" && !post && params != nullptr)
-    {
-        if (!this->plugin->gameWrapper->IsInFreeplay()) return;
-
-        ServerWrapper serverWrapper = this->plugin->gameWrapper->GetGameEventAsServer();
-        if (!serverWrapper.IsNull())
-        {
-            this->currentGameState = GameState(serverWrapper);
-        }
-
-        switch (this->boostMutator)
-        {
-            case BoostMutator::None:
-                // do nothing
-                break;
-            case BoostMutator::ZeroBoost:
-                this->setBoostAmount(0.0f);
-                break;
-            case BoostMutator::UnlimitedBoost:
-                this->setBoostAmount(100.0f);
-                break;
-        }
-
-        auto *controllerInput = (ControllerInput *) params;
-        switch (this->airRollMutator)
-        {
-            case AirRollMutator::None:
-                // do nothing
-                break;
-            case AirRollMutator::DisableAirRoll:
-                controllerInput->Roll = 0.0f;
-                break;
-            case AirRollMutator::ForceAirRollLeft:
-                controllerInput->Roll = -1.0f;
-                break;
-            case AirRollMutator::ForceAirRollRight:
-                controllerInput->Roll = 1.0f;
-                break;
-        }
-    }
-}
-
 void GeneralToolsComponent::createGameGravityMutatorCVar()
 {
     CVarFunctions::createCVarReflection(this->plugin, GameGravityMutatorCVarName, "sv_soccar_gravity");
@@ -115,6 +70,50 @@ void GeneralToolsComponent::createAirRollMutatorCVar()
                         this->airRollMutator = AirRollMutator::None;
                 }
             });
+}
+
+void GeneralToolsComponent::onEvent(const std::string &eventName, bool post, void *params)
+{
+    if (eventName == "Function TAGame.Car_TA.SetVehicleInput" && !post && params != nullptr)
+    {
+        if (!this->plugin->gameWrapper->IsInFreeplay()) return;
+
+        ServerWrapper serverWrapper = this->plugin->gameWrapper->GetGameEventAsServer();
+        if (!serverWrapper.IsNull())
+        {
+            this->currentGameState = GameState(serverWrapper);
+        }
+
+        switch (this->boostMutator)
+        {
+            case BoostMutator::None:
+                // do nothing
+                break;
+            case BoostMutator::ZeroBoost:
+                this->setBoostAmount(0.0f);
+                break;
+            case BoostMutator::UnlimitedBoost:
+                this->setBoostAmount(100.0f);
+                break;
+        }
+
+        auto *controllerInput = (ControllerInput *) params;
+        switch (this->airRollMutator)
+        {
+            case AirRollMutator::None:
+                // do nothing
+                break;
+            case AirRollMutator::DisableAirRoll:
+                controllerInput->Roll = 0.0f;
+                break;
+            case AirRollMutator::ForceAirRollLeft:
+                controllerInput->Roll = -1.0f;
+                break;
+            case AirRollMutator::ForceAirRollRight:
+                controllerInput->Roll = 1.0f;
+                break;
+        }
+    }
 }
 
 void GeneralToolsComponent::setBoostAmount(float amount)

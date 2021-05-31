@@ -1,36 +1,29 @@
 #pragma once
 
-#include <bakkesmod/wrappers/kismet/SequenceWrapper.h>
-#include <bakkesmod/wrappers/kismet/SequenceVariableWrapper.h>
-
 #include "../PluginComponentBase.h"
 #include "../livesplit/LiveSplitModel.h"
+#include "../kismet/KismetModel.h"
 
 class AutoSplitterComponent : public PluginComponentBase
 {
 protected:
     LiveSplitModel &liveSplitModel;
+    KismetModel &kismetModel;
 
     bool isEnabled;
-
-    bool supportsAutoStart;
     bool isAutoStartEnabled;
-
-    bool supportsAutoSplit;
     bool isAutoSplitEnabled;
-
-    bool supportsAutoReset;
     bool isAutoResetEnabled;
+
+    int segment;
 
 public:
     explicit AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
-    void render() final;
     void onEvent(const std::string &eventName, bool post, void *params) final;
+    void render() final;
 
-    void startTimer();
-    void splitTimer();
-    void resetTimer();
+    virtual void onMapReset();
 
 private:
     void renderConnectView();
@@ -39,6 +32,11 @@ private:
 protected:
     virtual void onEnable();
     virtual void update(const std::string &eventName, bool post, void *params) = 0;
+
+    void start();
+    void split();
+    void reset();
+
     virtual std::string getStartDescription();
     virtual std::string getSplitDescription();
     virtual std::string getResetDescription();

@@ -3,9 +3,10 @@
 #include "tutorial/TutorialAdvancedMapToolsComponent.h"
 #include "leth/LethsNeonRingsMapToolsComponent.h"
 #include "panic/PanicsAirRaceBeachMapToolsComponent.h"
-#include "speedjump/SpeedJumpRings1MapToolsComponent.h"
-#include "speedjump/SpeedJumpRings2MapToolsComponent.h"
-#include "speedjump/SpeedJumpRings3MapToolsComponent.h"
+#include "speedjump/rings/SpeedJumpRings1MapToolsComponent.h"
+#include "speedjump/rings/SpeedJumpRings2MapToolsComponent.h"
+#include "speedjump/rings/SpeedJumpRings3MapToolsComponent.h"
+#include "leth/LethsGiantRingsMapToolsComponent.h"
 
 MapToolsSelectorComponent::MapToolsSelectorComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : PluginComponentBase(plugin),
@@ -15,6 +16,7 @@ MapToolsSelectorComponent::MapToolsSelectorComponent(BakkesMod::Plugin::BakkesMo
     this->maps.push_back(std::make_unique<TutorialBasicMapToolsComponent>(plugin));
     this->maps.push_back(std::make_unique<TutorialAdvancedMapToolsComponent>(plugin));
     this->maps.push_back(std::make_unique<LethsNeonRingsMapToolsComponent>(plugin));
+    this->maps.push_back(std::make_unique<LethsGiantRingsMapToolsComponent>(plugin));
     this->maps.push_back(std::make_unique<PanicsAirRaceBeachMapToolsComponent>(plugin));
     this->maps.push_back(std::make_unique<SpeedJumpRings1MapToolsComponent>(plugin));
     this->maps.push_back(std::make_unique<SpeedJumpRings2MapToolsComponent>(plugin));

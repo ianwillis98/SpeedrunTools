@@ -91,7 +91,7 @@ enum basic_errors
   /// Connection refused.
   connection_refused = ASIO_SOCKET_ERROR(ECONNREFUSED),
 
-  /// Connection resetTimer by peer.
+  /// Connection reset by peer.
   connection_reset = ASIO_SOCKET_ERROR(ECONNRESET),
 
   /// Bad file descriptor.
@@ -121,7 +121,7 @@ enum basic_errors
   /// Network is down.
   network_down = ASIO_SOCKET_ERROR(ENETDOWN),
 
-  /// Network dropped connection on resetTimer.
+  /// Network dropped connection on reset.
   network_reset = ASIO_SOCKET_ERROR(ENETRESET),
 
   /// Network is unreachable.

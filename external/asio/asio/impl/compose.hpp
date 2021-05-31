@@ -84,7 +84,7 @@ namespace detail
 
     void reset()
     {
-        head_.resetTimer();
+        head_.reset();
       tail_.reset();
     }
 
@@ -296,7 +296,7 @@ namespace detail
 
     void complete(Args... args)
     {
-        this->work_.resetTimer();
+        this->work_.reset();
       this->handler_(ASIO_MOVE_CAST(Args)(args)...);
     }
 

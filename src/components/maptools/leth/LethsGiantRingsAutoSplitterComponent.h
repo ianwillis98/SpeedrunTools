@@ -1,18 +1,19 @@
 #pragma once
 
 #include "../AutoSplitterComponent.h"
+#include "../../../services/LiveSplitClient.h"
 
-class TutorialAdvancedAutoSplitterComponent : public AutoSplitterComponent
+class LethsGiantRingsAutoSplitterComponent : public AutoSplitterComponent
 {
 private:
-    bool isInTutorial;
-    int segment4GoalsScored;
-    int segment5GoalsScored;
+    bool timing;
+    int level;
 
 public:
-    explicit TutorialAdvancedAutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit LethsGiantRingsAutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
 protected:
+    void onEnable() override;
     void update(const std::string &eventName, bool post, void *params) override;
 
     std::string getStartDescription() override;

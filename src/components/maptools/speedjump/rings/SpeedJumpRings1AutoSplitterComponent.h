@@ -1,15 +1,11 @@
 #pragma once
 
-#include "../AutoSplitterComponent.h"
+#include "../../AutoSplitterComponent.h"
 
 class SpeedJumpRings1AutoSplitterComponent : public AutoSplitterComponent
 {
 private:
-    bool hasUpdatedOnce;
-    bool hasUpdatedTwice;
-
-    int currentRings;
-    int previousRings;
+    int rings;
 
 public:
     explicit SpeedJumpRings1AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);

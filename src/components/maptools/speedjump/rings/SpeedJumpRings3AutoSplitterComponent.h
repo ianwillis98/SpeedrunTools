@@ -1,20 +1,12 @@
 #pragma once
 
-#include "../AutoSplitterComponent.h"
+#include "../../AutoSplitterComponent.h"
 
 class SpeedJumpRings3AutoSplitterComponent : public AutoSplitterComponent
 {
 private:
-    bool hasUpdatedOnce;
-    bool hasUpdatedTwice;
-
-    std::string currentDisplayTimer;
-    std::string previousDisplayTimer;
-
-    int currentLevel;
-    int previousLevel;
-
-    int segment;
+    std::string timer;
+    int level;
 
 public:
     explicit SpeedJumpRings3AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);

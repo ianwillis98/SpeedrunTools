@@ -65,7 +65,7 @@ public:
 
   /// Destructor.
   /**
-   * Unless the object has already been resetTimer, or is in a moved-from state,
+   * Unless the object has already been reset, or is in a moved-from state,
    * calls <tt>on_work_finished()</tt> on the stored executor.
    */
   ~executor_work_guard()
@@ -88,7 +88,7 @@ public:
 
   /// Indicate that the work is no longer outstanding.
   /**
-   * Unless the object has already been resetTimer, or is in a moved-from state,
+   * Unless the object has already been reset, or is in a moved-from state,
    * calls <tt>on_work_finished()</tt> on the stored executor.
    */
   void reset() ASIO_NOEXCEPT

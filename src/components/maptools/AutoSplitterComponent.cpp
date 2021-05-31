@@ -3,44 +3,36 @@
 AutoSplitterComponent::AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : PluginComponentBase(plugin),
           liveSplitModel(LiveSplitModel::getInstance(plugin)),
+          kismetModel(KismetModel::getInstance(plugin)),
           isEnabled(false),
-          supportsAutoStart(true),
           isAutoStartEnabled(true),
-          supportsAutoSplit(true),
           isAutoSplitEnabled(true),
-          supportsAutoReset(true),
-          isAutoResetEnabled(true)
+          isAutoResetEnabled(true),
+          segment(0)
 {
 
 }
 
+void AutoSplitterComponent::onEvent(const std::string &eventName, bool post, void *params)
+{
+    if (this->isEnabled)
+    {
+        this->update(eventName, post, params);
+    }
+}
+
 void AutoSplitterComponent::render()
 {
-    ImGui::PushID(this);
-
     if (this->liveSplitModel.isConnected())
     {
         if (this->isEnabled)
         {
             if (ImGui::Button("Disable Auto Splitter For This Map"))
                 this->isEnabled = false;
-        }
-        else
-        {
-            if (ImGui::Button("Enable Auto Splitter For This Map"))
-            {
-                this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-                    this->isEnabled = true;
-                    this->onEnable();
-                });
-            }
-        }
 
-        if (this->isEnabled)
-        {
-            ImGui::Spacing();
+            ImGuiExtensions::BigSpacing();
 
-            if (this->supportsAutoStart) ImGui::Checkbox("Auto Start", &this->isAutoStartEnabled);
+            ImGui::Checkbox("Auto Start", &this->isAutoStartEnabled);
             if (!this->getStartDescription().empty())
             {
                 ImGuiExtensions::PushDisabledStyleIf(!this->isAutoStartEnabled);
@@ -49,7 +41,7 @@ void AutoSplitterComponent::render()
             }
             ImGui::Spacing();
 
-            if (this->supportsAutoSplit) ImGui::Checkbox("Auto Split", &this->isAutoSplitEnabled);
+            ImGui::Checkbox("Auto Split", &this->isAutoSplitEnabled);
             if (!this->getSplitDescription().empty())
             {
                 ImGuiExtensions::PushDisabledStyleIf(!this->isAutoSplitEnabled);
@@ -58,34 +50,43 @@ void AutoSplitterComponent::render()
             }
             ImGui::Spacing();
 
-            if (this->supportsAutoReset) ImGui::Checkbox("Auto Reset", &this->isAutoResetEnabled);
+            ImGui::Checkbox("Auto Reset", &this->isAutoResetEnabled);
             if (!this->getResetDescription().empty())
             {
                 ImGuiExtensions::PushDisabledStyleIf(!this->isAutoResetEnabled);
                 ImGui::Text("%s", this->getResetDescription().c_str());
                 ImGuiExtensions::PopDisabledStyleIf(!this->isAutoResetEnabled);
             }
-            ImGui::Spacing();
+            ImGuiExtensions::BigSpacing();
 
             std::string debug = this->getDebugTextPrefix() + this->getDebugText();
             ImGui::InputTextMultiline("Debug Output", (char *) debug.c_str(), debug.capacity() + 1, ImVec2(0, ImGui::GetTextLineHeight() * 8),
                                       ImGuiInputTextFlags_ReadOnly);
         }
+        else
+        {
+            if (ImGui::Button("Enable Auto Splitter For This Map"))
+            {
+                this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
+                    this->onEnable();
+                    this->isEnabled = true;
+                });
+            }
+        }
     }
     else
     {
-        ImGui::Text("Connect to LiveSplit to use the Auto Splitter...");
-        ImGui::Spacing();
         this->renderConnectView();
     }
-
-    ImGui::PopID();
 }
 
 void AutoSplitterComponent::renderConnectView()
 {
     if (!this->liveSplitModel.isConnected())
     {
+        ImGui::Text("Connect to LiveSplit to use the Auto Splitter...");
+        ImGui::Spacing();
+
         ImVec2 connectButtonSize(100.0f, 30.0f);
         ImGuiExtensions::PushDisabledStyleIf(this->liveSplitModel.isConnecting());
         if (ImGui::Button(this->liveSplitModel.isConnecting() ? "Connecting..." : "Connect", connectButtonSize))
@@ -98,52 +99,32 @@ void AutoSplitterComponent::renderConnectView()
     }
 }
 
+void AutoSplitterComponent::onMapReset()
+{
+    this->reset();
+}
+
 void AutoSplitterComponent::onEnable()
 {
 
 }
 
-void AutoSplitterComponent::onEvent(const std::string &eventName, bool post, void *params)
+void AutoSplitterComponent::start()
 {
-    if (!this->isEnabled) return;
-
-    this->update(eventName, post, params);
+    this->segment = 1;
+    if (this->liveSplitModel.isConnected() && this->isEnabled && this->isAutoStartEnabled) this->liveSplitModel.start();
 }
 
-std::string AutoSplitterComponent::getDebugTextPrefix() const
+void AutoSplitterComponent::split()
 {
-    std::stringstream ss;
-    ss << "Auto Splitter (Debug)" << std::endl;
-    ss << "isEnabled = " << this->isEnabled << std::endl;
-    ss << "supportsAutoStart = " << this->supportsAutoStart << std::endl;
-    ss << "isAutoStartEnabled = " << this->isAutoStartEnabled << std::endl;
-    ss << "supportsAutoSplit = " << this->supportsAutoSplit << std::endl;
-    ss << "isAutoSplitEnabled = " << this->isAutoSplitEnabled << std::endl;
-    ss << "supportsAutoReset = " << this->supportsAutoReset << std::endl;
-    ss << "isAutoResetEnabled = " << this->isAutoResetEnabled << std::endl;
-    ss << "-------------------------------------" << std::endl;
-    return ss.str();
+    this->segment++;
+    if (this->liveSplitModel.isConnected() && this->isEnabled && this->isAutoSplitEnabled) this->liveSplitModel.split();
 }
 
-void AutoSplitterComponent::startTimer()
+void AutoSplitterComponent::reset()
 {
-    if (!this->liveSplitModel.isConnected() || !this->isEnabled || !this->isAutoStartEnabled) return;
-
-    this->liveSplitModel.start();
-}
-
-void AutoSplitterComponent::splitTimer()
-{
-    if (!this->liveSplitModel.isConnected() || !this->isEnabled || !this->isAutoSplitEnabled) return;
-
-    this->liveSplitModel.split();
-}
-
-void AutoSplitterComponent::resetTimer()
-{
-    if (!this->liveSplitModel.isConnected() || !this->isEnabled || !this->isAutoSplitEnabled) return;
-
-    this->liveSplitModel.reset();
+    this->segment = 0;
+    if (this->liveSplitModel.isConnected() && this->isEnabled && this->isAutoResetEnabled) this->liveSplitModel.reset();
 }
 
 std::string AutoSplitterComponent::getStartDescription()
@@ -164,4 +145,17 @@ std::string AutoSplitterComponent::getResetDescription()
 std::string AutoSplitterComponent::getDebugText()
 {
     return std::string();
+}
+
+std::string AutoSplitterComponent::getDebugTextPrefix() const
+{
+    std::stringstream ss;
+    ss << "Auto Splitter (Debug)" << std::endl;
+    ss << "isEnabled = " << this->isEnabled << std::endl;
+    ss << "isAutoStartEnabled = " << this->isAutoStartEnabled << std::endl;
+    ss << "isAutoSplitEnabled = " << this->isAutoSplitEnabled << std::endl;
+    ss << "isAutoResetEnabled = " << this->isAutoResetEnabled << std::endl;
+    ss << "segment = " << this->segment << std::endl;
+    ss << "-------------------------------------" << std::endl;
+    return ss.str();
 }

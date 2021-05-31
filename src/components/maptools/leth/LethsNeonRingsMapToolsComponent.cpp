@@ -10,43 +10,15 @@ LethsNeonRingsMapToolsComponent::LethsNeonRingsMapToolsComponent(BakkesMod::Plug
 
 void LethsNeonRingsMapToolsComponent::resetMap()
 {
-    std::vector<KismetSequenceVariable> kismetVars = this->mapToolsModel.getKismetVars();
-    for (auto &var : kismetVars)
-    {
-        if (var.getName() == "Deaths")
-        {
-            var.setIntValue(0);
-            var.updateMainSequenceValue();
-        }
-        if (var.getName() == "Level")
-        {
-            var.setIntValue(0);
-            var.updateMainSequenceValue();
-        }
-        if (var.getName() == "Seconds")
-        {
-            var.setIntValue(0);
-            var.updateMainSequenceValue();
-        }
-        if (var.getName() == "Timing")
-        {
-            var.setBoolValue(false);
-            var.updateMainSequenceValue();
-        }
-    }
+    this->kismetModel.setBoolValue("Timing", false);
+    this->kismetModel.setIntValue("Level", 1);
+    this->kismetModel.setIntValue("Deaths", 0);
+    this->kismetModel.setIntValue("Seconds", 0);
     this->mapToolsModel.resetPlayers();
 }
 
 void LethsNeonRingsMapToolsComponent::checkpoint(int checkpoint)
 {
-    std::vector<KismetSequenceVariable> kismetVars = this->mapToolsModel.getKismetVars();
-    for (auto &var : kismetVars)
-    {
-        if (var.getName() == "Level")
-        {
-            var.setIntValue(checkpoint);
-            var.updateMainSequenceValue();
-        }
-    }
+    this->kismetModel.setIntValue("Level", checkpoint);
     this->mapToolsModel.resetPlayers();
 }

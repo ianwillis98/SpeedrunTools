@@ -8,7 +8,6 @@ PanicsAirRaceBeachMapToolsComponent::PanicsAirRaceBeachMapToolsComponent(BakkesM
 
 }
 
-
 void PanicsAirRaceBeachMapToolsComponent::resetMap()
 {
     this->mapToolsModel.resetPlayers();
@@ -86,18 +85,6 @@ void PanicsAirRaceBeachMapToolsComponent::checkpoint(int checkpoint)
 
 void PanicsAirRaceBeachMapToolsComponent::setCheckpointAndCount(int checkpoint, int count)
 {
-    std::vector<KismetSequenceVariable> kismetVars = this->mapToolsModel.getKismetVars();
-    for (auto &var : kismetVars)
-    {
-        if (var.getName() == "Player1CPCount")
-        {
-            var.setIntValue(checkpoint);
-            var.updateMainSequenceValue();
-        }
-        if (var.getName() == "Player1Count")
-        {
-            var.setIntValue(count);
-            var.updateMainSequenceValue();
-        }
-    }
+    this->kismetModel.setIntValue("Player1CPCount", checkpoint);
+    this->kismetModel.setIntValue("Player1Count", count);
 }

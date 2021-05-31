@@ -1,19 +1,19 @@
-#include "LethsNeonRingsAutoSplitterComponent.h"
+#include "LethsGiantRingsAutoSplitterComponent.h"
 
-LethsNeonRingsAutoSplitterComponent::LethsNeonRingsAutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
+LethsGiantRingsAutoSplitterComponent::LethsGiantRingsAutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : AutoSplitterComponent(plugin),
-          level(),
-          timing()
+          timing(),
+          level()
 {
 }
 
-void LethsNeonRingsAutoSplitterComponent::onEnable()
+void LethsGiantRingsAutoSplitterComponent::onEnable()
 {
     this->timing = this->kismetModel.getBoolValue("Timing");
     this->level = this->kismetModel.getIntValue("Level");
 }
 
-void LethsNeonRingsAutoSplitterComponent::update(const std::string &eventName, bool post, void *params)
+void LethsGiantRingsAutoSplitterComponent::update(const std::string &eventName, bool post, void *params)
 {
     if (eventName == "Function TAGame.Car_TA.SetVehicleInput" && post)
     {
@@ -51,25 +51,25 @@ void LethsNeonRingsAutoSplitterComponent::update(const std::string &eventName, b
     }
 }
 
-std::string LethsNeonRingsAutoSplitterComponent::getStartDescription()
+std::string LethsGiantRingsAutoSplitterComponent::getStartDescription()
 {
     return "The timer will start when map timer starts.";
 }
 
-std::string LethsNeonRingsAutoSplitterComponent::getSplitDescription()
+std::string LethsGiantRingsAutoSplitterComponent::getSplitDescription()
 {
     return "The timer will split after completing each level (20 splits in total).";
 }
 
-std::string LethsNeonRingsAutoSplitterComponent::getResetDescription()
+std::string LethsGiantRingsAutoSplitterComponent::getResetDescription()
 {
     return "The timer will reset when you press the reset map button or exit to the main menu.";
 }
 
-std::string LethsNeonRingsAutoSplitterComponent::getDebugText()
+std::string LethsGiantRingsAutoSplitterComponent::getDebugText()
 {
     std::stringstream ss;
-    ss << "Leth's Neon Rings Auto Splitter (Debug)" << std::endl;
+    ss << "Leth's Giant Rings Auto Splitter (Debug)" << std::endl;
     ss << "timing = " << this->timing << std::endl;
     ss << "level = " << this->level << std::endl;
     return ss.str();

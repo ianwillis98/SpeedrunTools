@@ -6,6 +6,7 @@ MapToolsComponent::MapToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin,
                                      std::string mapName, std::string cVarName, int numCheckpoints)
         : PluginComponentBase(plugin),
           mapToolsModel(MapToolsModel::getInstance(plugin)),
+          kismetModel(KismetModel::getInstance(plugin)),
           autoSplitterComponent(std::move(std::move(component))),
           mapName(std::move(mapName)),
           cVarName(std::move(cVarName)),
@@ -13,6 +14,30 @@ MapToolsComponent::MapToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin,
 {
     this->createResetNotifier();
     this->createCheckpointNotifiers();
+}
+
+void MapToolsComponent::createResetNotifier()
+{
+    this->plugin->cvarManager->registerNotifier("speedrun_maptools_" + this->cVarName + "_reset", [this](const std::vector<std::string> &commands) {
+        this->autoSplitterComponent->onMapReset();
+        this->resetMap();
+    }, "", PERMISSION_PAUSEMENU_CLOSED);
+}
+
+void MapToolsComponent::createCheckpointNotifiers()
+{
+    for (int i = 1; i <= this->numCheckpoints; i++)
+    {
+        std::string notifier = "speedrun_maptools_" + this->cVarName + "_cp" + std::to_string(i);
+        this->plugin->cvarManager->registerNotifier(notifier, [this, i](const std::vector<std::string> &commands) {
+            this->checkpoint(i);
+        }, "", PERMISSION_PAUSEMENU_CLOSED);
+    }
+}
+
+void MapToolsComponent::onEvent(const std::string &eventName, bool post, void *params)
+{
+    this->autoSplitterComponent->onEvent(eventName, post, params);
 }
 
 void MapToolsComponent::render()
@@ -43,18 +68,13 @@ void MapToolsComponent::render()
     }
 }
 
-void MapToolsComponent::renderCanvas(CanvasWrapper &canvasWrapper)
-{
-    this->autoSplitterComponent->renderCanvas(canvasWrapper);
-}
-
 void MapToolsComponent::renderGeneralMapTools()
 {
     if (ImGui::Button("Reset Map"))
     {
         this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
+            if (this->autoSplitterComponent != nullptr) this->autoSplitterComponent->onMapReset();
             this->resetMap();
-            this->autoSplitterComponent->resetTimer();
         });
     }
 }
@@ -84,27 +104,9 @@ void MapToolsComponent::renderAutoSplitter()
     this->autoSplitterComponent->render();
 }
 
-void MapToolsComponent::onEvent(const std::string &eventName, bool post, void *params)
+void MapToolsComponent::renderCanvas(CanvasWrapper &canvasWrapper)
 {
-    this->autoSplitterComponent->onEvent(eventName, post, params);
-}
-
-void MapToolsComponent::createResetNotifier()
-{
-    this->plugin->cvarManager->registerNotifier("speedrun_maptools_" + this->cVarName + "_reset", [this](const std::vector<std::string> &commands) {
-        this->resetMap();
-    }, "", PERMISSION_PAUSEMENU_CLOSED);
-}
-
-void MapToolsComponent::createCheckpointNotifiers()
-{
-    for (int i = 1; i <= this->numCheckpoints; i++)
-    {
-        std::string notifier = "speedrun_maptools_" + this->cVarName + "_reset" + std::to_string(i);
-        this->plugin->cvarManager->registerNotifier(notifier, [this, i](const std::vector<std::string> &commands) {
-            this->checkpoint(i);
-        }, "", PERMISSION_PAUSEMENU_CLOSED);
-    }
+    this->autoSplitterComponent->renderCanvas(canvasWrapper);
 }
 
 std::string MapToolsComponent::getMapName()

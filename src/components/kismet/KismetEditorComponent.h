@@ -1,7 +1,8 @@
 #pragma once
 
 #include "../PluginComponentBase.h"
-#include "../../models/KismetSequenceVariable.h"
+#include "KismetModel.h"
+#include "../../models/KismetVar.h"
 
 class KismetEditorComponent : public PluginComponentBase
 {
@@ -9,9 +10,7 @@ private:
     static const std::string ListAllCVarsNotifier;
 
 private:
-    std::vector<KismetSequenceVariable> kismetVars;
-    bool shouldAutoReloadKismetVars;
-    std::mutex mutex;
+    KismetModel &kismetModel;
 
 public:
     explicit KismetEditorComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
@@ -20,8 +19,5 @@ public:
     void render() override;
 
 private:
-    std::vector<KismetSequenceVariable> loadKismetVars();
-    void updateKismetVars();
-    void clearKismetVars();
     void listCVarsToConsole();
 };

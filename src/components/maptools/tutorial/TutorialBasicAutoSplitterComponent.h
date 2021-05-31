@@ -6,7 +6,6 @@ class TutorialBasicAutoSplitterComponent : public AutoSplitterComponent
 {
 private:
     bool isInTutorial;
-    int segment;
 
 public:
     explicit TutorialBasicAutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);

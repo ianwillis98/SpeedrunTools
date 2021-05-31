@@ -2,8 +2,7 @@
 
 TutorialBasicAutoSplitterComponent::TutorialBasicAutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : AutoSplitterComponent(plugin),
-          isInTutorial(false),
-          segment(0)
+          isInTutorial(false)
 {
 
 }
@@ -18,11 +17,7 @@ void TutorialBasicAutoSplitterComponent::update(const std::string &eventName, bo
     {
         this->isInTutorial = false;
 
-        if (segment > 0)
-        {
-            this->segment = 0;
-            this->resetTimer();
-        }
+        if (segment > 0) this->reset();
     }
     if (eventName == "Function TAGame.GFxShell_TA.ShowModalObject" && post)
     {
@@ -36,8 +31,7 @@ void TutorialBasicAutoSplitterComponent::update(const std::string &eventName, bo
             int yaw = cw.GetRotation().Yaw;
             if (yaw < 16000 || yaw > 16600) return;
 
-            this->segment++;
-            this->startTimer();
+            this->start();
         }
         else if (this->segment == 6)
         {
@@ -47,8 +41,7 @@ void TutorialBasicAutoSplitterComponent::update(const std::string &eventName, bo
             int yaw = cw.GetRotation().Yaw;
             if (yaw > 16000 && yaw < 16600) return;
 
-            this->segment++;
-            this->splitTimer();
+            this->split();
         }
     }
     if (eventName == "Function GameEvent_Tutorial_Basic_TA.Active.HandleHitGoal" && post)
@@ -57,8 +50,7 @@ void TutorialBasicAutoSplitterComponent::update(const std::string &eventName, bo
 
         if (1 <= this->segment && this->segment <= 5)
         {
-            this->segment++;
-            this->splitTimer();
+            this->split();
         }
     }
 }
@@ -69,6 +61,5 @@ std::string TutorialBasicAutoSplitterComponent::getDebugText()
     std::stringstream ss;
     ss << "Tutorial Basic Auto Splitter (Debug)" << std::endl;
     ss << "isInTutorial = " << this->isInTutorial << std::endl;
-    ss << "segment = " << this->segment << std::endl;
     return ss.str();
 }

@@ -43,11 +43,6 @@ void SaveStatesComponent::render()
     ImGui::Text("The ability to add multiple save states will come in a future update.");
 }
 
-void SaveStatesComponent::onEvent(const std::string &eventName, bool post, void *params)
-{
-
-}
-
 void SaveStatesComponent::saveCurrentGameState()
 {
     if (!this->plugin->gameWrapper->IsInFreeplay()) return;

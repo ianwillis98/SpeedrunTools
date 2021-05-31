@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../models/KismetSequenceVariable.h"
+#include "../../models/KismetVar.h"
 
 class MapToolsModel
 {
@@ -12,8 +12,6 @@ private:
 public:
     static MapToolsModel &getInstance(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
-    std::vector<KismetSequenceVariable> getKismetVars();
-
     void resetPlayers();
     void setCarState(Vector location = Vector(0.0f, 0.0f, 0.0f),
                      Rotator rotation = Rotator(0, 0, 0),
@@ -23,7 +21,4 @@ public:
 
     void removeAllBalls();
     void spawnAndStopBall(Vector location);
-
-    void isPlayerInsideCube(Vector corner1, Vector corner2);
-
 };

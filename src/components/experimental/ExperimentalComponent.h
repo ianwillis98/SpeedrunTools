@@ -1,25 +1,19 @@
 #pragma once
 
 #include "../PluginComponentBase.h"
-#include "../../models/collision/Rect3d.h"
+#include "TestVar.h"
 
 class ExperimentalComponent : public PluginComponentBase
 {
-private:
-    bool fly;
-    bool isBoostPressed;
-
-    bool lockToCar;
-
-    Vector center;
-    Vector size;
-    Rotator rotation;
-    Rect3d rect;
-
 public:
+    std::vector<TestVar> vars;
+
     explicit ExperimentalComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+
+    void onEvent(const std::string &eventName, bool post, void *params) override;
 
     void render() override;
     void renderCanvas(CanvasWrapper &canvasWrapper) override;
-    void onEvent(const std::string &eventName, bool post, void *params) override;
+
+    void assign();
 };

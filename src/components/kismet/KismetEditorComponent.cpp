@@ -4,54 +4,25 @@ const std::string KismetEditorComponent::ListAllCVarsNotifier = "speedrun_kismet
 
 KismetEditorComponent::KismetEditorComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : PluginComponentBase(plugin),
-          kismetVars(),
-          shouldAutoReloadKismetVars(false),
-          mutex()
+          kismetModel(KismetModel::getInstance(plugin))
 {
     this->plugin->cvarManager->registerNotifier(ListAllCVarsNotifier, [this](const std::vector<std::string> &commands) {
         this->listCVarsToConsole();
     }, "", PERMISSION_ALL);
-
-    this->updateKismetVars();
 }
 
 void KismetEditorComponent::onEvent(const std::string &eventName, bool post, void *params)
 {
-    if (eventName == "Function TAGame.Car_TA.SetVehicleInput" && post)
-    {
-        if (this->shouldAutoReloadKismetVars) this->updateKismetVars();
-    }
-    if (eventName == "Function TAGame.GameEvent_Soccar_TA.InitGame" && post)
-    {
-        this->plugin->gameWrapper->SetTimeout([this](GameWrapper *gw) {
-            this->updateKismetVars();
-        }, 1.0f);
-    }
-    if (eventName == "Function TAGame.GameEvent_Soccar_TA.Destroyed" && post)
-    {
-        this->clearKismetVars();
-    }
+    this->kismetModel.onEvent(eventName, post, params);
 }
 
 void KismetEditorComponent::render()
 {
-    ImGuiExtensions::PushDisabledStyleIf(this->shouldAutoReloadKismetVars);
-    if (ImGui::Button("Refresh"))
-    {
-        this->plugin->gameWrapper->Execute([this](GameWrapper *gw) {
-            this->updateKismetVars();
-        });
-    }
-    ImGuiExtensions::PopDisabledStyleIf(this->shouldAutoReloadKismetVars);
-    ImGui::SameLine();
-    ImGui::Checkbox("Auto Refresh", &this->shouldAutoReloadKismetVars);
+    std::vector<KismetVar> kismetVars = this->kismetModel.getKismetVars();
 
-    ImGui::Spacing();
-
-    mutex.lock();
-    if (this->kismetVars.empty())
+    if (kismetVars.empty())
     {
-        ImGui::Text("No kismet variables were found. Try refreshing or switching maps.");
+        ImGui::Text("No kismet variables were found for the current map.");
     }
     else
     {
@@ -69,69 +40,34 @@ void KismetEditorComponent::render()
 
         ImGui::Separator();
 
-        for (auto &var : this->kismetVars)
+        for (auto &kismetVar : kismetVars)
         {
             ImGui::AlignTextToFramePadding();
-            ImGui::Text("%s", var.getName().c_str());
+            ImGui::Text("%s", kismetVar.getName().c_str());
             ImGui::NextColumn();
 
-            if (var.render())
+            if (kismetVar.render())
             {
-                this->plugin->gameWrapper->Execute([var](GameWrapper *gw) {
-                    var.updateMainSequenceValue();
+                this->plugin->gameWrapper->Execute([this, kismetVar](GameWrapper *gw) {
+                    this->kismetModel.updateSequence(kismetVar);
                 });
             }
             ImGui::NextColumn();
 
             ImGui::AlignTextToFramePadding();
-            ImGui::Text("%s", var.getTypeAsString().c_str());
+            ImGui::Text("%s", kismetVar.getTypeAsString().c_str());
             ImGui::NextColumn();
         }
 
         ImGui::Columns(1);
         ImGui::Separator();
     }
-    mutex.unlock();
-}
-
-std::vector<KismetSequenceVariable> KismetEditorComponent::loadKismetVars()
-{
-    std::vector<KismetSequenceVariable> loaded;
-
-    auto sequence = this->plugin->gameWrapper->GetMainSequence();
-    if (sequence.memory_address != NULL)
-    {
-        auto vars = sequence.GetAllSequenceVariables(false);
-
-        for (auto &var : vars)
-        {
-            loaded.emplace_back(this->plugin, var.second);
-        }
-    }
-
-    return loaded;
-}
-
-void KismetEditorComponent::updateKismetVars()
-{
-    std::vector<KismetSequenceVariable> loaded = this->loadKismetVars();
-    mutex.lock();
-    this->kismetVars = loaded;
-    mutex.unlock();
-}
-
-void KismetEditorComponent::clearKismetVars()
-{
-    mutex.lock();
-    this->kismetVars.clear();
-    mutex.unlock();
 }
 
 void KismetEditorComponent::listCVarsToConsole()
 {
-    std::vector<KismetSequenceVariable> kismetVars = this->loadKismetVars();
     this->plugin->cvarManager->log("Listing all kismet variables:");
-    for (auto &var : kismetVars)
+    for (auto &var : this->kismetModel.getKismetVars())
     {
         this->plugin->cvarManager->log(var.getName() + ": " + var.getValueAsString());
     }

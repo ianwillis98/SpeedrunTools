@@ -5,14 +5,8 @@
 class PanicsAirRaceBeachAutoSplitterComponent : public AutoSplitterComponent
 {
 private:
-    bool hasUpdatedOnce;
-    bool hasUpdatedTwice;
-
-    int currentRings;
-    int previousRings;
-
-    int currentCheckpoint;
-    int previousCheckpoint;
+    int rings;
+    int checkpoint;
 
 public:
     explicit PanicsAirRaceBeachAutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
@@ -20,6 +14,7 @@ public:
 protected:
     void onEnable() override;
     void update(const std::string &eventName, bool post, void *params) override;
+
     std::string getStartDescription() override;
     std::string getSplitDescription() override;
     std::string getResetDescription() override;

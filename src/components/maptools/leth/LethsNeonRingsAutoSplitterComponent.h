@@ -1,25 +1,23 @@
 #pragma once
 
-#include "../../../services/LiveSplitClient.h"
 #include "../AutoSplitterComponent.h"
+#include "../../../services/LiveSplitClient.h"
 
 class LethsNeonRingsAutoSplitterComponent : public AutoSplitterComponent
 {
 private:
-    bool hasUpdatedOnce;
-    bool hasUpdatedTwice;
-
-    int currentLevel;
-    int previousLevel;
-
-    bool currentTiming;
-    bool previousTiming;
+    bool timing;
+    int level;
 
 public:
     explicit LethsNeonRingsAutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
 
 protected:
+    void onEnable() override;
     void update(const std::string &eventName, bool post, void *params) override;
 
+    std::string getStartDescription() override;
+    std::string getSplitDescription() override;
+    std::string getResetDescription() override;
     std::string getDebugText() override;
 };

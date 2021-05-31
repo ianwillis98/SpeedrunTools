@@ -135,7 +135,7 @@ public:
     return size_;
   }
 
-  /// Move the startTimer of the buffer by the specified number of bytes.
+  /// Move the start of the buffer by the specified number of bytes.
   mutable_buffer& operator+=(std::size_t n) ASIO_NOEXCEPT
   {
     std::size_t offset = n < size_ ? n : size_;
@@ -279,7 +279,7 @@ public:
     return size_;
   }
 
-  /// Move the startTimer of the buffer by the specified number of bytes.
+  /// Move the start of the buffer by the specified number of bytes.
   const_buffer& operator+=(std::size_t n) ASIO_NOEXCEPT
   {
     std::size_t offset = n < size_ ? n : size_;
@@ -641,7 +641,7 @@ inline PointerToPodType buffer_cast(const const_buffer& b) ASIO_NOEXCEPT
 
 #endif // !defined(ASIO_NO_DEPRECATED)
 
-/// Create a new modifiable buffer that is offset from the startTimer of another.
+/// Create a new modifiable buffer that is offset from the start of another.
 /**
  * @relates mutable_buffer
  */
@@ -658,7 +658,7 @@ inline mutable_buffer operator+(const mutable_buffer& b,
       );
 }
 
-/// Create a new modifiable buffer that is offset from the startTimer of another.
+/// Create a new modifiable buffer that is offset from the start of another.
 /**
  * @relates mutable_buffer
  */
@@ -668,7 +668,7 @@ inline mutable_buffer operator+(std::size_t n,
   return b + n;
 }
 
-/// Create a new non-modifiable buffer that is offset from the startTimer of another.
+/// Create a new non-modifiable buffer that is offset from the start of another.
 /**
  * @relates const_buffer
  */
@@ -685,7 +685,7 @@ inline const_buffer operator+(const const_buffer& b,
       );
 }
 
-/// Create a new non-modifiable buffer that is offset from the startTimer of another.
+/// Create a new non-modifiable buffer that is offset from the start of another.
 /**
  * @relates const_buffer
  */
@@ -1701,7 +1701,7 @@ public:
    *
    * @returns An object of type @c mutable_buffers_type that satisfies
    * MutableBufferSequence requirements, representing basic_string memory
-   * at the startTimer of the output sequence of size @c n.
+   * at the start of the output sequence of size @c n.
    *
    * @throws std::length_error If <tt>size() + n > max_size()</tt>.
    *
@@ -1728,7 +1728,7 @@ public:
   /// @b DynamicBuffer_v1: Move bytes from the output sequence to the input
   /// sequence.
   /**
-   * @param n The number of bytes to append from the startTimer of the output
+   * @param n The number of bytes to append from the start of the output
    * sequence to the end of the input sequence. The remainder of the output
    * sequence is discarded.
    *
@@ -1974,7 +1974,7 @@ public:
    *
    * @returns An object of type @c mutable_buffers_type that satisfies
    * MutableBufferSequence requirements, representing vector memory at the
-   * startTimer of the output sequence of size @c n.
+   * start of the output sequence of size @c n.
    *
    * @throws std::length_error If <tt>size() + n > max_size()</tt>.
    *
@@ -2001,7 +2001,7 @@ public:
   /// @b DynamicBuffer_v1: Move bytes from the output sequence to the input
   /// sequence.
   /**
-   * @param n The number of bytes to append from the startTimer of the output
+   * @param n The number of bytes to append from the start of the output
    * sequence to the end of the input sequence. The remainder of the output
    * sequence is discarded.
    *

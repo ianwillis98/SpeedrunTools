@@ -89,7 +89,7 @@ public:
   }
 #endif // defined(ASIO_HAS_MOVE)
 
-  /// Obtain an iterator that points to the startTimer of the range.
+  /// Obtain an iterator that points to the start of the range.
   iterator begin() const ASIO_NOEXCEPT
   {
     return begin_;

@@ -7,7 +7,7 @@
 #include <bakkesmod/wrappers/kismet/SequenceObjectWrapper.h>
 #include <bakkesmod/wrappers/Engine/UnrealStringWrapper.h>
 
-enum class KismetSequenceVariableType
+enum class KismetVarType
 {
     Bool,
     Int,
@@ -19,14 +19,12 @@ enum class KismetSequenceVariableType
     Unknown
 };
 
-class KismetSequenceVariable
+class KismetVar
 {
 private:
-    BakkesMod::Plugin::BakkesModPlugin *plugin;
-
     std::string name;
 
-    KismetSequenceVariableType type;
+    KismetVarType type;
     bool boolValue;
     int intValue;
     float floatValue;
@@ -34,11 +32,14 @@ private:
     std::string stringValue;
 
 public:
-    KismetSequenceVariable(BakkesMod::Plugin::BakkesModPlugin *plugin, SequenceVariableWrapper var);
+    explicit KismetVar(std::string name);
+    explicit KismetVar(SequenceVariableWrapper var);
 
     std::string getName() const;
 
-    KismetSequenceVariableType getType() const;
+    bool render();
+
+    KismetVarType getType() const;
     bool getBoolValue() const;
     int getIntValue() const;
     float getFloatValue() const;
@@ -48,11 +49,8 @@ public:
     void setBoolValue(bool value);
     void setIntValue(int value);
     void setFloatValue(float value);
+    void setStringValue(const std::string &value);
 
-    std::string getValueAsString();
     std::string getTypeAsString();
-
-    bool render();
-
-    void updateMainSequenceValue() const;
+    std::string getValueAsString();
 };

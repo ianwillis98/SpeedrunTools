@@ -49,14 +49,14 @@ The following CVars and Commands are best used through the in-game menu. They ca
 
 * `speedrun_livesplit_connect` (command): Try to connect to the LiveSplit Server
 * `speedrun_livesplit_disconnect` (command): Disconnect from the LiveSplit Server
-* `speedrun_livesplit_startorsplit` (command): Start or splitTimer the timer
+* `speedrun_livesplit_startorsplit` (command): Start or split the timer
 * `speedrun_livesplit_start` (command): Start the timer
 * `speedrun_livesplit_pause` (command): Pause the timer
 * `speedrun_livesplit_resume` (command): Resume the timer
 * `speedrun_livesplit_reset` (command):  Reset the timer
 * `speedrun_livesplit_split` (command): Split the timer
-* `speedrun_livepslit_skipsplit` (command): Skip the next splitTimer
-* `speedrun_livesplit_unodsplit` (command): Undo the previous splitTimer
+* `speedrun_livepslit_skipsplit` (command): Skip the next split
+* `speedrun_livesplit_unodsplit` (command): Undo the previous split
 
 **Mutators**
 

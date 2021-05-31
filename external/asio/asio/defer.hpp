@@ -87,7 +87,7 @@ ASIO_INITFN_AUTO_RESULT_TYPE(CompletionToken, void()) defer(
  *
  * @li Constructs a function object @c f with a function call operator that
  * performs <tt>ex1.dispatch(std::move(handler), alloc)</tt> followed by
- * <tt>w.resetTimer()</tt>.
+ * <tt>w.reset()</tt>.
  *
  * @li Performs <tt>Executor(ex).defer(std::move(f), alloc)</tt>.
  *

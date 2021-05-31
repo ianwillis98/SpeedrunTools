@@ -92,5 +92,8 @@ void LiveSplitModel::handleResultCallback(bool success, const std::string &messa
 
 void LiveSplitModel::log(const std::string &message)
 {
-    this->plugin->cvarManager->log("LiveSplit: " + message);
+    std::string m = "LiveSplit: " + message;
+
+    this->plugin->cvarManager->log(m);
+//    if (this->shouldLogToChatbox) this->plugin->gameWrapper->LogToChatbox(m, "SPEEDRUNTOOLS");
 }

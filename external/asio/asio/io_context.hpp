@@ -167,13 +167,13 @@ namespace detail {
  * permitting ready handlers to be dispatched.
  *
  * Alternatively, if the application requires that all operations and handlers
- * be allowed to finish normally, the work object may be explicitly resetTimer.
+ * be allowed to finish normally, the work object may be explicitly reset.
  *
  * @code asio::io_context io_context;
  * asio::executor_work_guard<asio::io_context::executor_type>
  *   = asio::make_work_guard(io_context);
  * ...
- * work.resetTimer(); // Allow run() to exit. @endcode
+ * work.reset(); // Allow run() to exit. @endcode
  */
 class io_context
   : public execution_context
