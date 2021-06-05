@@ -14,7 +14,6 @@ public:
 
     void onEnable() override;
     void update(const std::string &eventName, bool post, void *params) override;
-
     void renderCanvas(CanvasWrapper &canvasWrapper) override;
 
     std::string getStartDescription() override;

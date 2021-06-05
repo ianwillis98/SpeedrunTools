@@ -11,7 +11,7 @@ SpeedJumpRings3MapToolsComponent::SpeedJumpRings3MapToolsComponent(BakkesMod::Pl
 void SpeedJumpRings3MapToolsComponent::resetMap()
 {
     this->kismetModel.setIntValue("Level", 1);
-    this->mapToolsModel.setCarState(Vector(-6793, -8487, 719), Rotator(0, -16386, 0), Vector(0, 0, 0), Vector(0, 0, 0), 1.0f);
+    this->mapToolsModel.setCarState(Vector(-6793, -8487, 719), Rotator(0, -16386, 0));
 }
 
 void SpeedJumpRings3MapToolsComponent::checkpoint(int checkpoint)

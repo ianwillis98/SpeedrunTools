@@ -17,7 +17,4 @@ public:
     std::string getSplitDescription() override;
     std::string getResetDescription() override;
     std::string getDebugText() override;
-
-private:
-    void resetRingsKismetToZero();
 };

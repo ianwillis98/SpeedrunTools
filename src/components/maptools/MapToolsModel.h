@@ -17,7 +17,7 @@ public:
                      Rotator rotation = Rotator(0, 0, 0),
                      Vector velocity = Vector(0.0f, 0.0f, 0.0f),
                      Vector angularVelocity = Vector(0.0f, 0.0f, 0.0f),
-                     float boostAmount = 0.0f);
+                     float boostAmount = 1.0f);
 
     void removeAllBalls();
     void spawnAndStopBall(Vector location);

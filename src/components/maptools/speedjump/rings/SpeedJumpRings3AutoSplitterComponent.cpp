@@ -9,7 +9,7 @@ SpeedJumpRings3AutoSplitterComponent::SpeedJumpRings3AutoSplitterComponent(Bakke
 }
 void SpeedJumpRings3AutoSplitterComponent::onEnable()
 {
-    this->timer = this->kismetModel.getStringValue("displayTimer");
+    this->timer = this->kismetModel.getStringValue("displaytimer");
     this->level = this->kismetModel.getIntValue("Level");
 }
 
@@ -18,7 +18,7 @@ void SpeedJumpRings3AutoSplitterComponent::update(const std::string &eventName, 
     if (eventName == "Function TAGame.Car_TA.SetVehicleInput" && post)
     {
         std::string previousTimer = this->timer;
-        this->timer = this->kismetModel.getStringValue("displayTimer");
+        this->timer = this->kismetModel.getStringValue("displaytimer");
 
         int previousLevel = this->level;
         this->level = this->kismetModel.getIntValue("Level");
@@ -39,31 +39,31 @@ void SpeedJumpRings3AutoSplitterComponent::update(const std::string &eventName, 
         }
         else if (this->segment == 14)
         {
-            if (this->level == 1 && previousLevel == 14) this->split();
+            if (this->level == 1 && previousLevel == 14)
+            {
+                this->split();
+            }
         }
     }
     if (eventName == "Function TAGame.GameEvent_Soccar_TA.Destroyed" && post)
     {
-        if (this->segment > 0)
-        {
-            this->reset();
-        }
+        this->reset();
     }
 }
 
 std::string SpeedJumpRings3AutoSplitterComponent::getStartDescription()
 {
-    return AutoSplitterComponent::getStartDescription();
+    return "The timer starts when the map's timer starts.";
 }
 
 std::string SpeedJumpRings3AutoSplitterComponent::getSplitDescription()
 {
-    return AutoSplitterComponent::getSplitDescription();
+    return "The timer will split after entering each checkpoint and after entering the final ring (14 splits in total).";
 }
 
 std::string SpeedJumpRings3AutoSplitterComponent::getResetDescription()
 {
-    return AutoSplitterComponent::getResetDescription();
+    return "The timer will reset when you press the reset map button or exit to the main menu.";
 }
 
 std::string SpeedJumpRings3AutoSplitterComponent::getDebugText()

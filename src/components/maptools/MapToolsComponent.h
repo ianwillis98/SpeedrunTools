@@ -21,7 +21,6 @@ public:
                       std::string mapName, std::string cVarName, int numCheckpoints);
 
     void onEvent(const std::string &eventName, bool post, void *params) override;
-
     void render() override;
     void renderCanvas(CanvasWrapper &canvasWrapper) override;
 

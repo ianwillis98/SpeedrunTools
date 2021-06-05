@@ -28,54 +28,44 @@ void SpeedJumpRings1AutoSplitterComponent::update(const std::string &eventName, 
         }
         else if (1 <= this->segment && this->segment <= 16)
         {
-            if (this->rings == (previousRings + 1) && (this->rings % 10) == 0 && this->rings == ((this->segment + 1) * 10))
+            if (this->rings == (previousRings + 1) && (this->rings % 10) == 0 && this->rings == (this->segment * 10))
             {
                 this->split();
             }
         }
-//        else if (this->segment == 17)
-//        {
-//            if (this->rings == 162 && previousRings != 162)
-//            {
-//                this->split();
-//            }
-//        }
     }
     if (eventName == "Function TAGame.GFxShell_TA.ShowModalObject" && post)
     {
         if (this->segment == 17)
         {
-            if (this->rings >= 161)
-            {
-                // test what rings and previousRings are
-                this->split();
-            }
+            // rings is 161
+            this->split();
         }
     }
     if (eventName == "Function TAGame.GameEvent_TA.PlayerResetTraining")
     {
-        this->resetRingsKismetToZero();
+        this->kismetModel.setIntValue("Rings", 0); // in case they reset when rings is 1
         this->reset();
     }
     if (eventName == "Function TAGame.GameEvent_Soccar_TA.Destroyed" && post)
     {
-        if (this->segment > 0) this->reset();
+        this->reset();
     }
 }
 
 std::string SpeedJumpRings1AutoSplitterComponent::getStartDescription()
 {
-    return "The timer will start after passing the first ring.";
+    return "The timer will start after entering the first ring.";
 }
 
 std::string SpeedJumpRings1AutoSplitterComponent::getSplitDescription()
 {
-    return "The timer will split after every 10 rings passed and after passing the final ring (17 splits in total).";
+    return "The timer will split after entering every 10th ring and after entering the final ring (17 splits in total, 162 rings).";
 }
 
 std::string SpeedJumpRings1AutoSplitterComponent::getResetDescription()
 {
-    return "The timer will reset when the player presses the 'Reset Shot' binding or leaves the map.";
+    return "The timer will reset when the player presses the 'Reset Shot' binding or leaves the match.";
 }
 
 std::string SpeedJumpRings1AutoSplitterComponent::getDebugText()
@@ -84,9 +74,4 @@ std::string SpeedJumpRings1AutoSplitterComponent::getDebugText()
     ss << "Speed Jump Rings 1 Auto Splitter (Debug)" << std::endl;
     ss << "rings = " << this->rings << std::endl;
     return ss.str();
-}
-
-void SpeedJumpRings1AutoSplitterComponent::resetRingsKismetToZero()
-{
-    this->kismetModel.setIntValue("Rings", 0);
 }

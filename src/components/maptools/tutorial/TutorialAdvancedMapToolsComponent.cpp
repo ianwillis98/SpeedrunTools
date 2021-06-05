@@ -28,8 +28,7 @@ void TutorialAdvancedMapToolsComponent::checkpoint(int checkpoints)
     }
     else if (checkpoints == 6)
     {
-        this->mapToolsModel.setCarState(Vector(0.0f, -4859.0f, 17.01f), Rotator(-100, 16384, 0),
-                                        Vector(0.0f, 0.0f, 0.0f), Vector(0.0f, 0.0f, 0.0f), 1.0f);
+        this->mapToolsModel.setCarState(Vector(0.0f, -4859.0f, 17.01f), Rotator(-100, 16384, 0));
         this->mapToolsModel.removeAllBalls();
         this->mapToolsModel.spawnAndStopBall(Vector(2559.98999f, -3167.98999f, 864.0f));
         this->mapToolsModel.spawnAndStopBall(Vector(1919.98999f, 2720.01001f, 736.0f));

@@ -19,7 +19,7 @@ SpeedJumpRings2AutoSplitterComponent::SpeedJumpRings2AutoSplitterComponent(Bakke
 
 void SpeedJumpRings2AutoSplitterComponent::onEnable()
 {
-    this->timer = this->kismetModel.getStringValue("displayTimer");
+    this->timer = this->kismetModel.getStringValue("displaytimer");
 }
 
 void SpeedJumpRings2AutoSplitterComponent::update(const std::string &eventName, bool post, void *params)
@@ -27,7 +27,7 @@ void SpeedJumpRings2AutoSplitterComponent::update(const std::string &eventName, 
     if (eventName == "Function TAGame.Car_TA.SetVehicleInput" && post)
     {
         std::string previousTimer = this->timer;
-        this->timer = this->kismetModel.getStringValue("displayTimer");
+        this->timer = this->kismetModel.getStringValue("displaytimer");
 
         if (this->segment == 0)
         {
@@ -43,7 +43,7 @@ void SpeedJumpRings2AutoSplitterComponent::update(const std::string &eventName, 
 
             Vector location = car.GetLocation();
 
-            if (this->hitBoxes[this->segment].second.contains(location))
+            if (this->hitBoxes[this->segment - 1].second.contains(location))
             {
                 this->split();
             }
@@ -56,58 +56,57 @@ void SpeedJumpRings2AutoSplitterComponent::update(const std::string &eventName, 
             this->split();
         }
     }
-    if (eventName == "Function TAGame.GameEvent_TA.PlayerResetTraining")
+    if (eventName == "Function TAGame.GameEvent_TA.PlayerResetTraining" && post)
     {
+        this->kismetModel.setStringValue("displaytimer", ""); // in case they reset when timer is "0:00"
         this->reset();
     }
     if (eventName == "Function TAGame.GameEvent_Soccar_TA.Destroyed" && post)
     {
-        if (this->segment > 0)
-        {
-            this->reset();
-        }
+        this->reset();
     }
 }
 
 void SpeedJumpRings2AutoSplitterComponent::renderCanvas(CanvasWrapper &canvasWrapper)
 {
-    if (!this->plugin->gameWrapper->IsInFreeplay()) return;
-
-    CarWrapper car = this->plugin->gameWrapper->GetLocalCar();
-    if (car.IsNull()) return;
-
-    CameraWrapper cameraWrapper = this->plugin->gameWrapper->GetCamera();
-    if (cameraWrapper.IsNull()) return;
-
-    Vector location = car.GetLocation();
-
-    for (auto &hitBox : hitBoxes)
-    {
-        if (hitBox.second.contains(location)) canvasWrapper.SetColor(0, 255, 0, 255);
-        else canvasWrapper.SetColor(255, 0, 0, 255);
-
-        hitBox.second.renderCanvas(canvasWrapper, cameraWrapper);
-    }
+//    if (!this->plugin->gameWrapper->IsInFreeplay()) return;
+//
+//    CarWrapper car = this->plugin->gameWrapper->GetLocalCar();
+//    if (car.IsNull()) return;
+//
+//    CameraWrapper cameraWrapper = this->plugin->gameWrapper->GetCamera();
+//    if (cameraWrapper.IsNull()) return;
+//
+//    Vector location = car.GetLocation();
+//
+//    for (auto &hitBox : hitBoxes)
+//    {
+//        if (hitBox.second.contains(location)) canvasWrapper.SetColor(0, 255, 0, 255);
+//        else canvasWrapper.SetColor(255, 0, 0, 255);
+//
+//        hitBox.second.renderCanvas(canvasWrapper, cameraWrapper);
+//    }
 }
 
 std::string SpeedJumpRings2AutoSplitterComponent::getStartDescription()
 {
-    return AutoSplitterComponent::getStartDescription();
+    return "The timer starts when the map's timer starts.";
 }
 
 std::string SpeedJumpRings2AutoSplitterComponent::getSplitDescription()
 {
-    return AutoSplitterComponent::getSplitDescription();
+    return "The timer will split after passing the final ring of each section and when the timer stops(11 splits in total).";
 }
 
 std::string SpeedJumpRings2AutoSplitterComponent::getResetDescription()
 {
-    return AutoSplitterComponent::getResetDescription();
+    return "The timer will reset when the player presses the 'Reset Shot' binding or leaves the match.";
 }
 
 std::string SpeedJumpRings2AutoSplitterComponent::getDebugText()
 {
     std::stringstream ss;
     ss << "Speed Jump Rings 2 Auto Splitter (Debug)" << std::endl;
+    ss << "timer = " << this->timer << std::endl;
     return ss.str();
 }

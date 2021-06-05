@@ -55,6 +55,25 @@ void TutorialBasicAutoSplitterComponent::update(const std::string &eventName, bo
     }
 }
 
+std::string TutorialBasicAutoSplitterComponent::getStartDescription()
+{
+    return "The timer will start on \"Welcome to Tutorial Training!\" popup.";
+}
+
+std::string TutorialBasicAutoSplitterComponent::getSplitDescription()
+{
+    return "The timer will split after completing each stage (6 splits in total).";
+}
+
+std::string TutorialBasicAutoSplitterComponent::getResetDescription()
+{
+    std::stringstream ss;
+    ss << "The timer will reset whenever the map unloads. This occurs when:" << std::endl;
+    ss << "\t- The player exits to the main menu or chooses a different mode/match to play" << std::endl;
+    ss << "\t- The player restarts the training" << std::endl;
+    ss << "\t- The training ends and the player is teleported to freeplay" << std::endl;
+    return ss.str();
+}
 
 std::string TutorialBasicAutoSplitterComponent::getDebugText()
 {

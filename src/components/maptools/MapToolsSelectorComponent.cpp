@@ -7,6 +7,7 @@
 #include "speedjump/rings/SpeedJumpRings2MapToolsComponent.h"
 #include "speedjump/rings/SpeedJumpRings3MapToolsComponent.h"
 #include "leth/LethsGiantRingsMapToolsComponent.h"
+#include "speedjump/trials/SpeedJumpTrials1MapToolsComponent.h"
 
 MapToolsSelectorComponent::MapToolsSelectorComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : PluginComponentBase(plugin),
@@ -21,6 +22,7 @@ MapToolsSelectorComponent::MapToolsSelectorComponent(BakkesMod::Plugin::BakkesMo
     this->maps.push_back(std::make_unique<SpeedJumpRings1MapToolsComponent>(plugin));
     this->maps.push_back(std::make_unique<SpeedJumpRings2MapToolsComponent>(plugin));
     this->maps.push_back(std::make_unique<SpeedJumpRings3MapToolsComponent>(plugin));
+    this->maps.push_back(std::make_unique<SpeedJumpTrials1MapToolsComponent>(plugin));
 }
 
 void MapToolsSelectorComponent::onEvent(const std::string &eventName, bool post, void *params)
