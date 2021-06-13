@@ -16,8 +16,7 @@ void TutorialBasicAutoSplitterComponent::update(const std::string &eventName, bo
     if (eventName == "Function TAGame.GameEvent_Tutorial_TA.Destroyed" && post)
     {
         this->isInTutorial = false;
-
-        if (segment > 0) this->reset();
+        this->reset();
     }
     if (eventName == "Function TAGame.GFxShell_TA.ShowModalObject" && post)
     {
@@ -62,17 +61,12 @@ std::string TutorialBasicAutoSplitterComponent::getStartDescription()
 
 std::string TutorialBasicAutoSplitterComponent::getSplitDescription()
 {
-    return "The timer will split after completing each stage (6 splits in total).";
+    return "The timer will split after completing each section (6 splits in total).";
 }
 
 std::string TutorialBasicAutoSplitterComponent::getResetDescription()
 {
-    std::stringstream ss;
-    ss << "The timer will reset whenever the map unloads. This occurs when:" << std::endl;
-    ss << "\t- The player exits to the main menu or chooses a different mode/match to play" << std::endl;
-    ss << "\t- The player restarts the training" << std::endl;
-    ss << "\t- The training ends and the player is teleported to freeplay" << std::endl;
-    return ss.str();
+    return "The timer will reset whenever the player resets the tutorial or leaves the match.";
 }
 
 std::string TutorialBasicAutoSplitterComponent::getDebugText()

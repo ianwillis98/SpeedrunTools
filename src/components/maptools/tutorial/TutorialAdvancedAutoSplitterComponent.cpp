@@ -19,19 +19,15 @@ void TutorialAdvancedAutoSplitterComponent::update(const std::string &eventName,
     {
         this->isInTutorial = false;
 
-        if (this->segment != 0)
-        {
-            this->segment = 0;
-            this->segment4GoalsScored = 0;
-            this->segment5GoalsScored = 0;
-            this->reset();
-        }
+        this->segment4GoalsScored = 0;
+        this->segment5GoalsScored = 0;
+        this->reset();
     }
     if (eventName == "Function GameEvent_Tutorial_Basic_TA.Active.HandleHitGoal" && post)
     {
         if (!this->isInTutorial) return;
 
-        if (this->segment >= 1 && this->segment <= 3)
+        if (1 <= this->segment && this->segment <= 3)
         {
             this->split();
         }
@@ -46,10 +42,6 @@ void TutorialAdvancedAutoSplitterComponent::update(const std::string &eventName,
         else if (this->segment == 5)
         {
             this->segment5GoalsScored++;
-            if (this->segment5GoalsScored == 3)
-            {
-                this->split();
-            }
         }
     }
     if (eventName == "Function TAGame.GFxShell_TA.ShowModalObject" && post)
@@ -62,11 +54,12 @@ void TutorialAdvancedAutoSplitterComponent::update(const std::string &eventName,
             if (cw.IsNull()) return;
 
             int yaw = cw.GetRotation().Yaw;
-            if (yaw < -33000 || yaw > -32000) return;
-
-            this->start();
+            if (-33000 < yaw && yaw < -32000)
+            {
+                this->start();
+            }
         }
-        else if (this->segment == 6)
+        else if (this->segment == 5 && this->segment5GoalsScored >= 3)
         {
             this->split();
         }
@@ -80,25 +73,12 @@ std::string TutorialAdvancedAutoSplitterComponent::getStartDescription()
 
 std::string TutorialAdvancedAutoSplitterComponent::getSplitDescription()
 {
-    std::stringstream ss;
-    ss << "The timer will split after each of six segments:" << std::endl;
-    ss << "\t1. Side Dodge (Left)" << std::endl;
-    ss << "\t2. Side Dodge (Right)" << std::endl;
-    ss << "\t3. Dodge and Momentum" << std::endl;
-    ss << "\t4. Double Jump (all five balls scored)" << std::endl;
-    ss << "\t5. Rocket Flying (all three balls scored)" << std::endl;
-    ss << "\t6. \"Tutorial Completed!\" popup shows" << std::endl;
-    return ss.str();
+    return "The timer will split after completing each section (5 splits in total).";
 }
 
 std::string TutorialAdvancedAutoSplitterComponent::getResetDescription()
 {
-    std::stringstream ss;
-    ss << "The timer will reset whenever the map unloads. This occurs when:" << std::endl;
-    ss << "\t- The player exits to the main menu or chooses a different mode/match to play" << std::endl;
-    ss << "\t- The player restarts the training" << std::endl;
-    ss << "\t- The training ends and the player is teleported to freeplay" << std::endl;
-    return ss.str();
+    return "The timer will reset whenever the player resets the tutorial or leaves the match.";
 }
 
 std::string TutorialAdvancedAutoSplitterComponent::getDebugText()

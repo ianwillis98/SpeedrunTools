@@ -33,6 +33,13 @@ void SpeedJumpRings1AutoSplitterComponent::update(const std::string &eventName, 
                 this->split();
             }
         }
+        if (this->segment > 0)
+        {
+            if (this->rings == 0 && previousRings != 0)
+            {
+                this->reset();
+            }
+        }
     }
     if (eventName == "Function TAGame.GFxShell_TA.ShowModalObject" && post)
     {

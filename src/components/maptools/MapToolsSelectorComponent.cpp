@@ -8,6 +8,7 @@
 #include "speedjump/rings/SpeedJumpRings3MapToolsComponent.h"
 #include "leth/LethsGiantRingsMapToolsComponent.h"
 #include "speedjump/trials/SpeedJumpTrials1MapToolsComponent.h"
+#include "airdribble/AirDribbleHoopsMapToolsComponent.h"
 
 MapToolsSelectorComponent::MapToolsSelectorComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
         : PluginComponentBase(plugin),
@@ -16,13 +17,14 @@ MapToolsSelectorComponent::MapToolsSelectorComponent(BakkesMod::Plugin::BakkesMo
 {
     this->maps.push_back(std::make_unique<TutorialBasicMapToolsComponent>(plugin));
     this->maps.push_back(std::make_unique<TutorialAdvancedMapToolsComponent>(plugin));
+    this->maps.push_back(std::make_unique<PanicsAirRaceBeachMapToolsComponent>(plugin));
     this->maps.push_back(std::make_unique<LethsNeonRingsMapToolsComponent>(plugin));
     this->maps.push_back(std::make_unique<LethsGiantRingsMapToolsComponent>(plugin));
-    this->maps.push_back(std::make_unique<PanicsAirRaceBeachMapToolsComponent>(plugin));
+    this->maps.push_back(std::make_unique<AirDribbleHoopsMapToolsComponent>(plugin));
     this->maps.push_back(std::make_unique<SpeedJumpRings1MapToolsComponent>(plugin));
     this->maps.push_back(std::make_unique<SpeedJumpRings2MapToolsComponent>(plugin));
     this->maps.push_back(std::make_unique<SpeedJumpRings3MapToolsComponent>(plugin));
-    this->maps.push_back(std::make_unique<SpeedJumpTrials1MapToolsComponent>(plugin));
+    //this->maps.push_back(std::make_unique<SpeedJumpTrials1MapToolsComponent>(plugin));
 }
 
 void MapToolsSelectorComponent::onEvent(const std::string &eventName, bool post, void *params)
