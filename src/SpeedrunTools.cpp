@@ -47,12 +47,12 @@ void SpeedrunTools::onUnload()
 
 void SpeedrunTools::renderBody()
 {
-    static bool showDemoWindow = false;
+    /*static bool showDemoWindow = false;
     ImGui::Checkbox("Show Demo Window", &showDemoWindow);
     if (showDemoWindow)
     {
         ImGui::ShowDemoWindow();
-    }
+    }*/
 
     ImGui::Text("%s (version %s)", PLUGIN_TITLE, PLUGIN_VERSION);
     ImGui::Spacing();
@@ -138,6 +138,8 @@ void SpeedrunTools::MessageRecieved(const std::string& message, PriWrapper sende
     if (!curCar) return;
     auto curPri = curCar.GetPRI();
     if (!curPri) return;
+
+    //Don't duplicate splits for the sender
     if (sender.GetPlayerID() == curPri.GetPlayerID()) return;
 
     if (message == "Start") {
