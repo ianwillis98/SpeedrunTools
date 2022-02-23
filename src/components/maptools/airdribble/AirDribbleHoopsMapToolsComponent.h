@@ -3,7 +3,7 @@
 class AirDribbleHoopsMapToolsComponent : public MapToolsComponent
 {
 public:
-    explicit AirDribbleHoopsMapToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit AirDribbleHoopsMapToolsComponent(NetcodePlugin *plugin);
 
 protected:
     void resetMap() override;

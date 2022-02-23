@@ -1,6 +1,6 @@
 #include "PluginComponentBase.h"
 
-PluginComponentBase::PluginComponentBase(BakkesMod::Plugin::BakkesModPlugin *plugin) : plugin(plugin)
+PluginComponentBase::PluginComponentBase(NetcodePlugin* plugin) : plugin(plugin)
 {
 
 }

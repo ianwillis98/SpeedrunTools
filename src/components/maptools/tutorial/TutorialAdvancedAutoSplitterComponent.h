@@ -10,7 +10,7 @@ private:
     int segment5GoalsScored;
 
 public:
-    explicit TutorialAdvancedAutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit TutorialAdvancedAutoSplitterComponent(NetcodePlugin *plugin);
 
 protected:
     void update(const std::string &eventName, bool post, void *params) override;

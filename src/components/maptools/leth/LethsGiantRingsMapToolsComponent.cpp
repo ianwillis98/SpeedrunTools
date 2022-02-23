@@ -1,7 +1,7 @@
 #include "LethsGiantRingsMapToolsComponent.h"
 #include "LethsGiantRingsAutoSplitterComponent.h"
 
-LethsGiantRingsMapToolsComponent::LethsGiantRingsMapToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
+LethsGiantRingsMapToolsComponent::LethsGiantRingsMapToolsComponent(NetcodePlugin *plugin)
         : MapToolsComponent(plugin, std::make_shared<LethsGiantRingsAutoSplitterComponent>(plugin),
                             "Leth's Giant Rings", "lethsgiant", 20)
 {

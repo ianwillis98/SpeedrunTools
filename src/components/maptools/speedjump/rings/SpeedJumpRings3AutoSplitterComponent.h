@@ -9,7 +9,7 @@ private:
     int level;
 
 public:
-    explicit SpeedJumpRings3AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit SpeedJumpRings3AutoSplitterComponent(NetcodePlugin *plugin);
 
     void onEnable() override;
     void update(const std::string &eventName, bool post, void *params) override;

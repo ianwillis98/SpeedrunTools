@@ -10,7 +10,7 @@ private:
     int selectedMapIndex;
 
 public:
-    explicit MapToolsSelectorComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit MapToolsSelectorComponent(NetcodePlugin *plugin);
 
     void onEvent(const std::string &eventName, bool post, void *params) override;
 

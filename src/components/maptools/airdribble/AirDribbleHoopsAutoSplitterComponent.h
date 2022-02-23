@@ -7,7 +7,7 @@ private:
     int level;
 
 public:
-    explicit AirDribbleHoopsAutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit AirDribbleHoopsAutoSplitterComponent(NetcodePlugin *plugin);
 
     void onEnable() override;
     void update(const std::string &eventName, bool post, void *params) override;

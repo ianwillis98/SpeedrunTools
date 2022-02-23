@@ -13,7 +13,7 @@ private:
     KismetModel &kismetModel;
 
 public:
-    explicit KismetEditorComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit KismetEditorComponent(NetcodePlugin *plugin);
 
     void onEvent(const std::string &eventName, bool post, void *params) override;
     void render() override;

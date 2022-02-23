@@ -2,13 +2,12 @@
 
 #include "../MapToolsComponent.h"
 
-class TutorialBasicMapToolsComponent : public MapToolsComponent
+class LethsEgyptianTombMapToolsComponent : public MapToolsComponent
 {
 public:
-    explicit TutorialBasicMapToolsComponent(NetcodePlugin *plugin);
+    explicit LethsEgyptianTombMapToolsComponent(NetcodePlugin* plugin);
 
 protected:
     void resetMap() override;
     void checkpoint(int checkpoint) override;
 };
-

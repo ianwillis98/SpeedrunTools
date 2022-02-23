@@ -1,7 +1,7 @@
 #include "PanicsAirRaceBeachMapToolsComponent.h"
 #include "PanicsAirRaceBeachAutoSplitterComponent.h"
 
-PanicsAirRaceBeachMapToolsComponent::PanicsAirRaceBeachMapToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
+PanicsAirRaceBeachMapToolsComponent::PanicsAirRaceBeachMapToolsComponent(NetcodePlugin *plugin)
         : MapToolsComponent(plugin, std::make_shared<PanicsAirRaceBeachAutoSplitterComponent>(plugin),
                             "Panic's Air Race Beach", "panicsbeach", 11)
 {

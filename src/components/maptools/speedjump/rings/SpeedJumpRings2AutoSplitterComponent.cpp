@@ -1,6 +1,6 @@
 #include "SpeedJumpRings2AutoSplitterComponent.h"
 
-SpeedJumpRings2AutoSplitterComponent::SpeedJumpRings2AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
+SpeedJumpRings2AutoSplitterComponent::SpeedJumpRings2AutoSplitterComponent(NetcodePlugin *plugin)
         : AutoSplitterComponent(plugin),
           hitBoxes(),
           timer()

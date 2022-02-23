@@ -1,6 +1,6 @@
 #include "SpeedJumpRings1AutoSplitterComponent.h"
 
-SpeedJumpRings1AutoSplitterComponent::SpeedJumpRings1AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
+SpeedJumpRings1AutoSplitterComponent::SpeedJumpRings1AutoSplitterComponent(NetcodePlugin *plugin)
         : AutoSplitterComponent(plugin),
           rings()
 {

@@ -5,7 +5,7 @@
 class PanicsAirRaceBeachMapToolsComponent : public MapToolsComponent
 {
 public:
-    explicit PanicsAirRaceBeachMapToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit PanicsAirRaceBeachMapToolsComponent(NetcodePlugin *plugin);
 
 protected:
     void resetMap() override;

@@ -10,7 +10,7 @@ private:
     int level;
 
 public:
-    explicit LethsGiantRingsAutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit LethsGiantRingsAutoSplitterComponent(NetcodePlugin *plugin);
 
 protected:
     void onEnable() override;

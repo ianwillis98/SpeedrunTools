@@ -1,6 +1,6 @@
 #include "ExperimentalComponent.h"
 
-ExperimentalComponent::ExperimentalComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
+ExperimentalComponent::ExperimentalComponent(NetcodePlugin *plugin)
         : PluginComponentBase(plugin), vars()
 {
 

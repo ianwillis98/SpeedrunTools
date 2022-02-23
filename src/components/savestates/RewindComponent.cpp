@@ -1,6 +1,6 @@
 #include "RewindComponent.h"
 
-RewindComponent::RewindComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
+RewindComponent::RewindComponent(NetcodePlugin *plugin)
         : PluginComponentBase(plugin),
           rewindBuffer(6.0f),
           previousSaveTime()

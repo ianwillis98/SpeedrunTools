@@ -1,6 +1,6 @@
 #include "AirDribbleHoopsAutoSplitterComponent.h"
 
-AirDribbleHoopsAutoSplitterComponent::AirDribbleHoopsAutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
+AirDribbleHoopsAutoSplitterComponent::AirDribbleHoopsAutoSplitterComponent(NetcodePlugin *plugin)
         : AutoSplitterComponent(plugin),
           timer(),
           level()
@@ -63,7 +63,7 @@ std::string AirDribbleHoopsAutoSplitterComponent::getSplitDescription()
 
 std::string AirDribbleHoopsAutoSplitterComponent::getResetDescription()
 {
-    return "The timer will reset after pressing the reset map button or leaving the match.";
+    return "The timer will reset after leaving the match.";
 }
 
 std::string AirDribbleHoopsAutoSplitterComponent::getDebugText()

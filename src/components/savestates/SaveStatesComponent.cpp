@@ -3,7 +3,7 @@
 const std::string SaveStatesComponent::SaveStateCVarName = "speedrun_savestate_save";
 const std::string SaveStatesComponent::LoadStateCVarName = "speedrun_savestate_load";
 
-SaveStatesComponent::SaveStatesComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
+SaveStatesComponent::SaveStatesComponent(NetcodePlugin *plugin)
         : PluginComponentBase(plugin),
           isGameStateSaved(false),
           gameSaveState()

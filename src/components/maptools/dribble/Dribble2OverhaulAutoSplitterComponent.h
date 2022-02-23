@@ -1,20 +1,19 @@
 #pragma once
 
 #include "../AutoSplitterComponent.h"
-#include "../../../services/LiveSplitClient.h"
 
-class LethsNeonRingsAutoSplitterComponent : public AutoSplitterComponent
+class Dribble2OverhaulAutoSplitterComponent : public AutoSplitterComponent
 {
 private:
+    int checkpoint;
     bool timing;
-    int level;
 
 public:
-    explicit LethsNeonRingsAutoSplitterComponent(NetcodePlugin *plugin);
+    explicit Dribble2OverhaulAutoSplitterComponent(NetcodePlugin* plugin);
 
 protected:
     void onEnable() override;
-    void update(const std::string &eventName, bool post, void *params) override;
+    void update(const std::string& eventName, bool post, void* params) override;
 
     std::string getStartDescription() override;
     std::string getSplitDescription() override;

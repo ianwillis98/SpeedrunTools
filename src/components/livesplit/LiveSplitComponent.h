@@ -22,7 +22,7 @@ private:
     LiveSplitModel &liveSplitModel;
 
 public:
-    explicit LiveSplitComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit LiveSplitComponent(NetcodePlugin *plugin);
 
     void render() override;
 

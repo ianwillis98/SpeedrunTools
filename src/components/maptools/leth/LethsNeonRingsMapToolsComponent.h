@@ -5,7 +5,7 @@
 class LethsNeonRingsMapToolsComponent : public MapToolsComponent
 {
 public:
-    explicit LethsNeonRingsMapToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit LethsNeonRingsMapToolsComponent(NetcodePlugin *plugin);
 
 protected:
     void resetMap() override;
