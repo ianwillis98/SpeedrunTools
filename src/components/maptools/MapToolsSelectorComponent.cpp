@@ -66,6 +66,9 @@ void MapToolsSelectorComponent::render()
                 this->selectedMapIndex = i;
             if (isSelected)
                 ImGui::SetItemDefaultFocus();
+            else
+                this->maps.at(i)->disableAutoSplitter();
+            //added in to disable other autosplitters when you switch to a new one
         }
         ImGui::EndCombo();
     }

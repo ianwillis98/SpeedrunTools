@@ -24,6 +24,7 @@ public:
     void render() final;
 
     virtual void onMapReset();
+    void disable();
 
 private:
     void renderConnectView();

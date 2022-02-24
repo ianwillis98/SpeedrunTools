@@ -104,6 +104,11 @@ void AutoSplitterComponent::onMapReset()
     this->reset();
 }
 
+void AutoSplitterComponent::disable()
+{
+    this->isEnabled = false;
+}
+
 void AutoSplitterComponent::onEnable()
 {
 

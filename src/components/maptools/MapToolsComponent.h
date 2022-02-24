@@ -24,6 +24,8 @@ public:
     void render() override;
     void renderCanvas(CanvasWrapper &canvasWrapper) override;
 
+    void disableAutoSplitter();
+
     std::string getMapName();
     std::string getCvar();
 

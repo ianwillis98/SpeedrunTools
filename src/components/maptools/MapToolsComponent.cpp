@@ -109,6 +109,11 @@ void MapToolsComponent::renderCanvas(CanvasWrapper &canvasWrapper)
     this->autoSplitterComponent->renderCanvas(canvasWrapper);
 }
 
+void MapToolsComponent::disableAutoSplitter()
+{
+    autoSplitterComponent->disable();
+}
+
 std::string MapToolsComponent::getMapName()
 {
     return this->mapName;
