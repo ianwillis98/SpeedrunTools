@@ -117,7 +117,7 @@ void SpeedrunTools::setupEvents()
     // modal popup
     this->setupEventPost("Function TAGame.GFxShell_TA.ShowModalObject");
 
-    // dribble challenge end
+    // goal scored function
     this->setupEventPost("Function TAGame.Ball_TA.Explode");
 }
 

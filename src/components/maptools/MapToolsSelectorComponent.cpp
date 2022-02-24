@@ -11,6 +11,7 @@
 #include "airdribble/AirDribbleHoopsMapToolsComponent.h"
 #include "dribble/Dribble2OverhaulMapToolsComponent.h"
 #include "leth/LethsEgyptianTombMapToolsComponent.h"
+#include "minigolf/MinigolfMapToolsComponent.h"
 
 MapToolsSelectorComponent::MapToolsSelectorComponent(NetcodePlugin *plugin)
         : PluginComponentBase(plugin),
@@ -28,6 +29,7 @@ MapToolsSelectorComponent::MapToolsSelectorComponent(NetcodePlugin *plugin)
     this->maps.push_back(std::make_unique<SpeedJumpRings3MapToolsComponent>(plugin));
     this->maps.push_back(std::make_unique<Dribble2OverhaulMapToolsComponent>(plugin));
     this->maps.push_back(std::make_unique<LethsEgyptianTombMapToolsComponent>(plugin));
+    this->maps.push_back(std::make_unique<MinigolfMapToolsComponent>(plugin));
     //this->maps.push_back(std::make_unique<SpeedJumpTrials1MapToolsComponent>(plugin));
 
     this->plugin->cvarManager->registerNotifier("speedrun_maptools_global_reset", [this](const std::vector<std::string>& commands) {
