@@ -58,7 +58,7 @@ std::string AirDribbleHoopsAutoSplitterComponent::getStartDescription()
 
 std::string AirDribbleHoopsAutoSplitterComponent::getSplitDescription()
 {
-    return "The timer will split after completing each level.";
+    return "The timer will split after completing each level (21 splits in total).";
 }
 
 std::string AirDribbleHoopsAutoSplitterComponent::getResetDescription()

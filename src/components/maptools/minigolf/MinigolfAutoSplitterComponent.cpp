@@ -46,7 +46,7 @@ std::string MinigolfAutoSplitterComponent::getStartDescription()
 
 std::string MinigolfAutoSplitterComponent::getSplitDescription()
 {
-    return "The timer will split after a goal is scored.";
+    return "The timer will split after a goal is scored (9 splits in total).";
 }
 
 std::string MinigolfAutoSplitterComponent::getResetDescription()
