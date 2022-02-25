@@ -7,6 +7,7 @@ class MapToolsSelectorComponent : public PluginComponentBase
 {
 private:
     std::vector<std::unique_ptr<MapToolsComponent>> maps;
+    std::vector<std::string> mapNames;
     int selectedMapIndex;
 
 public:
