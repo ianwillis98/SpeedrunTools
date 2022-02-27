@@ -2,7 +2,7 @@
 
 const std::string KismetEditorComponent::ListAllCVarsNotifier = "speedrun_kismet_list";
 
-KismetEditorComponent::KismetEditorComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
+KismetEditorComponent::KismetEditorComponent(NetcodePlugin *plugin)
         : PluginComponentBase(plugin),
           kismetModel(KismetModel::getInstance(plugin))
 {

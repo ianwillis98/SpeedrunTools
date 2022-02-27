@@ -14,7 +14,7 @@ private:
     GameState gameSaveState;
 
 public:
-    explicit SaveStatesComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit SaveStatesComponent(NetcodePlugin *plugin);
 
     void render() override;
 

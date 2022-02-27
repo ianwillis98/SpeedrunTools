@@ -8,7 +8,7 @@ private:
     bool isInTutorial;
 
 public:
-    explicit TutorialBasicAutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit TutorialBasicAutoSplitterComponent(NetcodePlugin *plugin);
 
 protected:
     void update(const std::string &eventName, bool post, void *params) override;

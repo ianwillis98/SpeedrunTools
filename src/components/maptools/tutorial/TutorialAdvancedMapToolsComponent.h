@@ -5,7 +5,7 @@
 class TutorialAdvancedMapToolsComponent : public MapToolsComponent
 {
 public:
-    explicit TutorialAdvancedMapToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit TutorialAdvancedMapToolsComponent(NetcodePlugin *plugin);
 
 protected:
     void resetMap() override;

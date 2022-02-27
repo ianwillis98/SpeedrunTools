@@ -10,7 +10,7 @@ private:
     int level;
 
 public:
-    explicit LethsNeonRingsAutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit LethsNeonRingsAutoSplitterComponent(NetcodePlugin *plugin);
 
 protected:
     void onEnable() override;

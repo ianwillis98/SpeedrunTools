@@ -1,6 +1,6 @@
 #include "AutoSplitterComponent.h"
 
-AutoSplitterComponent::AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
+AutoSplitterComponent::AutoSplitterComponent(NetcodePlugin *plugin)
         : PluginComponentBase(plugin),
           liveSplitModel(LiveSplitModel::getInstance(plugin)),
           kismetModel(KismetModel::getInstance(plugin)),
@@ -10,7 +10,7 @@ AutoSplitterComponent::AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin 
           isAutoResetEnabled(true),
           segment(0)
 {
-
+    
 }
 
 void AutoSplitterComponent::onEvent(const std::string &eventName, bool post, void *params)
@@ -59,9 +59,9 @@ void AutoSplitterComponent::render()
             }
             ImGuiExtensions::BigSpacing();
 
-            std::string debug = this->getDebugTextPrefix() + this->getDebugText();
+            /*std::string debug = this->getDebugTextPrefix() + this->getDebugText();
             ImGui::InputTextMultiline("Debug Output", (char *) debug.c_str(), debug.capacity() + 1, ImVec2(0, ImGui::GetTextLineHeight() * 8),
-                                      ImGuiInputTextFlags_ReadOnly);
+                                      ImGuiInputTextFlags_ReadOnly);*/
         }
         else
         {
@@ -104,27 +104,35 @@ void AutoSplitterComponent::onMapReset()
     this->reset();
 }
 
+void AutoSplitterComponent::disable()
+{
+    this->isEnabled = false;
+}
+
 void AutoSplitterComponent::onEnable()
 {
 
 }
 
-void AutoSplitterComponent::start()
+void AutoSplitterComponent::start(bool netcode)
 {
     this->segment = 1;
     if (this->liveSplitModel.isConnected() && this->isEnabled && this->isAutoStartEnabled) this->liveSplitModel.start();
+    if (netcode) this->plugin->NotifyPlayers("Start");
 }
 
-void AutoSplitterComponent::split()
+void AutoSplitterComponent::split(bool netcode)
 {
     this->segment++;
     if (this->liveSplitModel.isConnected() && this->isEnabled && this->isAutoSplitEnabled) this->liveSplitModel.split();
+    if (netcode) this->plugin->NotifyPlayers("Split");
 }
 
-void AutoSplitterComponent::reset()
+void AutoSplitterComponent::reset(bool netcode)
 {
     this->segment = 0;
     if (this->liveSplitModel.isConnected() && this->isEnabled && this->isAutoResetEnabled) this->liveSplitModel.reset();
+    if (netcode) this->plugin->NotifyPlayers("Reset");
 }
 
 std::string AutoSplitterComponent::getStartDescription()

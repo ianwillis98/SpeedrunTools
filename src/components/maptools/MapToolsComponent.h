@@ -17,14 +17,17 @@ protected:
     const int numCheckpoints;
 
 public:
-    MapToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin, std::shared_ptr<AutoSplitterComponent> component,
+    MapToolsComponent(NetcodePlugin *plugin, std::shared_ptr<AutoSplitterComponent> component,
                       std::string mapName, std::string cVarName, int numCheckpoints);
 
     void onEvent(const std::string &eventName, bool post, void *params) override;
     void render() override;
     void renderCanvas(CanvasWrapper &canvasWrapper) override;
 
+    void disableAutoSplitter();
+
     std::string getMapName();
+    std::string getCvar();
 
 protected:
     virtual void createResetNotifier();

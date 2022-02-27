@@ -1,7 +1,7 @@
 #include "TutorialBasicMapToolsComponent.h"
 #include "TutorialBasicAutoSplitterComponent.h"
 
-TutorialBasicMapToolsComponent::TutorialBasicMapToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
+TutorialBasicMapToolsComponent::TutorialBasicMapToolsComponent(NetcodePlugin *plugin)
         : MapToolsComponent(plugin, std::make_shared<TutorialBasicAutoSplitterComponent>(plugin),
                             "Tutorial Basic", "tutorialbasic", 6)
 {

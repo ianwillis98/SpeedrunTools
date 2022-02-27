@@ -11,7 +11,7 @@ private:
     float previousSaveTime;
 
 public:
-    explicit RewindComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit RewindComponent(NetcodePlugin *plugin);
 
     void render() override;
     void onEvent(const std::string &eventName, bool post, void *params) override;

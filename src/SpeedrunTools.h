@@ -21,7 +21,11 @@ public:
     void renderBody() override;
     void renderCanvas(CanvasWrapper &canvasWrapper);
 
+    void NotifyPlayers(std::string message) override;
+
 private:
     void setupEvents();
     void setupEventPost(const std::string &eventName);
+
+    void MessageRecieved(const std::string& message, PriWrapper sender);
 };

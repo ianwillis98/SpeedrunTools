@@ -1,7 +1,7 @@
 #include "SpeedJumpRings2MapToolsComponent.h"
 #include "SpeedJumpRings2AutoSplitterComponent.h"
 
-SpeedJumpRings2MapToolsComponent::SpeedJumpRings2MapToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
+SpeedJumpRings2MapToolsComponent::SpeedJumpRings2MapToolsComponent(NetcodePlugin *plugin)
         : MapToolsComponent(plugin, std::make_shared<SpeedJumpRings2AutoSplitterComponent>(plugin),
                             "Speed Jump Rings 2", "sjr2", 11)
 {

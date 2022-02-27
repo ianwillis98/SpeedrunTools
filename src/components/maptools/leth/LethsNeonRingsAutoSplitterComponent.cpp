@@ -1,6 +1,6 @@
 #include "LethsNeonRingsAutoSplitterComponent.h"
 
-LethsNeonRingsAutoSplitterComponent::LethsNeonRingsAutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
+LethsNeonRingsAutoSplitterComponent::LethsNeonRingsAutoSplitterComponent(NetcodePlugin *plugin)
         : AutoSplitterComponent(plugin),
           level(),
           timing()
@@ -63,7 +63,7 @@ std::string LethsNeonRingsAutoSplitterComponent::getSplitDescription()
 
 std::string LethsNeonRingsAutoSplitterComponent::getResetDescription()
 {
-    return "The timer will reset when you press the reset map button or exit to the main menu.";
+    return "The timer will reset after leaving the map.";
 }
 
 std::string LethsNeonRingsAutoSplitterComponent::getDebugText()

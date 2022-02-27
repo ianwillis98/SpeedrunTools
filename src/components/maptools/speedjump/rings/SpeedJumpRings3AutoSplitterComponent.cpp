@@ -1,6 +1,6 @@
 #include "SpeedJumpRings3AutoSplitterComponent.h"
 
-SpeedJumpRings3AutoSplitterComponent::SpeedJumpRings3AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
+SpeedJumpRings3AutoSplitterComponent::SpeedJumpRings3AutoSplitterComponent(NetcodePlugin *plugin)
         : AutoSplitterComponent(plugin),
           timer(),
           level()

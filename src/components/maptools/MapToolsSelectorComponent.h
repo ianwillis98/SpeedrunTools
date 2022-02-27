@@ -7,10 +7,11 @@ class MapToolsSelectorComponent : public PluginComponentBase
 {
 private:
     std::vector<std::unique_ptr<MapToolsComponent>> maps;
+    std::vector<std::string> mapNames;
     int selectedMapIndex;
 
 public:
-    explicit MapToolsSelectorComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit MapToolsSelectorComponent(NetcodePlugin *plugin);
 
     void onEvent(const std::string &eventName, bool post, void *params) override;
 

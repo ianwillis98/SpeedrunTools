@@ -1,14 +1,15 @@
 #pragma once
 
 #include "../PluginComponent.h"
+#include "../NetcodePlugin.h"
 
 class PluginComponentBase : public PluginComponent
 {
 protected:
-    BakkesMod::Plugin::BakkesModPlugin *plugin;
+    NetcodePlugin *plugin;
 
 public:
-    explicit PluginComponentBase(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit PluginComponentBase(NetcodePlugin* plugin);
 
     void onEvent(const std::string &eventName, bool post, void *params) override;
 

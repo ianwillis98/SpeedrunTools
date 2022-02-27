@@ -1,6 +1,6 @@
 #include "SpeedJumpTrials1AutoSplitterComponent.h"
 
-SpeedJumpTrials1AutoSplitterComponent::SpeedJumpTrials1AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
+SpeedJumpTrials1AutoSplitterComponent::SpeedJumpTrials1AutoSplitterComponent(NetcodePlugin *plugin)
         : AutoSplitterComponent(plugin),
           level(),
           resetMap()
@@ -40,8 +40,7 @@ void SpeedJumpTrials1AutoSplitterComponent::update(const std::string &eventName,
         }
         else if (2 <= this->segment && this->segment <= 9)
         {
-            // TODO CHECK SEG
-            if (this->level == (previousLevel + 1))
+            if (this->level == (previousLevel + 1) && this->level == (this->segment + 1))
             {
                 this->split();
             }

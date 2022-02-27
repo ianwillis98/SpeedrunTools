@@ -10,7 +10,7 @@ private:
     std::string timer;
 
 public:
-    explicit SpeedJumpRings2AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit SpeedJumpRings2AutoSplitterComponent(NetcodePlugin *plugin);
 
     void onEnable() override;
     void update(const std::string &eventName, bool post, void *params) override;

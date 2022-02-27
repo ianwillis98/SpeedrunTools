@@ -1,6 +1,6 @@
 #include "LethsGiantRingsAutoSplitterComponent.h"
 
-LethsGiantRingsAutoSplitterComponent::LethsGiantRingsAutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
+LethsGiantRingsAutoSplitterComponent::LethsGiantRingsAutoSplitterComponent(NetcodePlugin *plugin)
         : AutoSplitterComponent(plugin),
           timing(),
           level()

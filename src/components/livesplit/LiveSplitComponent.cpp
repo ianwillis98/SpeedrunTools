@@ -11,7 +11,7 @@ const std::string LiveSplitComponent::SplitCVarName = "speedrun_livesplit_split"
 const std::string LiveSplitComponent::SkipSplitCVarName = "speedrun_livesplit_skipsplit";
 const std::string LiveSplitComponent::UndoSplitCVarName = "speedrun_livesplit_undosplit";
 
-LiveSplitComponent::LiveSplitComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
+LiveSplitComponent::LiveSplitComponent(NetcodePlugin *plugin)
         : PluginComponentBase(plugin),
           liveSplitModel(LiveSplitModel::getInstance(plugin))
 {

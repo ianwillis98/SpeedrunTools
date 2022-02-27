@@ -9,7 +9,7 @@ private:
     int checkpoint;
 
 public:
-    explicit PanicsAirRaceBeachAutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit PanicsAirRaceBeachAutoSplitterComponent(NetcodePlugin *plugin);
 
 protected:
     void onEnable() override;

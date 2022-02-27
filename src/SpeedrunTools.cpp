@@ -21,18 +21,23 @@ SpeedrunTools::SpeedrunTools()
 
 void SpeedrunTools::onLoad()
 {
+    using namespace std::placeholders;
+
     this->tabs.emplace_back("General Tools", std::make_unique<GeneralToolsComponent>(this));
     this->tabs.emplace_back("Map Tools", std::make_unique<MapToolsSelectorComponent>(this));
     this->tabs.emplace_back("Save States", std::make_unique<SaveStatesComponent>(this));
     this->tabs.emplace_back("LiveSplit Controls", std::make_unique<LiveSplitComponent>(this));
     this->tabs.emplace_back("Kismet Editor", std::make_unique<KismetEditorComponent>(this));
-    this->tabs.emplace_back("Experimental", std::make_unique<ExperimentalComponent>(this));
+    //this->tabs.emplace_back("Experimental", std::make_unique<ExperimentalComponent>(this));
 
     this->setupEvents();
 
     this->gameWrapper->RegisterDrawable([this](CanvasWrapper canvasWrapper) {
         this->renderCanvas(canvasWrapper);
     });
+
+    Netcode = std::make_shared<NetcodeManager>(this->cvarManager, this->gameWrapper, exports,
+        std::bind(&SpeedrunTools::MessageRecieved, this, _1, _2));
 }
 
 void SpeedrunTools::onUnload()
@@ -42,12 +47,12 @@ void SpeedrunTools::onUnload()
 
 void SpeedrunTools::renderBody()
 {
-    static bool showDemoWindow = false;
+    /*static bool showDemoWindow = false;
     ImGui::Checkbox("Show Demo Window", &showDemoWindow);
     if (showDemoWindow)
     {
         ImGui::ShowDemoWindow();
-    }
+    }*/
 
     ImGui::Text("%s (version %s)", PLUGIN_TITLE, PLUGIN_VERSION);
     ImGui::Spacing();
@@ -74,6 +79,11 @@ void SpeedrunTools::renderCanvas(CanvasWrapper &canvasWrapper)
     {
         tab.second->renderCanvas(canvasWrapper);
     }
+}
+
+void SpeedrunTools::NotifyPlayers(std::string message)
+{
+    Netcode->SendNewMessage(message);
 }
 
 void SpeedrunTools::setupEvents()
@@ -106,6 +116,9 @@ void SpeedrunTools::setupEvents()
 
     // modal popup
     this->setupEventPost("Function TAGame.GFxShell_TA.ShowModalObject");
+
+    // goal scored function
+    this->setupEventPost("Function TAGame.Ball_TA.Explode");
 }
 
 void SpeedrunTools::setupEventPost(const std::string &eventName)
@@ -116,4 +129,26 @@ void SpeedrunTools::setupEventPost(const std::string &eventName)
                 for (auto &tab : this->tabs) tab.second->onEvent(eventName, true, nullptr);
             }
     );
+}
+
+void SpeedrunTools::MessageRecieved(const std::string& message, PriWrapper sender)
+{
+    if (!sender) return;
+    auto curCar = this->gameWrapper->GetLocalCar();
+    if (!curCar) return;
+    auto curPri = curCar.GetPRI();
+    if (!curPri) return;
+
+    //Don't duplicate splits for the sender
+    if (sender.GetPlayerID() == curPri.GetPlayerID()) return;
+
+    if (message == "Start") {
+        this->cvarManager->executeCommand("speedrun_livesplit_start");
+    }
+    else if (message == "Split") {
+        this->cvarManager->executeCommand("speedrun_livesplit_split");
+    }
+    else if (message == "Reset") {
+        this->cvarManager->executeCommand("speedrun_livesplit_reset");
+    }
 }

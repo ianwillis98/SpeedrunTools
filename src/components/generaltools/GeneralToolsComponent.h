@@ -32,7 +32,7 @@ private:
     AirRollMutator airRollMutator;
 
 public:
-    explicit GeneralToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit GeneralToolsComponent(NetcodePlugin *plugin);
 
     void render() override;
     void onEvent(const std::string &eventName, bool post, void *params) override;

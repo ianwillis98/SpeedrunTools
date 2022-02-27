@@ -1,6 +1,6 @@
 #include "TutorialBasicAutoSplitterComponent.h"
 
-TutorialBasicAutoSplitterComponent::TutorialBasicAutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
+TutorialBasicAutoSplitterComponent::TutorialBasicAutoSplitterComponent(NetcodePlugin *plugin)
         : AutoSplitterComponent(plugin),
           isInTutorial(false)
 {

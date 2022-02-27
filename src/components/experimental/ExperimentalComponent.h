@@ -8,7 +8,7 @@ class ExperimentalComponent : public PluginComponentBase
 public:
     std::vector<TestVar> vars;
 
-    explicit ExperimentalComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit ExperimentalComponent(NetcodePlugin *plugin);
 
     void onEvent(const std::string &eventName, bool post, void *params) override;
 

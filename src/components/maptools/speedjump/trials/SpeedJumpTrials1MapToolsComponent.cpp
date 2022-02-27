@@ -1,7 +1,7 @@
 #include "SpeedJumpTrials1MapToolsComponent.h"
 #include "SpeedJumpTrials1AutoSplitterComponent.h"
 
-SpeedJumpTrials1MapToolsComponent::SpeedJumpTrials1MapToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
+SpeedJumpTrials1MapToolsComponent::SpeedJumpTrials1MapToolsComponent(NetcodePlugin *plugin)
         : MapToolsComponent(plugin, std::make_shared<SpeedJumpTrials1AutoSplitterComponent>(plugin),
                             "Speed Jump Trials 1", "sjt1", 10)
 {

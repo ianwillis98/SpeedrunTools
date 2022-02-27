@@ -2,7 +2,7 @@
 
 #include <utility>
 
-MapToolsComponent::MapToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin, std::shared_ptr<AutoSplitterComponent> component,
+MapToolsComponent::MapToolsComponent(NetcodePlugin *plugin, std::shared_ptr<AutoSplitterComponent> component,
                                      std::string mapName, std::string cVarName, int numCheckpoints)
         : PluginComponentBase(plugin),
           mapToolsModel(MapToolsModel::getInstance(plugin)),
@@ -109,7 +109,17 @@ void MapToolsComponent::renderCanvas(CanvasWrapper &canvasWrapper)
     this->autoSplitterComponent->renderCanvas(canvasWrapper);
 }
 
+void MapToolsComponent::disableAutoSplitter()
+{
+    autoSplitterComponent->disable();
+}
+
 std::string MapToolsComponent::getMapName()
 {
     return this->mapName;
+}
+
+std::string MapToolsComponent::getCvar()
+{
+    return this->cVarName;
 }

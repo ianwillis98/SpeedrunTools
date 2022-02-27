@@ -1,6 +1,6 @@
 #include "PanicsAirRaceBeachAutoSplitterComponent.h"
 
-PanicsAirRaceBeachAutoSplitterComponent::PanicsAirRaceBeachAutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
+PanicsAirRaceBeachAutoSplitterComponent::PanicsAirRaceBeachAutoSplitterComponent(NetcodePlugin *plugin)
         : AutoSplitterComponent(plugin),
           rings(),
           checkpoint()

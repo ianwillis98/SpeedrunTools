@@ -5,7 +5,7 @@
 class SpeedJumpRings1MapToolsComponent : public MapToolsComponent
 {
 public:
-    explicit SpeedJumpRings1MapToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit SpeedJumpRings1MapToolsComponent(NetcodePlugin *plugin);
 
 protected:
     void resetMap() override;

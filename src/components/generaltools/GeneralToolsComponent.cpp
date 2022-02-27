@@ -5,7 +5,7 @@ const std::string GeneralToolsComponent::AirRollMutatorCVarName = "speedrun_muta
 const std::string GeneralToolsComponent::GameGravityMutatorCVarName = "speedrun_mutator_game_gravity";
 const std::string GeneralToolsComponent::GameSpeedMutatorCVarName = "speedrun_mutator_game_speed";
 
-GeneralToolsComponent::GeneralToolsComponent(BakkesMod::Plugin::BakkesModPlugin *plugin)
+GeneralToolsComponent::GeneralToolsComponent(NetcodePlugin *plugin)
         : PluginComponentBase(plugin),
           currentGameState(),
           boostMutator(BoostMutator::None),

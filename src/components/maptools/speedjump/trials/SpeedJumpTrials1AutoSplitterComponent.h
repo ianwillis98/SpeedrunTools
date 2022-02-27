@@ -9,7 +9,7 @@ private:
     bool resetMap;
 
 public:
-    explicit SpeedJumpTrials1AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit SpeedJumpTrials1AutoSplitterComponent(NetcodePlugin *plugin);
 
     void onEnable() override;
     void update(const std::string &eventName, bool post, void *params) override;

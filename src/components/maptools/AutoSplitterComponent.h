@@ -18,12 +18,13 @@ protected:
     int segment;
 
 public:
-    explicit AutoSplitterComponent(BakkesMod::Plugin::BakkesModPlugin *plugin);
+    explicit AutoSplitterComponent(NetcodePlugin *plugin);
 
     void onEvent(const std::string &eventName, bool post, void *params) final;
     void render() final;
 
     virtual void onMapReset();
+    void disable();
 
 private:
     void renderConnectView();
@@ -33,9 +34,9 @@ protected:
     virtual void onEnable();
     virtual void update(const std::string &eventName, bool post, void *params) = 0;
 
-    void start();
-    void split();
-    void reset();
+    void start(bool netcode = false);
+    void split(bool netcode = false);
+    void reset(bool netcode = false);
 
     virtual std::string getStartDescription();
     virtual std::string getSplitDescription();

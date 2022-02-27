@@ -1,8 +1,9 @@
 #pragma once
 
 #include <bakkesmod/plugin/pluginwindow.h>
+#include "NetcodePlugin.h"
 
-class BaseBakkesModPlugin : public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::Plugin::PluginWindow
+class BaseBakkesModPlugin : public NetcodePlugin, public BakkesMod::Plugin::PluginWindow
 {
 protected:
     const std::string menuTitle;
