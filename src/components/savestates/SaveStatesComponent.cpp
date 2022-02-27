@@ -6,7 +6,7 @@ const std::string SaveStatesComponent::LoadStateCVarName = "speedrun_savestate_l
 SaveStatesComponent::SaveStatesComponent(NetcodePlugin *plugin)
         : PluginComponentBase(plugin),
           isGameStateSaved(false),
-          gameSaveState()
+          savedGameState()
 {
     this->plugin->cvarManager->registerNotifier(SaveStateCVarName, [this](const std::vector<std::string> &commands) {
         this->saveCurrentGameState();
@@ -36,11 +36,9 @@ void SaveStatesComponent::render()
     }
     ImGuiExtensions::BigSeparator();
 
-    this->gameSaveState.render();
+    this->savedGameState.render();
     ImGuiExtensions::PopDisabledStyleIf(isInFreeplay && !this->isGameStateSaved);
     ImGuiExtensions::PopDisabledStyleIf(!isInFreeplay);
-
-    ImGui::Text("The ability to add multiple save states will come in a future update.");
 }
 
 void SaveStatesComponent::saveCurrentGameState()
@@ -50,7 +48,7 @@ void SaveStatesComponent::saveCurrentGameState()
     ServerWrapper server = this->plugin->gameWrapper->GetGameEventAsServer();
     if (server.IsNull()) return;
 
-    this->gameSaveState = GameState(server);
+    this->savedGameState = GameState(server);
     this->isGameStateSaved = true;
 }
 
@@ -62,5 +60,5 @@ void SaveStatesComponent::loadPreviousGameState()
     ServerWrapper server = this->plugin->gameWrapper->GetGameEventAsServer();
     if (server.IsNull()) return;
 
-    this->gameSaveState.applyTo(server);
+    this->savedGameState.applyTo(server);
 }

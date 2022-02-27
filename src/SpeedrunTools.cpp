@@ -30,11 +30,11 @@ void SpeedrunTools::onLoad()
     this->tabs.emplace_back("Kismet Editor", std::make_unique<KismetEditorComponent>(this));
     //this->tabs.emplace_back("Experimental", std::make_unique<ExperimentalComponent>(this));
 
-    this->setupEvents();
-
     this->gameWrapper->RegisterDrawable([this](CanvasWrapper canvasWrapper) {
         this->renderCanvas(canvasWrapper);
     });
+
+    this->setupEvents();
 
     Netcode = std::make_shared<NetcodeManager>(this->cvarManager, this->gameWrapper, exports,
         std::bind(&SpeedrunTools::MessageRecieved, this, _1, _2));
@@ -54,7 +54,7 @@ void SpeedrunTools::renderBody()
         ImGui::ShowDemoWindow();
     }*/
 
-    ImGui::Text("%s (version %s)", PLUGIN_TITLE, PLUGIN_VERSION);
+    ImGui::Text("%s (version %s)", PLUGIN_TITLE.c_str(), PLUGIN_VERSION.c_str());
     ImGui::Spacing();
 
     if (ImGui::BeginTabBar("MainTabBar", ImGuiTabBarFlags_None))

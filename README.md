@@ -1,20 +1,33 @@
 # Speedrun Tools
 
-Speedrun Tools is a [Bakkes Mod Plugin](https://bakkesplugins.com/) aimed at making speedrunning easier and more efficient. The following tools will
-only work in freeplay and workshop runs.
+Speedrun Tools is a [Bakkes Mod Plugin](https://bakkesplugins.com/) aimed at making speedrunning easier. It includes:
 
-## Download
+* Custom Map Tools
+* Save States
+* Kismet Editor
+* LiveSplit Controller
+* Game Mutators
+
+## Downloads
 
 Required Downloads
+
 * [BakkesMod](https://bakkesmod.com/download.php) (if you don't have it already)
 * [Speedrun Tools Plugin](https://bakkesplugins.com/plugins/view/165)
-  
+
 Needed to use LiveSplit Tools
-* [LiveSplit](https://livesplit.org/) (timing software)
-* [LiveSplit Server](https://github.com/LiveSplit/LiveSplit.Server) (how this plugin talks to LiveSplit)
+
+* [LiveSplit](https://livesplit.org/) (popular speedrunning timing software)
+* [LiveSplit Server](https://github.com/LiveSplit/LiveSplit.Server) (how this plugin communicates with LiveSplit)
 
 ## Features
 
+* Custom Map Tools
+* Save States
+    * Save the current game state
+    * Load the saved game state
+* Kismet Sequence Variable Editor
+    * View and edit kismet variables
 * LiveSplit Client
     * Connect to and control LiveSplit
     * Auto splitters for:
@@ -29,11 +42,6 @@ Needed to use LiveSplit Tools
     * Unlimited boost, zero boost
     * Custom gravity
     * Custom game speed
-* Save state mimics, including
-    * Game save states
-    * Game state rewind
-* Kismet Sequence Variable Editor
-    * View and edit kismet variables
 
 ## How to Open the In-game Menu
 
@@ -44,6 +52,11 @@ Needed to use LiveSplit Tools
 ## Console Variables (CVars) and Commands
 
 The following CVars and Commands are best used through the in-game menu. They can also be accessed through the BakkesMod console.
+
+**Save States**
+
+* `speedrun_savestate_save` (command): Saves the current game state
+* `speedrun_savestate_load` (command): Loads the previously saved game state
 
 **LiveSplit Client**
 
@@ -75,19 +88,5 @@ The following CVars and Commands are best used through the in-game menu. They ca
     * `float`
 
 * `speedrun_mutators_game_speed` (cvar): The current game speed
-    * `float`
-
-**Save States**
-
-* `speedrun_savestates_save` (command): Saves the current game state
-
-* `speedrun_savestates_load` (command): Loads the previously saved game state
-
-* `speedrun_savestates_rewind` (command): Rewinds the game back in time
-
-* `speedrun_savestates_rewindlength` (cvar): The amount of time that the game will be rewound
-    * `float`
-
-* `speedrun_savestates_rewindsaveinterval` (cvar): The frequency that the game state is recorded for rewinding
     * `float`
     

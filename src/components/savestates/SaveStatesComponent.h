@@ -11,7 +11,7 @@ public:
 
 private:
     bool isGameStateSaved;
-    GameState gameSaveState;
+    GameState savedGameState;
 
 public:
     explicit SaveStatesComponent(NetcodePlugin *plugin);

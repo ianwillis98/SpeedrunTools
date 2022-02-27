@@ -183,27 +183,3 @@ std::string KismetVar::getValueAsString()
             return "Type Not Registered";
     }
 }
-
-//void KismetVar::updateMainSequenceValue() const
-//{
-//    auto sequence = this->plugin->gameWrapper->GetMainSequence();
-//    if (sequence.memory_address == NULL) return;
-//
-//    auto vars = sequence.GetAllSequenceVariables(false);
-//
-//    auto var = vars.find(this->name);
-//    if (var == vars.end()) return;
-//
-//    if (this->type == KismetVarType::Int)
-//    {
-//        var->second.SetInt(this->intValue);
-//    }
-//    if (this->type == KismetVarType::Float)
-//    {
-//        var->second.SetFloat(this->floatValue);
-//    }
-//    if (this->type == KismetVarType::Bool)
-//    {
-//        var->second.SetBool(this->boolValue);
-//    }
-//}
